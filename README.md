@@ -14,7 +14,7 @@ To reproduce the results please download this repository (see [here](https://sup
   - `make Sydney` Produces the figures and results of Section 4.3
   - `make Chicago` Produces the figures and results of Section 4.4
   
-To wipe the populated directories, simply enter `make clean`.
+To wipe the populated directories, enter `make clean`.
 
 ### Data
 
@@ -24,16 +24,6 @@ Some of the data files were too large to be stored on Github. Before calling `ma
 - `curl https://dl.dropboxusercontent.com/s/m5ocngvauxosz50/SA2_2011_AUST.shp -O data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp`
 - `curl https://dl.dropboxusercontent.com/s/m4qigm9s4ijn4bj/SA3_2011_AUST.shp -O data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp`
 
-
-
-
 ### MODIS
 
-The MODIS study is computationally demanding (upwards of 10 hours). To simply test that the code works, one may use extremely low rank versions of the models by setting `LOWRANK = TRUE` within src/MODIS_control.R. In fact, `LOWRANK = TRUE` is the default, so that people do not inadvertently get stuck in some lengthy computations. One can reproduce the results from a subset of packages by editing the object `PACKAGES` in src/MODIS_control.R.
-
-#### References
-
-* Heaton MJ, Datta A, Finley AO, Furrer R, Guinness J, Guhaniyogi R, Gerber F, Gramacy
-RB, Hammerling D, Katzfuss M, Lindgren F, Nychka DW, Sun F, Zammit-Mangion A
-(2019). “A case study competition among methods for analyzing large spatial data.” Journal
-of Agricultural, Biological and Environmental Statistics, 24, 398–425.
+The MODIS study is computationally demanding (upwards of 10 hours). To simply test that the code works, one may use extremely low rank versions of the models by setting `LOWRANK = TRUE` within src/MODIS_control.R. In fact, `LOWRANK = TRUE` is the default, so that people do not inadvertently get stuck in some lengthy computations. Further, one can reproduce the results from a subset of packages by editing the object `PACKAGES` in src/MODIS_control.R.
