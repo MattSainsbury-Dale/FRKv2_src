@@ -4,15 +4,16 @@ This repository contains the source code to replicate the figures and results of
 
 ## Instructions
 
-To reproduce the results please download this repository (see [here](https://superuser.com/a/1309684) for steps to download a repository). In terminal, navigate to the top directory of the repository. It is important that the working directory is the top directory because the scripts use references to ./src/, ./img/, ./results/, and so on. Then, one may use the makefile to automatically populate the img/ and results/ directories. The targets in the makefile correspond to subsections of Sections 3 and 4 of the manuscript. Specially, the main targets are
-- `all`	Produces all of the figures and results in the manuscript
-  - `Poisson_sim` Produces the figures and results of Section 3.1 
-  - `Negbinom_sim` Produces the figures and results of Section 3.2
-  - `Heaton` Produces the FRK v.2 entry of the Heaton et al. (2019) comparison study table shown in Section 3.4
-  - `MODIS` Produces the figures and results of Section 4.1 (see below for some considerations)
-  - `Am` Produces the figures and results of Section 4.2
-  - `Sydney` Produces the figures and results of Section 4.3
-  - `Chicago` Produces the figures and results of Section 4.4
+To reproduce the results please download this repository (see [here](https://superuser.com/a/1309684) for steps to download a repository). In terminal, navigate to the top directory of the repository. It is important that the working directory is the top directory because the scripts use references to src/, img/, results/, and so on. Then, one may use the `makefile` to automatically populate the img/ and results/ directories. The targets in the makefile correspond to subsections of Sections 3 and 4 of the manuscript. 
+- `make all`	Produces all of the figures and results in the manuscript
+  - `make Poisson_sim` Produces the figures and results of Section 3.1 
+  - `make Negbinom_sim` Produces the figures and results of Section 3.2
+  - `make Heaton` Produces the FRK v.2 entry of the Heaton et al. (2019) comparison study table shown in Section 3.4
+  - `make MODIS` Produces the figures and results of Section 4.1 (see below for some considerations)
+  - `make Am` Produces the figures and results of Section 4.2
+  - `make Sydney` Produces the figures and results of Section 4.3
+  - `make Chicago` Produces the figures and results of Section 4.4
+  
 To wipe the populated directories after a call to make, simply enter `make clean`.
 
 ### Data
@@ -28,7 +29,7 @@ Some of the data files were too large to be stored on Github. Before calling `ma
 
 ### MODIS
 
-The MODIS study is computationally demanding (upwards of 10 hours). To simply test that the code works, one may use extremely low rank versions of the models by setting LOWRANK = TRUE within src/MODIS_control.R. In fact, LOWRANK = TRUE is the default, so that people do not inadvertently get stuck in some lengthy computations. Further, one can reproduce the results from a subset of packages by editing the object PACKAGES in src/MODIS_control.R.
+The MODIS study is computationally demanding (upwards of 10 hours). To simply test that the code works, one may use extremely low rank versions of the models by setting `LOWRANK = TRUE` within src/MODIS_control.R. In fact, `LOWRANK = TRUE` is the default, so that people do not inadvertently get stuck in some lengthy computations. One can reproduce the results from a subset of packages by editing the object `PACKAGES` in src/MODIS_control.R.
 
 #### References
 
