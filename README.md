@@ -4,7 +4,7 @@ This repository contains the source code to replicate the figures and results of
 
 ## Instructions
 
-To reproduce the results please download this repository (see [here](https://superuser.com/a/1309684) for steps to download a repository). In terminal, navigate to the top directory of the repository. It is important that the working directory is the top directory because the scripts use references to src/, img/, results/, and so on. Then, one may use the `makefile` to automatically populate the intermediates/, img/, and results/ directories. The targets in the makefile correspond to subsections of Sections 3 and 4 of the manuscript. 
+To reproduce the results please download this repository (see [here](https://superuser.com/a/1309684) for steps to download a repository). In terminal, navigate to the top directory of the repository. It is important that the working directory is the top directory because the scripts use references to src/, img/, results/, and so on. Then, one may use `make` to automatically run the source code and populate the img/ and results/ directories with the figures and results of the manuscript. The targets in the makefile correspond to subsections of Sections 3 and 4 of the manuscript. 
 - `make all`	Produces all of the figures and results in the manuscript
   - `make Poisson_sim` Produces the figures and results of Section 3.1 
   - `make Negbinom_sim` Produces the figures and results of Section 3.2
