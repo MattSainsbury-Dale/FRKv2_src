@@ -1,5 +1,4 @@
-# devtools::install_github("andrewzm/FRK", "FRKTMB")
-library("FRK") # FRKTMB branch
+library("FRK") 
 library("dplyr")
 library("ggplot2")
 library("ggmap")

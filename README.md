@@ -16,6 +16,12 @@ To reproduce the results please download this repository (see [here](https://sup
   
 To wipe the populated directories, enter `make clean`.
 
+
+### Dependencies
+
+The file DEPENDS.txt contains the `R` package dependencies for this repo. To automatically install the reuired packages (if not already present), please run `make DEPENDS`, which calls the `R` script src/DEPENDS.R.  
+
+
 ### Data
 
 Some of the data files were too large to be stored on Github. Before calling `make`, please run the following commands in terminal (assuming you have navigated to the top directory of this repo) to download these files and place them in the appropriate place. 

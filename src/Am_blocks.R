@@ -1,7 +1,3 @@
-## Following Paul and Cressie (2011),
-## we predict over a series of concentric square blocks centred at Ground Zero 
-## (GZ), as well as a series of concentric square blocks away from GZ.
-
 library("sp")
 GZ_df <- read.csv("./intermediates/Am_GZ.csv")
 
@@ -16,6 +12,9 @@ makeRectangle <- function(centre, w, h) {
 }
 
 
+## Following Paul and Cressie (2011),
+## we predict over a series of concentric square blocks centred at Ground Zero 
+## (GZ), as well as a series of concentric square blocks away from GZ.
 construct_block_scheme <- function() {
   n_schemes <- 2
   n_block <- 5
