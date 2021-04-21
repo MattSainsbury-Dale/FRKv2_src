@@ -29,8 +29,12 @@ MODIS_OBJECTS = img/MODIS_data.png img/MODIS_MAR_predictions.png img/MODIS_block
 
 MODIS: DEPENDS $(MODIS_OBJECTS)
 
-$(MODIS_OBJECTS): src/MODIS_control.R src/MODIS.R src/MODIS_modelling_fns
+$(MODIS_OBJECTS): src/MODIS_control.R 
 	Rscript src/MODIS_control.R
+	
+src/MODIS_control.R: src/MODIS.R 
+
+src/MODIS.R: src/MODIS_modelling_fns
 
 
 Am: DEPENDS img/Am_data_and_blocks.png img/Am_comparison.png
