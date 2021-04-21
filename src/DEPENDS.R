@@ -1,5 +1,6 @@
 ## Find the packages used throughout this repo using the package renv
-if (!("renv" %in% rownames(installed.packages()))) install.packages("renv")
+if (!("renv" %in% rownames(installed.packages()))) 
+  install.packages("renv", repos = "https://cran.csiro.au")
 DEPENDS <- renv::dependencies()
 DEPENDS <- unique(DEPENDS$Package)
 
