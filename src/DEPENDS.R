@@ -1,6 +1,8 @@
+CRANMIRROR <- "https://cran.csiro.au" 
+
 ## Find the packages used throughout this repo using the package renv
 if (!("renv" %in% rownames(installed.packages()))) 
-  install.packages("renv", repos = "https://cran.csiro.au")
+  install.packages("renv", repos = CRANMIRROR)
 DEPENDS <- renv::dependencies()
 DEPENDS <- unique(DEPENDS$Package)
 
@@ -15,7 +17,6 @@ new_packages <- DEPENDS[!(DEPENDS %in% rownames(installed.packages()))]
 if (!("FRK" %in% new_packages) && packageVersion("FRK") < 2)
   new_packages <- c(new_packages, "FRK")
 
-if(length(new_packages)) install.packages(new_packages, 
-                                          repos = "https://cran.csiro.au")
+if(length(new_packages)) install.packages(new_packages, repos = CRANMIRROR)
 
 
