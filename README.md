@@ -19,7 +19,7 @@ To wipe the populated directories, enter `make clean`.
 
 ### Dependencies
 
-The file DEPENDS.txt contains the `R` package dependencies for this repo. To automatically install the reuired packages (if not already present), please run `make DEPENDS`, which calls the `R` script src/DEPENDS.R.  
+The file DEPENDS.txt contains the `R` package dependencies for this repo. To automatically install the reuired packages (if not already present), please run `make DEPENDS`, which calls the `R` script src/DEPENDS.R. Note that this script uses the CRAN mirror run by the CSIRO (in Australia), so you may want to change this. 
 
 
 ### Data
