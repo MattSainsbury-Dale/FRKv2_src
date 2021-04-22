@@ -17,4 +17,5 @@ src/Am_Paul_Cressie.R
 data/Am_Paul_Cressie_2011_block_results.csv
 data/Am_Paul_Cressie_2011_pred.csv
 data/Am_Paul_Cressie_2011_RMSPE.csv
+unused
 
