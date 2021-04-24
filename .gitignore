@@ -10,12 +10,6 @@ data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp
 data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp
 
 # Files which are not of use currently, but I don't want to delete yet
-data/Sydney_shapefiles/MeshBlocks
-src/Chicago_extraneous.R
-src/Am_Paul_Cressie_Figures.R
-src/Am_Paul_Cressie.R
-data/Am_Paul_Cressie_2011_block_results.csv
-data/Am_Paul_Cressie_2011_pred.csv
-data/Am_Paul_Cressie_2011_RMSPE.csv
-unused
+untracked
+src/MODIS_optimise_args.R
 

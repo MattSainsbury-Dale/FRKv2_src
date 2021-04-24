@@ -23,8 +23,7 @@ library("spNNGP")
 library("spBayes")
 
 ## Packages used
-# PACKAGES <- c("FRK", "INLA", "mgcv", "spNNGP", "spBayes")
-PACKAGES <- c("FRK")
+PACKAGES <- c("FRK", "INLA", "mgcv", "spNNGP", "spBayes")
 
 ## Use extremely low-rank versions of the models to establish that the 
 ## code works (relatively) quickly

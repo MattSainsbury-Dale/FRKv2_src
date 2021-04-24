@@ -3,11 +3,9 @@ BrierScore <- function(Z, pred) mean((Z - pred)^2)
 AUC <- function(Z, pred) as.numeric(pROC::auc(Z, pred))
 
 ## df should contain predicted probabilities in a field named pred, 
-## and the validation data in a field called Z. 
+## and the validation data in a field called z. 
 compute_diagnostics_MODIS <- function(df) {
-  summarise(df,
-            Brier = BrierScore(Z, pred),
-            AUC = AUC(Z, pred))
+  summarise(df, Brier = BrierScore(z, pred), AUC = AUC(z, pred))
 }
 
 
