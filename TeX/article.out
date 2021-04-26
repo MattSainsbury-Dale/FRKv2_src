@@ -1,0 +1,14 @@
+\BOOKMARK [1][-]{Section.0.Introduction.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{Section.1.Methodology.1}{Methodology}{}% 2
+\BOOKMARK [2][-]{Subsection.2.0.The process layer.2}{The process layer}{Section.1.Methodology.1}% 3
+\BOOKMARK [2][-]{Subsection.2.1.The data layer.2}{The data layer}{Section.1.Methodology.1}% 4
+\BOOKMARK [2][-]{Subsection.2.2.Estimation.2}{Estimation}{Section.1.Methodology.1}% 5
+\BOOKMARK [3][-]{Subsubsection.2.3.0.Model fitting with TMB.3}{Model fitting with TMB}{Subsection.2.2.Estimation.2}% 6
+\BOOKMARK [2][-]{Subsection.2.3.Prediction and uncertainty quantification.2}{Prediction and uncertainty quantification}{Section.1.Methodology.1}% 7
+\BOOKMARK [3][-]{Subsubsection.2.4.0.Arbitrary prediction regions.3}{Arbitrary prediction regions}{Subsection.2.3.Prediction and uncertainty quantification.2}% 8
+\BOOKMARK [2][-]{Subsection.2.4.Spatio-temporal framework.2}{Spatio-temporal framework}{Section.1.Methodology.1}% 9
+\BOOKMARK [1][-]{Section.2.Usage of new features.1}{Usage of new features}{}% 10
+\BOOKMARK [2][-]{Subsection.3.0.Illustrative example: Simulated, non-Gaussian, point-referenced spatial data.2}{Illustrative example: Simulated, non-Gaussian, point-referenced spatial data}{Section.2.Usage of new features.1}% 11
+\BOOKMARK [2][-]{Subsection.3.1.Non-Gaussian, areally-referenced spatial data and change of support.2}{Non-Gaussian, areally-referenced spatial data and change of support}{Section.2.Usage of new features.1}% 12
+\BOOKMARK [2][-]{Subsection.3.2.Spatio-temporal extensions.2}{Spatio-temporal extensions}{Section.2.Usage of new features.1}% 13
+\BOOKMARK [2][-]{Subsection.3.3.Support for increased number of basis functions.2}{Support for increased number of basis functions}{Section.2.Usage of new features.1}% 14

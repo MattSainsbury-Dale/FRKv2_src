@@ -1,0 +1,313 @@
+\begin{thebibliography}{}
+
+\bibitem[Bachl et~al., 2019]{Bachl_2019_inlabru}
+Bachl, F.~E., Lindgren, F., Borchers, D.~L., and Illian, J.~B. (2019).
+\newblock {inlabru: an \texttt{R} package for Bayesian spatial modelling from
+  ecological survey data}.
+\newblock {\em {Methods in Ecology and Evolution}}, 10:760--766.
+
+\bibitem[Bates et~al., 2019]{Matrix_Package}
+Bates, D., Maechler, M., and Davis, T.~A. (2019).
+\newblock {\em \texttt{Matrix}: Sparse and Dense Matrix Classes and Methods}.
+\newblock \texttt{R} package version 1.2-17.
+
+\bibitem[Bell, 2005]{CppAD_Package}
+Bell, B.~M. (2005).
+\newblock {CppAD: a package for C++ algorithmic differentiation.}
+\newblock \url{http://www.coin-or.org/CppAD}.
+\newblock Accessed: 2019-06-15.
+
+\bibitem[Bivand, 2020]{CRAN_Task_View:spatial}
+Bivand, R. (2020).
+\newblock {CRAN Task View: Analysis of Spatial Data}.
+\newblock \url{https://CRAN.R-project.org/view=Spatial}.
+\newblock Accessed: 2020-04-03.
+
+\bibitem[Bowsher and Swain,
+  2012]{Bowsher_Swain_2012_total_conditional_variance}
+Bowsher, C.~G. and Swain, P.~S. (2012).
+\newblock {Identifying sources of variation and the flow of information in
+  biochemical networks}.
+\newblock {\em Proceedings of the National Academy of Sciences of the United
+  States of America}, 109:1320--1328.
+
+\bibitem[Bradley et~al.,
+  2018]{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}
+Bradley, J.~R., Holan, S.~H., and Wikle, C.~K. (2018).
+\newblock {Computationally efficient multivariate spatio-temporal models for
+  high-dimensional count-valued data (with discussion)}.
+\newblock {\em Bayesian Analysis}, 13:253--310.
+
+\bibitem[Bradley et~al.,
+  2020]{Bradley_2020_Bayesian_Hierarchical_Models_With_Conjugate_Full-Conditional_Distributions_for_Dependent_Data_From_the_Natural_Exponential_Family}
+Bradley, J.~R., Holan, S.~H., and Wikle, C.~K. (2020).
+\newblock Bayesian hierarchical models with conjugate full-conditional
+  distributions for dependent data from the natural exponential family.
+\newblock {\em Journal of the American Statistical Association},
+  115:2037--2052.
+
+\bibitem[{Chicago Metropolitan Agency for Planning},
+  2017]{Chicago_community_data_snapshots}
+{Chicago Metropolitan Agency for Planning} (2017).
+\newblock {Chicago community data snapshots}.
+\newblock
+  \url{https://www.cmap.illinois.gov/documents/10180/126764/_Combined_AllCCAs.pdf/}.
+\newblock Accessed: 2020-09-18.
+
+\bibitem[Cressie, 1993]{Cressie_1993_stats_for_spatial_data}
+Cressie, N. (1993).
+\newblock {\em {Statistics for Spatial Data}}.
+\newblock John Wiley \& Sons, Hoboken, NJ, revised edition.
+
+\bibitem[Cressie, 2006]{Cressie_2006_block_kriging_lognormal_spatial_processes}
+Cressie, N. (2006).
+\newblock {Block kriging for lognormal spatial processes}.
+\newblock {\em {Mathematical Geology}}, 38:413--443.
+
+\bibitem[Cressie and Johannesson, 2008]{Cressie_Johannesson_2008_FRK}
+Cressie, N. and Johannesson, G. (2008).
+\newblock {Fixed rank kriging for very large spatial data sets}.
+\newblock {\em {Journal of the Royal Statistical Society}}, 70:209--226.
+
+\bibitem[Datta et~al., 2016]{Datta_2016_NNGP_spatial}
+Datta, A., Banerjee, S., Finley, A.~O., and Gelfand, A.~E. (2016).
+\newblock {Hierarchical nearest-neighbour Gaussian process models for large
+  geostatistical datasets}.
+\newblock {\em Journal of the American Statistical Association}, 111:800--812.
+
+\bibitem[Diaconis and Ylvisaker,
+  1979]{Diaconis_Ylvisaker_1979_conjugate_prior_natural_exponential_family}
+Diaconis, P. and Ylvisaker, D. (1979).
+\newblock {Conjugate priors for exponential families}.
+\newblock {\em {Annals of Statistics}}, 7:269--281.
+
+\bibitem[Diggle et~al., 1998]{Diggle_1998_spatial_GLMM}
+Diggle, P.~J., Tawn, J.~A., and Moyeed, R.~A. (1998).
+\newblock {Model-based geostatistics}.
+\newblock {\em Journal of the Royal Statistical Society}, 47:299--350.
+
+\bibitem[Finley et~al., 2015]{Finley_2015_spBayes}
+Finley, A.~O., Banerjee, S., and Gelfand, A.~E. (2015).
+\newblock {\texttt{spBayes}} for large univariate and multivariate
+  point-referenced spatio-temporal data models.
+\newblock {\em Journal of Statistical Software}, 63:1--28.
+
+\bibitem[Finley et~al., 2020]{Finley_2020_spNNGP}
+Finley, A.~O., Datta, A., and Banerjee, S. (2020).
+\newblock {\texttt{spNNGP} \texttt{R} package for nearest neighbour Gaussian
+  process models}.
+\newblock \textit{arXiv:2001.09111}.
+
+\bibitem[Furrer et~al., 2006]{Furrer_2006_CovarianceTapering}
+Furrer, R., Nychka, D., and Genton, M.~G. (2006).
+\newblock Covariance tapering for interpolation of large spatial datasets.
+\newblock {\em Journal of Computational and Graphical Statistics}, 15:502--523.
+
+\bibitem[Gneiting et~al., 2007]{Gneiting_2007_scoring_rules}
+Gneiting, T., Balabdaoui, F., and Raftery, A.~E. (2007).
+\newblock {Probabilistic forecasts, calibration and sharpness}.
+\newblock {\em {Journal of the Royal Statistical Society}}, 69:243--268.
+
+\bibitem[Guennebaud et~al., 2010]{Eigen}
+Guennebaud, G., Jacob, B., et~al. (2010).
+\newblock {\texttt{Eigen} v3}.
+\newblock \url{http://eigen.tuxfamily.org}.
+\newblock Accessed: 11-05-2019.
+
+\bibitem[Heaton et~al., 2019]{Heaton_2019_comparative_study}
+Heaton, M.~J., Datta, A., Finley, A.~O., Furrer, R., Guinness, J., Guhaniyogi,
+  R., Gerber, F., Gramacy, R.~B., Hammerling, D., Katzfuss, M., Lindgren, F.,
+  Nychka, D.~W., Sun, F., and Zammit-Mangion, A. (2019).
+\newblock {A case study competition among methods for analyzing large spatial
+  data}.
+\newblock {\em Journal of Agricultural, Biological and Environmental
+  Statistics}, 24:398--425.
+
+\bibitem[Hersbach, 2000]{Hersbach_2000_CRPS}
+Hersbach, H. (2000).
+\newblock Decomposition of the continuous ranked probability score for ensemble
+  prediction systems.
+\newblock {\em American Meteorological Society}, 15:559--570.
+
+\bibitem[Huang et~al.,
+  2009]{Huang_2009_multivar_intrinsic_rand_functions_cokriging}
+Huang, C., Yao, Y., Cressie, N., and Hsing, T. (2009).
+\newblock {Multivariate intrinsic random functions for cokriging}.
+\newblock {\em {International Association for Mathematical Geosciences}},
+  41:887--904.
+
+\bibitem[Kristensen et~al., 2016]{Kristensen_2016_TMB}
+Kristensen, K., Nielsen, A., Berg, C.~W., Skaug, H., and Bell, B.~M. (2016).
+\newblock {\texttt{TMB}: Automatic differentiation and Laplace approximation}.
+\newblock {\em Journal of Statistical Software}, 70:1--21.
+
+\bibitem[Lee and Park,
+  2020]{Lee_2020_partitioned_domain_basis_function_non_Gaussian}
+Lee, B.~S. and Park, J. (2020).
+\newblock {A scalable partitioned approach to model massive nonstationary
+  non-Gaussian spatial datasets}.
+\newblock \textit{arXiv:2001.09111}.
+
+\bibitem[Lindgren and Rue, 2011]{Lindgren_Rue_2011_GF_GMRF_SPDE}
+Lindgren, F. and Rue, H. (2011).
+\newblock {An explicit link between Gaussian fields and Gaussian Markov random
+  fields: The stochastic partial differential equation approach}.
+\newblock {\em Journal of the Royal Statistical Society}, 73:423--498.
+
+\bibitem[Lindgren and Rue, 2015]{Lindgren_2015_R-INLA}
+Lindgren, F. and Rue, H. (2015).
+\newblock {Bayesian spatial modelling with \texttt{R-INLA}.}
+\newblock {\em Journal of Statistical Software}, 63:1--25.
+
+\bibitem[Lopes et~al.,
+  2011]{Lopes_2011_spatial_GLMM_reduced_rank_factor_analytic_model}
+Lopes, H.~F., Gamerman, D., and Salazar, E. (2011).
+\newblock {Generalized spatial dynamic factor models}.
+\newblock {\em Computational Statistics and Data Analysis}, 55:1319--1330.
+
+\bibitem[McCullagh and Nelder, 1989]{McCullagh_Nelder_1989_GLM}
+McCullagh, P. and Nelder, J.~A. (1989).
+\newblock {\em {Generalized Linear Models}}.
+\newblock Chapman \& Hall, London, UK.
+
+\bibitem[{MODIS Characterization Support Team}, 2015]{MODIS_satelitte}
+{MODIS Characterization Support Team} (2015).
+\newblock {MODIS 500m Calibrated Radiance Product. NASA MODIS Adaptive
+  Processing System, Goddard Space Flight Center, USA.}
+\newblock \url{https://mcst.gsfc.nasa.gov/}.
+
+\bibitem[Nychka et~al., 2016]{Nychka_2016_LatticeKrig}
+Nychka, D., Hammerling, D., Sain, S., and Lenssen, N. (2016).
+\newblock {\em LatticeKrig: Multiresolution Kriging Based on Markov Random
+  Fields}.
+\newblock \texttt{R} package version 6.2.
+
+\bibitem[Papritz, 2020]{georob}
+Papritz, A. (2020).
+\newblock {\em \texttt{georob}: Robust Geostatistical Analysis of Spatial
+  Data}.
+\newblock \texttt{R} package version 0.3-13.
+
+\bibitem[Paul and Cressie,
+  2011]{Paul_Cressie_2011_lognormal_kriging_block_prediction}
+Paul, R. and Cressie, N. (2011).
+\newblock {Lognormal block kriging for contaminated soil}.
+\newblock {\em {European Journal of Soil Science}}, 62:337--345.
+
+\bibitem[Pebesma, 2018]{Pebesma_2018_sf_package}
+Pebesma, E. (2018).
+\newblock {Simple Features for R: Standardized Support for Spatial Vector
+  Data}.
+\newblock {\em {The R Journal}}, 10:439--446.
+
+\bibitem[Pebesma, 2020]{CRAN_Task_View:spatio-temporal}
+Pebesma, E. (2020).
+\newblock {CRAN Task View: Handling and Analyzing Spatio-Temporal Data}.
+\newblock \url{https://CRAN.R-project.org/view=SpatioTemporal}.
+\newblock Accessed: 2020-04-03.
+
+\bibitem[Pebesma and Bivand, 2005]{Pebesma_2005_sp_package}
+Pebesma, E.~J. and Bivand, R.~S. (2005).
+\newblock Classes and methods for spatial data in {R}.
+\newblock {\em R News}, 5:9--13.
+
+\bibitem[Polson et~al., 2013]{Polson_2013_Polya-Gamma_Bayesian_logistic}
+Polson, N.~G., Scott, J.~G., and Windle, J. (2013).
+\newblock {Bayesian inference for logistic models using Pólya–Gamma latent
+  variables}.
+\newblock {\em Journal of the American Statistical Association},
+  108:1339--1349.
+
+\bibitem[{\texttt{R} Core Team}, 2020]{Rcoreteam_2020}
+{\texttt{R} Core Team} (2020).
+\newblock {\em R: A Language and Environment for Statistical Computing}.
+\newblock \texttt{R} Foundation for Statistical Computing, Vienna, Austria.
+
+\bibitem[Rue and Martino, 2007]{Rue_Martino_2007_Bayesian_inference_for_GMRF}
+Rue, H. and Martino, S. (2007).
+\newblock {Approximate Bayesian inference for hierarchical Gaussian Markov
+  random fields models}.
+\newblock {\em Journal of Statistical Planning and Inference}, 137:3177--3192.
+
+\bibitem[Rue et~al., 2009]{Rue_2009_INLA}
+Rue, H., Martino, S., and Chopin, N. (2009).
+\newblock {Approximate Bayesian inference for latent Gaussian models by using
+  integrated nested Laplace approximations}.
+\newblock {\em Journal of the Royal Statistical Society}, 71:3319--392.
+
+\bibitem[Searle, 1982]{Searle_1982_MAUFS}
+Searle, S.~R. (1982).
+\newblock {\em {Matrix Algebra Useful For Statistics}}.
+\newblock John Wiley \& Sons, Hoboken, NJ.
+
+\bibitem[Sengupta and Cressie, 2013]{Sengupta_Cressie_2013_spatial_GLMM_FRK}
+Sengupta, A. and Cressie, N. (2013).
+\newblock {Hierarchical statistical modelling of big spatial datasets using the
+  exponential family of distributions}.
+\newblock {\em Spatial Statistics}, 4:14--44.
+
+\bibitem[Sengupta and Cressie, 2016]{Sengupta_2016_MODIS}
+Sengupta, A. and Cressie, N. (2016).
+\newblock {Predictive inference for big, spatial, non-Gaussian data: MODIS
+  cloud data and its change-of-support}.
+\newblock {\em Australian \& New Zealand Journal of Statistics}, 58:15--45.
+
+\bibitem[Takahashi et~al., 1973]{Takahashi(1973)SparseInverseSubsetAlgorithm}
+Takahashi, K., Fagan, J., and Chin, M. (1973).
+\newblock Formation of a sparse bus impedance matrix and its application to
+  short circuit study.
+\newblock In {\em 8th PICA Conference Proceedings}, pages 16--29, Minneapolis,
+  Minnesota.
+
+\bibitem[{The University of Chicago Library},
+  2020]{Chicago_library_census_data_info}
+{The University of Chicago Library} (2020).
+\newblock {Spatially Referenced Census Data for the City of Chicago: Sources
+  Available at or through the University of Chicago Library}.
+\newblock
+  \url{https://www.lib.uchicago.edu/e/collections/maps/censusinfo.html}.
+\newblock Accessed: 2020-09-15.
+
+\bibitem[{Urban Center for Computation and Data and University of Chicago},
+  2020]{Plenario_open_source_website}
+{Urban Center for Computation and Data and University of Chicago} (2020).
+\newblock {Plenario}.
+\newblock http://plenar.io/explore/discover.
+\newblock Accessed: 11-09-2020.
+
+\bibitem[Wood, 2001]{Wood_2001_mgcv}
+Wood, S. (2001).
+\newblock {\texttt{mgcv}: GAMs and generalized ridge regression for
+  \texttt{R}}.
+\newblock {\em {\texttt{R} News}}, 1:20--25.
+
+\bibitem[Wood, 2017]{Wood_2017_GAM:R}
+Wood, S. (2017).
+\newblock {\em Generalized Additive Models: An Introduction with \texttt{R}}.
+\newblock Chapman and Hall/CRC, Boca Raton, FL, 2nd edition.
+
+\bibitem[Zammit-Mangion, 2018]{sparseinv_Package}
+Zammit-Mangion, A. (2018).
+\newblock {\em \texttt{sparseinv}: Computation of the sparse inverse subset}.
+\newblock \texttt{R} package version 0.1.3.
+
+\bibitem[Zammit-Mangion and Cressie, 2021]{FRK_paper}
+Zammit-Mangion, A. and Cressie, N. (2021).
+\newblock {\texttt{FRK}: an \texttt{R} package for spatial and spatio-temporal
+  prediction with large datasets}.
+\newblock {\em Journal of Statistical Software}, In press.
+
+\bibitem[Zammit-Mangion et~al.,
+  2021]{ZammitMangion_2021_Deep_compositional_spatial_model}
+Zammit-Mangion, A., Ng, T. L.~J., Vu, Q., and Filippone, M. (2021).
+\newblock {Deep compositional spatial models}.
+\newblock {\em Journal of the American Statistical Association}, In press.
+
+\bibitem[Zammit-Mangion and Rougier,
+  2018]{Zammit-Mangion_Rougier_2018_sparse_inverse_subset}
+Zammit-Mangion, A. and Rougier, J. (2018).
+\newblock {A sparse linear algebra algorithm for fast computation of prediction
+  variances with Gaussian Markov random fields}.
+\newblock {\em Computational Statistics \& Data Analysis}, 123:116--130.
+
+\end{thebibliography}
