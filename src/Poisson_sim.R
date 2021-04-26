@@ -66,7 +66,7 @@ BAUs$fs <- rep(1, length(BAUs))
 ## Convert Poisson_simulated to Spatial* obejct
 coordinates(Poisson_simulated) <- ~ x + y
 
-S <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
+S <- FRK(f = Z ~ 1, data = list(Poisson_simulated),
          BAUs = BAUs, response = "poisson", link = "log")
 
 pred <- predict(S, type = c("link", "mean"))
@@ -77,7 +77,7 @@ plot_list <- plot(S, pred, Poisson_simulated)
 ## True mean process
 plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +
   scale_fill_distiller(palette = "Spectral") +
-  labs(fill = expression(mu("\U00B7"))) +
+  labs(fill = bquote("\U03BC(\U00B7)")) +
   theme_bw() + coord_fixed()
 
 ## Adjust the breaks

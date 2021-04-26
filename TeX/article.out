@@ -12,3 +12,15 @@
 \BOOKMARK [2][-]{Subsection.3.1.Non-Gaussian, areally-referenced spatial data and change of support.2}{Non-Gaussian, areally-referenced spatial data and change of support}{Section.2.Usage of new features.1}% 12
 \BOOKMARK [2][-]{Subsection.3.2.Spatio-temporal extensions.2}{Spatio-temporal extensions}{Section.2.Usage of new features.1}% 13
 \BOOKMARK [2][-]{Subsection.3.3.Support for increased number of basis functions.2}{Support for increased number of basis functions}{Section.2.Usage of new features.1}% 14
+\BOOKMARK [1][-]{Section.3.Application and comparison studies.1}{Application and comparison studies}{}% 15
+\BOOKMARK [2][-]{Subsection.4.0.Comparative study: MODIS cloud data.2}{Comparative study: MODIS cloud data}{Section.3.Application and comparison studies.1}% 16
+\BOOKMARK [2][-]{Subsection.4.1.Block prediction: Contaminated soil.2}{Block prediction: Contaminated soil}{Section.3.Application and comparison studies.1}% 17
+\BOOKMARK [2][-]{Subsection.4.2.Spatial change of support: Poverty in Sydney.2}{Spatial change of support: Poverty in Sydney}{Section.3.Application and comparison studies.1}% 18
+\BOOKMARK [2][-]{Subsection.4.3.Non-Gaussian spatio-temporal data: Crime in Chicago.2}{Non-Gaussian spatio-temporal data: Crime in Chicago}{Section.3.Application and comparison studies.1}% 19
+\BOOKMARK [1][-]{Section.4.Conclusion.1}{Conclusion}{}% 20
+\BOOKMARK [1][-]{Section..Parametrisations of the basis-function coefficients.1}{Parametrisations of the basis-function coefficients}{}% 21
+\BOOKMARK [2][-]{Subsection.A.0.Covariance matrix.2}{Covariance matrix}{Section..Parametrisations of the basis-function coefficients.1}% 22
+\BOOKMARK [2][-]{Subsection.A.1.Precision matrix.2}{Precision matrix}{Section..Parametrisations of the basis-function coefficients.1}% 23
+\BOOKMARK [1][-]{Section.A.Distributions with size parameters.1}{Distributions with size parameters}{}% 24
+\BOOKMARK [1][-]{Section.B.Scoring rules.1}{Scoring rules}{}% 25
+\BOOKMARK [1][-]{Section.C.Sydney poverty lines.1}{Sydney poverty lines}{}% 26

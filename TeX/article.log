@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.5.21)  26 APR 2021 10:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020) (preloaded format=pdflatex 2020.5.21)  26 APR 2021 11:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -610,17 +610,19 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 170.
 LaTeX Info: Redefining \pageref on input line 170.
 LaTeX Info: Redefining \nameref on input line 170.
+ (./article.out) (./article.out)
 \@outlinefile=\write4
 \openout4 = `article.out'.
 
-<jsslogo.jpg, id=4, 540.0175pt x 393.47pt>
+<jsslogo.jpg, id=108, 540.0175pt x 393.47pt>
 File: jsslogo.jpg Graphic file (type jpg)
 <use jsslogo.jpg>
 Package pdftex.def Info: jsslogo.jpg  used on input line 170.
 (pdftex.def)             Requested size: 89.80768pt x 65.43607pt.
 LaTeX Font Info:    Trying to load font information for T1+pzc on input line 17
 0.
- (/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/t1pzc.fd
+
+(/usr/local/texlive/2020/texmf-dist/tex/latex/psnfss/t1pzc.fd
 File: t1pzc.fd 2001/06/04 font definitions for T1/pzc.
 )
 LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <28> not available
@@ -697,43 +699,11 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 {/usr/local/texlive/2020/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./jsslo
 go.jpg>]
-
-Package natbib Warning: Citation `FRK_paper' on page 2 undefined on input line 
-194.
-
-
-Package natbib Warning: Citation `Rcoreteam_2020' on page 2 undefined on input 
-line 194.
-
-
-Package natbib Warning: Citation `Cressie_1993_stats_for_spatial_data' on page 
-2 undefined on input line 203.
-
-
-Package natbib Warning: Citation `Diggle_1998_spatial_GLMM' on page 2 undefined
- on input line 205.
-
-
-Package natbib Warning: Citation `Lopes_2011_spatial_GLMM_reduced_rank_factor_a
-nalytic_model' on page 2 undefined on input line 207.
-
-
-Package natbib Warning: Citation `Lindgren_Rue_2011_GF_GMRF_SPDE' on page 2 und
-efined on input line 209.
-
-
-Package natbib Warning: Citation `Sengupta_Cressie_2013_spatial_GLMM_FRK' on pa
-ge 2 undefined on input line 210.
-
-
-Package natbib Warning: Citation `Cressie_Johannesson_2008_FRK' on page 2 undef
-ined on input line 210.
-
-
-Package natbib Warning: Citation `Lee_2020_partitioned_domain_basis_function_no
-n_Gaussian' on page 2 undefined on input line 211.
-
-
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
+94.
+(/usr/local/texlive/2020/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -742,48 +712,6 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [2]
-
-Package natbib Warning: Citation `CRAN_Task_View:spatial' on page 3 undefined o
-n input line 222.
-
-
-Package natbib Warning: Citation `CRAN_Task_View:spatio-temporal' on page 3 und
-efined on input line 222.
-
-
-Package natbib Warning: Citation `Lindgren_2015_R-INLA' on page 3 undefined on 
-input line 223.
-
-
-Package natbib Warning: Citation `Rue_2009_INLA' on page 3 undefined on input l
-ine 223.
-
-
-Package natbib Warning: Citation `Bachl_2019_inlabru' on page 3 undefined on in
-put line 225.
-
-
-Package natbib Warning: Citation `Wood_2017_GAM:R' on page 3 undefined on input
- line 226.
-
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-28.
-(/usr/local/texlive/2020/texmf-dist/tex/latex/lm/t1lmtt.fd
-File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-
-Package natbib Warning: Citation `Finley_2015_spBayes' on page 3 undefined on i
-nput line 228.
-
-
-Package natbib Warning: Citation `Finley_2020_spNNGP' on page 3 undefined on in
-put line 230.
-
-
-Package natbib Warning: Citation `Datta_2016_NNGP_spatial' on page 3 undefined 
-on input line 230.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -792,68 +720,7 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [3]
-
-LaTeX Warning: Reference `SEC:Methodology' on page 4 undefined on input line 25
-4.
-
-
-Package natbib Warning: Citation `Kristensen_2016_TMB' on page 4 undefined on i
-nput line 254.
-
-
-LaTeX Warning: Reference `SEC:IllustrativeExample' on page 4 undefined on input
- line 255.
-
-
-LaTeX Warning: Reference `SEC:ApplicationStudy' on page 4 undefined on input li
-ne 257.
-
-
-LaTeX Warning: Reference `SEC:Conclusion' on page 4 undefined on input line 259
-.
-
-
-Package natbib Warning: Citation `Diggle_1998_spatial_GLMM' on page 4 undefined
- on input line 263.
-
-
-Package natbib Warning: Citation `Cressie_Johannesson_2008_FRK' on page 4 undef
-ined on input line 265.
-
-
-Package natbib Warning: Citation `Sengupta_Cressie_2013_spatial_GLMM_FRK' on pa
-ge 4 undefined on input line 265.
-
-
-LaTeX Warning: Reference `subsection:04-01:ProcessLayer' on page 4 undefined on
- input line 265.
-
-
-LaTeX Warning: Reference `subsection:04-02:DataLayer' on page 4 undefined on in
-put line 267.
-
-
-LaTeX Warning: Reference `subsection:02-03:Estimation' on page 4 undefined on i
-nput line 268.
-
-
-LaTeX Warning: Reference `subsection:04-03:Prediction' on page 4 undefined on i
-nput line 268.
-
-
-LaTeX Warning: Reference `sec:spatio-temporal' on page 4 undefined on input lin
-e 269.
-
-
-Package natbib Warning: Citation `FRK_paper' on page 4 undefined on input line 
-289.
-
-
-LaTeX Warning: Reference `sec:spatio-temporal' on page 4 undefined on input lin
-e 292.
-
-
-Underfull \vbox (badness 1701) has occurred while \output is active []
+Underfull \vbox (badness 3482) has occurred while \output is active []
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -861,20 +728,7 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [4]
-
-LaTeX Warning: Reference `eqn:04-01:Y(s)' on page 5 undefined on input line 299
-.
-
-
-Package natbib Warning: Citation `FRK_paper' on page 5 undefined on input line 
-313.
-
-
-LaTeX Warning: Reference `eqn:04-01:Y(s)' on page 5 undefined on input line 317
-.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 4726) has occurred while \output is active []
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -882,28 +736,11 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [5]
-
-LaTeX Warning: Reference `Appendix:CovarianceTapering' on page 6 undefined on i
-nput line 333.
-
-
-Package natbib Warning: Citation `McCullagh_Nelder_1989_GLM' on page 6 undefine
-d on input line 406.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 6 []
  []
 
 [6]
-
-Package natbib Warning: Citation `McCullagh_Nelder_1989_GLM' on page 7 undefine
-d on input line 455.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -912,19 +749,6 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [7]
-
-LaTeX Warning: Reference `sec:spatio-temporal' on page 8 undefined on input lin
-e 470.
-
-
-Package natbib Warning: Citation `Kristensen_2016_TMB' on page 8 undefined on i
-nput line 516.
-
-
-LaTeX Warning: Reference `eqn:04:Joint_Likelihood' on page 8 undefined on input
- line 540.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -934,47 +758,8 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 
 [8]
 
-LaTeX Warning: Reference `eqn:02-04:LikelihoodTheta' on page 9 undefined on inp
-ut line 614.
-
-
-LaTeX Warning: Reference `eqn:04:Joint_Likelihood' on page 9 undefined on input
- line 630.
-
-
-LaTeX Warning: Reference `eqn:02-04:LikelihoodTheta' on page 9 undefined on inp
-ut line 632.
-
-
-LaTeX Warning: Reference `subsection:04-03:Prediction' on page 9 undefined on i
-nput line 642.
-
-
 LaTeX Font Warning: Font shape `T1/lmr/b/it' in size <12> not available
 (Font)              Font shape `T1/lmr/b/sl' tried instead on input line 776.
-
-
-LaTeX Warning: Reference `eqn:04:Joint_Log_Likelihood' on page 9 undefined on i
-nput line 778.
-
-
-Package natbib Warning: Citation `Kristensen_2016_TMB' on page 9 undefined on i
-nput line 778.
-
-
-Package natbib Warning: Citation `CppAD_Package' on page 9 undefined on input l
-ine 779.
-
-
-Package natbib Warning: Citation `Eigen' on page 9 undefined on input line 779.
-
-
-
-Package natbib Warning: Citation `Matrix_Package' on page 9 undefined on input 
-line 779.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -982,11 +767,6 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [9]
-
-LaTeX Warning: Reference `subsection:02-03:Estimation' on page 10 undefined on 
-input line 930.
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -995,18 +775,6 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [10]
-
-LaTeX Warning: Reference `eqn:Y_MC_simple' on page 11 undefined on input line 9
-74.
-
-
-LaTeX Warning: Reference `sec:spatialCOS' on page 11 undefined on input line 10
-20.
-
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 11
  []
@@ -1020,45 +788,15 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [12]
-
-LaTeX Warning: Reference `sec:ST_example' on page 13 undefined on input line 11
-37.
-
-
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 13
  []
 
 [13]
-
-LaTeX Warning: Reference `tab:new_arguments_in_functions' on page 14 undefined 
-on input line 1158.
-
-
-LaTeX Warning: Reference `table:response_and_links' on page 14 undefined on inp
-ut line 1159.
-
-
-LaTeX Warning: Reference `sec:03-01:Poisson' on page 14 undefined on input line
- 1160.
-
-
-LaTeX Warning: Reference `sec:03:Additonal_features' on page 14 undefined on in
-put line 1162.
-
-
-LaTeX Warning: Reference `sec:3:increased_resolution' on page 14 undefined on i
-nput line 1163.
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 1182--1183
 []|\T1/lmr/m/n/10.95 Optimising func-tion when \T1/lmtt/m/n/10.95 method = "TMB
 " \T1/lmr/m/n/10.95 (de-fault
  []
-
-
-LaTeX Warning: Reference `Appendix:CovarianceTapering' on page 14 undefined on 
-input line 1183.
 
 
 Underfull \hbox (badness 2529) in paragraph at lines 1184--1185
@@ -1081,108 +819,44 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <9> on input line 1228.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 1228.
-
-LaTeX Warning: Reference `sec:Distributions with size parameters' on page 14 un
-defined on input line 1228.
-
-
-LaTeX Warning: Reference `fig:Poisson_true_and_Z' on page 14 undefined on input
- line 1252.
-
-<Images/Poisson_true_and_Z.pdf, id=121, 722.7pt x 289.08pt>
-File: Images/Poisson_true_and_Z.pdf Graphic file (type pdf)
-<use Images/Poisson_true_and_Z.pdf>
-Package pdftex.def Info: Images/Poisson_true_and_Z.pdf  used on input line 1263
-.
+<img/Poisson_sim_true_process_and_data.png, id=348, 722.7pt x 289.08pt>
+File: img/Poisson_sim_true_process_and_data.png Graphic file (type png)
+<use img/Poisson_sim_true_process_and_data.png>
+Package pdftex.def Info: img/Poisson_sim_true_process_and_data.png  used on inp
+ut line 1263.
 (pdftex.def)             Requested size: 331.99031pt x 132.79755pt.
-
-LaTeX Warning: Reference `sec:03-01:Poisson' on page 14 undefined on input line
- 1265.
-
-
-LaTeX Warning: Reference `sec:03-01:Poisson' on page 14 undefined on input line
- 1265.
-
-
-Package natbib Warning: Citation `FRK_paper' on page 14 undefined on input line
- 1272.
-
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 14 []
  []
 
-[14 <./Images/Poisson_true_and_Z.pdf>]
+[14 <./img/Poisson_sim_true_process_and_data.png (PNG copy)>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 15
  []
 
 [15]
-
-LaTeX Warning: Reference `tab:new_arguments_in_functions' on page 16 undefined 
-on input line 1284.
-
-
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 16 []
  []
 
 [16]
-
-Package natbib Warning: Citation `Wickham_2016_ggplot2' on page 17 undefined on
- input line 1300.
-
-
-Package natbib Warning: Citation `Kassambara_2020_ggpubr' on page 17 undefined 
-on input line 1304.
-
-
-LaTeX Warning: Reference `fig:Poisson_nres3' on page 17 undefined on input line
- 1304.
-
-<Images/Poisson_nres3.pdf, id=173, 939.51pt x 289.08pt>
-File: Images/Poisson_nres3.pdf Graphic file (type pdf)
-<use Images/Poisson_nres3.pdf>
-Package pdftex.def Info: Images/Poisson_nres3.pdf  used on input line 1311.
+<img/Poisson_sim.png, id=384, 939.51pt x 289.08pt>
+File: img/Poisson_sim.png Graphic file (type png)
+<use img/Poisson_sim.png>
+Package pdftex.def Info: img/Poisson_sim.png  used on input line 1311.
 (pdftex.def)             Requested size: 442.65375pt x 136.19844pt.
-
-LaTeX Warning: Reference `fig:Poisson_true_and_Z' on page 17 undefined on input
- line 1313.
-
-
-LaTeX Warning: Reference `fig:Poisson_true_and_Z' on page 17 undefined on input
- line 1313.
-
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 17
  []
 
 [17]
-
-LaTeX Warning: Reference `fig:03-02-negative-binomial_data' on page 18 undefine
-d on input line 1341.
-
-<Images/03-02-negative_binomial_spatialCOS_data.png, id=181, 939.51pt x 289.08p
-t>
-File: Images/03-02-negative_binomial_spatialCOS_data.png Graphic file (type png
-)
-<use Images/03-02-negative_binomial_spatialCOS_data.png>
-Package pdftex.def Info: Images/03-02-negative_binomial_spatialCOS_data.png  us
-ed on input line 1355.
+<img/Negbinom_sim_data.png, id=397, 939.51pt x 289.08pt>
+File: img/Negbinom_sim_data.png Graphic file (type png)
+<use img/Negbinom_sim_data.png>
+Package pdftex.def Info: img/Negbinom_sim_data.png  used on input line 1355.
 (pdftex.def)             Requested size: 442.65375pt x 136.19844pt.
-
-LaTeX Warning: Reference `sec:03-03:negative-binomial' on page 18 undefined on 
-input line 1362.
-
-
-LaTeX Warning: Reference `sec:03-03:negative-binomial' on page 18 undefined on 
-input line 1362.
-
-
-LaTeX Warning: Reference `subsection:04-01:ProcessLayer' on page 18 undefined o
-n input line 1379.
-
 
 Underfull \vbox (badness 2495) has occurred while \output is active []
 
@@ -1191,128 +865,46 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 18 []
  []
 
-[18 <./Images/Poisson_nres3.pdf>]
-<Images/03-02-negative_binomial_spatialCOS.png, id=197, 939.51pt x 289.08pt>
-File: Images/03-02-negative_binomial_spatialCOS.png Graphic file (type png)
-<use Images/03-02-negative_binomial_spatialCOS.png>
-Package pdftex.def Info: Images/03-02-negative_binomial_spatialCOS.png  used on
- input line 1406.
+[18 <./img/Poisson_sim.png (PNG copy)>]
+<img/Negbinom_sim_BAU_predictions.png, id=406, 939.51pt x 289.08pt>
+File: img/Negbinom_sim_BAU_predictions.png Graphic file (type png)
+<use img/Negbinom_sim_BAU_predictions.png>
+Package pdftex.def Info: img/Negbinom_sim_BAU_predictions.png  used on input li
+ne 1406.
 (pdftex.def)             Requested size: 442.65375pt x 136.19844pt.
-
-
-LaTeX Warning: Reference `sec:03-03:negative-binomial' on page 19 undefined on 
-input line 1408.
-
-
-LaTeX Warning: Reference `sec:03-03:negative-binomial' on page 19 undefined on 
-input line 1408.
-
-
-LaTeX Warning: Reference `fig:03-02-negative-binomial' on page 19 undefined on 
-input line 1412.
-
-
-LaTeX Warning: Reference `fig:03-02-negative-binomial_data' on page 19 undefine
-d on input line 1414.
-
-
-LaTeX Warning: Reference `sec:03-01:Poisson' on page 19 undefined on input line
- 1415.
-
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 19
  []
 
-[19 <./Images/03-02-negative_binomial_spatialCOS_data.png (PNG copy)>]
-
-LaTeX Warning: Reference `fig:03-02-negative-binomial_polygons' on page 20 unde
-fined on input line 1426.
-
-<Images/03-02-negative_binomial_spatialCOS_polygons.png, id=204, 722.7pt x 216.
-81pt>
-File: Images/03-02-negative_binomial_spatialCOS_polygons.png Graphic file (type
- png)
-<use Images/03-02-negative_binomial_spatialCOS_polygons.png>
-Package pdftex.def Info: Images/03-02-negative_binomial_spatialCOS_polygons.png
-  used on input line 1432.
+[19 <./img/Negbinom_sim_data.png (PNG copy)>]
+<img/Negbinom_sim_arbitrary_polygon_predictions.png, id=419, 722.7pt x 216.81pt
+>
+File: img/Negbinom_sim_arbitrary_polygon_predictions.png Graphic file (type png
+)
+<use img/Negbinom_sim_arbitrary_polygon_predictions.png>
+Package pdftex.def Info: img/Negbinom_sim_arbitrary_polygon_predictions.png  us
+ed on input line 1432.
 (pdftex.def)             Requested size: 442.65375pt x 132.79645pt.
-
-LaTeX Warning: Reference `sec:03-03:negative-binomial' on page 20 undefined on 
-input line 1433.
-
-
-LaTeX Warning: Reference `sec:03-03:negative-binomial' on page 20 undefined on 
-input line 1433.
-
-
-LaTeX Warning: Reference `sec:ST_example' on page 20 undefined on input line 14
-49.
-
-
-Underfull \vbox (badness 1694) has occurred while \output is active []
-
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 20 []
  []
 
-[20 <./Images/03-02-negative_binomial_spatialCOS.png (PNG copy)>]
-
-LaTeX Warning: Reference `app:ScoringRules' on page 21 undefined on input line 
-1460.
-
-
-LaTeX Warning: Reference `sec:03-01:Poisson' on page 21 undefined on input line
- 1464.
-
-
-LaTeX Warning: Reference `tab:03-02:PoissonScoringRules' on page 21 undefined o
-n input line 1464.
-
-
-LaTeX Warning: Reference `eqn:04-01:Y(s)' on page 21 undefined on input line 14
-67.
-
-
-Package natbib Warning: Citation `Heaton_2019_comparative_study' on page 21 und
-efined on input line 1520.
-
-
-Package natbib Warning: Citation `Heaton_2019_comparative_study' on page 21 und
-efined on input line 1520.
-
-
+[20 <./img/Negbinom_sim_BAU_predictions.png (PNG copy)>]
 Overfull \hbox (20.62491pt too wide) in paragraph at lines 1522--1542
  [] 
  []
 
 
-Package natbib Warning: Citation `Heaton_2019_comparative_study' on page 21 und
-efined on input line 1544.
-
-
-Package natbib Warning: Citation `Heaton_2019_comparative_study' on page 21 und
-efined on input line 1552.
-
-
-Package natbib Warning: Citation `Heaton_2019_comparative_study' on page 21 und
-efined on input line 1555.
-
-
-LaTeX Warning: Reference `tab:Heaton_comparison' on page 21 undefined on input 
-line 1556.
-
-
-Package natbib Warning: Citation `Heaton_2019_comparative_study' on page 21 und
-efined on input line 1556.
+Underfull \vbox (badness 2443) has occurred while \output is active []
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 21
  []
 
-[21 <./Images/03-02-negative_binomial_spatialCOS_polygons.png (PNG copy)>]
+[21 <./img/Negbinom_sim_arbitrary_polygon_predictions.png (PNG copy)>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
@@ -1321,116 +913,348 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [22]
-
-LaTeX Warning: Reference `sec:04-01:MODIS' on page 23 undefined on input line 1
-582.
-
-
-LaTeX Warning: Reference `sec:block_prediction' on page 23 undefined on input l
-ine 1583.
-
-
-LaTeX Warning: Reference `sec:spatialCOS' on page 23 undefined on input line 15
-84.
-
-
-LaTeX Warning: Reference `sec:ST_example' on page 23 undefined on input line 15
-85.
-
-
-Package natbib Warning: Citation `Lindgren_2015_R-INLA' on page 23 undefined on
- input line 1592.
-
-
-Package natbib Warning: Citation `Finley_2020_spNNGP' on page 23 undefined on i
-nput line 1592.
-
-
-Package natbib Warning: Citation `Finley_2015_spBayes' on page 23 undefined on 
-input line 1592.
-
-
-Package natbib Warning: Citation `Wood_2017_GAM:R' on page 23 undefined on inpu
-t line 1592.
-
-
-Package natbib Warning: Citation `MODIS_satelitte' on page 23 undefined on inpu
-t line 1593.
-
-
-Package natbib Warning: Citation `Sengupta_2016_MODIS' on page 23 undefined on 
-input line 1594.
-
-
-Package natbib Warning: Citation `ZammitMangion_2021_Deep_compositional_spatial
-_model' on page 23 undefined on input line 1594.
-
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
 596.
-(/usr/local/texlive/2020/texmf-dist/tex/latex/lm/ts1lmr.fd
+ (/usr/local/texlive/2020/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
+<img/MODIS_data.png, id=478, 939.51pt x 158.994pt>
+File: img/MODIS_data.png Graphic file (type png)
+<use img/MODIS_data.png>
+Package pdftex.def Info: img/MODIS_data.png  used on input line 1611.
+(pdftex.def)             Requested size: 442.65375pt x 74.90913pt.
 
-LaTeX Warning: Reference `fig:03-04-Modis1' on page 23 undefined on input line 
-1608.
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
-LaTeX Warning: File `../MODIS/FINAL/img/MODIS_data_facet.png' not found on inpu
-t line 1611.
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 23
+ []
+
+[23]
+Underfull \vbox (badness 2435) has occurred while \output is active []
 
 
-! Package pdftex.def Error: File `../MODIS/FINAL/img/MODIS_data_facet.png' not 
-found: using draft setting.
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 24 []
+ []
 
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.1611 ...../MODIS/FINAL/img/MODIS_data_facet.png}
-                                                  
-? X
- 
+[24 <./img/MODIS_data.png (PNG copy)>]
+<img/MODIS_MAR_predictions.png, id=497, 867.24pt x 169.8345pt>
+File: img/MODIS_MAR_predictions.png Graphic file (type png)
+<use img/MODIS_MAR_predictions.png>
+Package pdftex.def Info: img/MODIS_MAR_predictions.png  used on input line 1636
+.
+(pdftex.def)             Requested size: 442.65375pt x 86.687pt.
+<img/MODIS_block_predictions.png, id=500, 867.24pt x 180.675pt>
+File: img/MODIS_block_predictions.png Graphic file (type png)
+<use img/MODIS_block_predictions.png>
+Package pdftex.def Info: img/MODIS_block_predictions.png  used on input line 16
+43.
+(pdftex.def)             Requested size: 442.65375pt x 92.22021pt.
+<img/MODIS_ROC.png, id=507, 433.62pt x 187.902pt>
+File: img/MODIS_ROC.png Graphic file (type png)
+<use img/MODIS_ROC.png>
+Package pdftex.def Info: img/MODIS_ROC.png  used on input line 1682.
+(pdftex.def)             Requested size: 442.65375pt x 191.82666pt.
+
+Underfull \vbox (badness 3503) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 25
+ []
+
+[25 <./img/MODIS_MAR_predictions.png (PNG copy)> <./img/MODIS_block_predictions
+.png>]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 26 []
+ []
+
+[26 <./img/MODIS_ROC.png>]
+<img/Am_data_and_blocks.png, id=539, 982.872pt x 325.215pt>
+File: img/Am_data_and_blocks.png Graphic file (type png)
+<use img/Am_data_and_blocks.png>
+Package pdftex.def Info: img/Am_data_and_blocks.png  used on input line 1768.
+(pdftex.def)             Requested size: 442.65375pt x 146.46945pt.
+
+Underfull \vbox (badness 5578) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 27
+ []
+
+[27]
+<img/Am_comparison.png, id=549, 982.872pt x 325.215pt>
+File: img/Am_comparison.png Graphic file (type png)
+<use img/Am_comparison.png>
+Package pdftex.def Info: img/Am_comparison.png  used on input line 1804.
+(pdftex.def)             Requested size: 442.65375pt x 146.46945pt.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 28 []
+ []
+
+[28 <./img/Am_data_and_blocks.png (PNG copy)>]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 29
+ []
+
+[29 <./img/Am_comparison.png (PNG copy)>]
+<img/Sydney_training_data.png, id=569, 650.43pt x 296.307pt>
+File: img/Sydney_training_data.png Graphic file (type png)
+<use img/Sydney_training_data.png>
+Package pdftex.def Info: img/Sydney_training_data.png  used on input line 1918.
+
+(pdftex.def)             Requested size: 442.65375pt x 201.6579pt.
+
+Underfull \vbox (badness 3009) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 30 []
+ []
+
+[30 <./img/Sydney_training_data.png (PNG copy)>]
+<img/Sydney_SA1_predictions.png, id=578, 686.565pt x 317.988pt>
+File: img/Sydney_SA1_predictions.png Graphic file (type png)
+<use img/Sydney_SA1_predictions.png>
+Package pdftex.def Info: img/Sydney_SA1_predictions.png  used on input line 196
+2.
+(pdftex.def)             Requested size: 442.65375pt x 205.01576pt.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 31
+ []
+
+[31 <./img/Sydney_SA1_predictions.png (PNG copy)>]
+<img/Sydney_SA3_predictions.png, id=586, 686.565pt x 317.988pt>
+File: img/Sydney_SA3_predictions.png Graphic file (type png)
+<use img/Sydney_SA3_predictions.png>
+Package pdftex.def Info: img/Sydney_SA3_predictions.png  used on input line 197
+9.
+(pdftex.def)             Requested size: 442.65375pt x 205.01576pt.
+
+Underfull \vbox (badness 5203) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 32 []
+ []
+
+[32 <./img/Sydney_SA3_predictions.png (PNG copy)>]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 33
+ []
+
+[33]
+<img/Chicago_data_pred_uncertainty.png, id=609, 794.97pt x 505.89pt>
+File: img/Chicago_data_pred_uncertainty.png Graphic file (type png)
+<use img/Chicago_data_pred_uncertainty.png>
+Package pdftex.def Info: img/Chicago_data_pred_uncertainty.png  used on input l
+ine 2125.
+(pdftex.def)             Requested size: 442.65375pt x 281.69858pt.
+<img/Chicago_focused_CAs_time_series.png, id=610, 650.43pt x 433.62pt>
+File: img/Chicago_focused_CAs_time_series.png Graphic file (type png)
+<use img/Chicago_focused_CAs_time_series.png>
+Package pdftex.def Info: img/Chicago_focused_CAs_time_series.png  used on input
+ line 2142.
+(pdftex.def)             Requested size: 442.65375pt x 295.10913pt.
+<img/Chicago_focused_CAs_predictive_distributions.png, id=611, 650.43pt x 433.6
+2pt>
+File: img/Chicago_focused_CAs_predictive_distributions.png Graphic file (type p
+ng)
+<use img/Chicago_focused_CAs_predictive_distributions.png>
+Package pdftex.def Info: img/Chicago_focused_CAs_predictive_distributions.png  
+used on input line 2150.
+(pdftex.def)             Requested size: 442.65375pt x 295.10913pt.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 34 []
+ []
+
+[34]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 35
+ []
+
+[35 <./img/Chicago_data_pred_uncertainty.png (PNG copy)>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 36 []
+ []
+
+[36 <./img/Chicago_focused_CAs_time_series.png (PNG copy)>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 37
+ []
+
+[37 <./img/Chicago_focused_CAs_predictive_distributions.png (PNG copy)>]
+(./article.bbl
+Underfull \hbox (badness 5345) in paragraph at lines 40--45
+[]\T1/lmr/m/n/10.95 Chicago Metropoli-tan Agency for Plan-ning (2017).  ``Chica
+go com-mu-nity data
+ []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 38 []
+ []
+
+[38]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 39
+ []
+
+[39]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 40 []
+ []
+
+[40]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 41
+ []
+
+[41])
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 42 []
+ []
+
+[42]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 43
+ []
+
+[43]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 44 []
+ []
+
+[44]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 45
+ []
+
+[45]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 46 []
+ []
+
+[46]
+LaTeX Font Info:    Trying to load font information for U+bbm on input line 296
+7.
+ (/usr/local/texlive/2020/texmf-dist/tex/latex/bbm-macros/ubbm.fd
+File: ubbm.fd 1999/03/15 V 1.2 Font definition for bbm font - TH
+)
+Underfull \vbox (badness 3907) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 47
+ []
+
+[47]
+Underfull \hbox (badness 1163) in paragraph at lines 3132--3153
+\T1/lmtt/m/n/10.95 poverty-[]lines / 2017 / Poverty-[]Lines-[]Australia-[]March
+-[]Quarter-[]2011 . pdf$[][]\T1/lmr/m/n/10.95 ). Un-for-tu-
+ []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 48 []
+ []
+
+[48]
+LaTeX Font Info:    Font shape `T1/pzc/m/n' in size <13> not available
+(Font)              Font shape `T1/pzc/mb/it' tried instead on input line 3516.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 3516.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 49
+ []
+
+[49]
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 50 []
+ []
+
+[50]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 3516.
+ (./article.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 3516.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 3516.
+
+Package rerunfilecheck Info: File `article.out' has not changed.
+(rerunfilecheck)             Checksum: C4F7E0C2A4529FDD7444A3C7ADB99D6A;3293.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 3516.
+ ) 
 Here is how much of TeX's memory you used:
- 12116 strings out of 480608
- 220849 string characters out of 5903630
- 488967 words of memory out of 5000000
- 27604 multiletter control sequences out of 15000+600000
- 663393 words of font info for 104 fonts, out of 8000000 for 9000
+ 12534 strings out of 480608
+ 232676 string characters out of 5903630
+ 500245 words of memory out of 5000000
+ 27896 multiletter control sequences out of 15000+600000
+ 668123 words of font info for 112 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,17n,46p,927b,792s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/loca
-l/texlive/2020/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2020
-/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2020/texmf-dist/fo
-nts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2020/texmf-dist/fonts/enc/dv
-ips/lm/lm-mathex.enc}{/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/base/8
-r.enc}</usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmb10.pfb></usr
-/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmbo10.pfb></usr/local/tex
-live/2020/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2020/
-texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2020/texmf-dist
-/fonts/type1/public/lm/lmbx9.pfb></usr/local/texlive/2020/texmf-dist/fonts/type
-1/public/lm/lmex10.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/l
-m/lmmi10.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmmi6.pf
-b></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/loc
-al/texlive/2020/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/local/texlive/
-2020/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2020/texm
-f-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2020/texmf-dist/font
-s/type1/public/lm/lmr6.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/publ
-ic/lm/lmr8.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmr9.p
-fb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/l
-ocal/texlive/2020/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texli
-ve/2020/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2020/te
-xmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2020/texmf-dist/f
-onts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1
-/public/lm/lmsy6.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/
-lmsy8.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmsy9.pfb><
-/usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/local
-/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/l
-ocal/texlive/2020/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></u
-sr/local/texlive/2020/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
-Output written on article.pdf (22 pages, 1297270 bytes).
+ 42i,17n,46p,1022b,880s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </Users/MattSainsbury/Library/texlive/2020/texmf-var/fonts/pk/ljfour/public/
+bbm/bbm10.657pk>{/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/lm/lm-ec.en
+c}{/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/local
+/texlive/2020/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2
+020/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2020/texmf-dist
+/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2020/texmf-dist/fonts/enc
+/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/bas
+e/8r.enc}</usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmb10.pfb></
+usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmbo10.pfb></usr/local/
+texlive/2020/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/20
+20/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2020/texmf-d
+ist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2020/texmf-dist/fonts/
+type1/public/lm/lmmi10.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/publ
+ic/lm/lmmi6.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmmi8
+.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></usr/
+local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/tex
+live/2020/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2020/t
+exmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2020/texmf-dist/fo
+nts/type1/public/lm/lmr8.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/pu
+blic/lm/lmr9.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmri
+10.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmri12.pfb></u
+sr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmri9.pfb></usr/local/te
+xlive/2020/texmf-dist/fonts/type1/public/lm/lmro10.pfb></usr/local/texlive/2020
+/texmf-dist/fonts/type1/public/lm/lmss10.pfb></usr/local/texlive/2020/texmf-dis
+t/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2020/texmf-dist/fonts/ty
+pe1/public/lm/lmsy6.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/
+lm/lmsy8.pfb></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmsy9.pf
+b></usr/local/texlive/2020/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></usr/lo
+cal/texlive/2020/texmf-dist/fonts/type1/public/lm/lmtti10.pfb></usr/local/texli
+ve/2020/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/t
+exlive/2020/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/loc
+al/texlive/2020/texmf-dist/fonts/type1/urw/zapfchan/uzcmi8a.pfb>
+Output written on article.pdf (50 pages, 6695403 bytes).
 PDF statistics:
- 338 PDF objects out of 1000 (max. 8388607)
- 265 compressed objects within 3 object streams
- 76 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 915 PDF objects out of 1000 (max. 8388607)
+ 795 compressed objects within 8 object streams
+ 187 named destinations out of 1000 (max. 500000)
+ 299 words of extra memory for PDF output out of 10000 (max. 10000000)
 
