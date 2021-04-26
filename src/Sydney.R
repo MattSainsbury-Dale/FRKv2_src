@@ -276,7 +276,7 @@ plots <- lapply(plots, function(gg) gg + lab1 + lab2)
 
 ggsave( 
   ggpubr::ggarrange(plots$p_prob,# + labs(fill = "Prediction of\nprobability process"), 
-                    plots$interval_90_prob,# + labs(fill = "90% prediction interval width\nof probability process"),
+                    plots$interval90_prob,# + labs(fill = "90% prediction interval width\nof probability process"),
                     nrow = 1, legend = "top"),
   filename = "Sydney_SA1_predictions.png", device = "png", width = 9.5, height = 4.4,
   path = "./img/"
@@ -294,7 +294,7 @@ plots <- lapply(plots, function(gg) gg + lab1 + lab2)
 
 ggsave( 
     ggpubr::ggarrange(plots$p_mu, # + labs(fill = "Prediction of\nmean process"), 
-                      plots$interval_90_mu + 
+                      plots$interval90_mu + 
                         scale_fill_distiller(palette="BrBG", 
                                              #name = "90% prediction interval\nwidth of mean process", 
                                              breaks = c(100, 200, 300)), 

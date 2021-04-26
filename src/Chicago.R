@@ -253,7 +253,7 @@ suppressMessages(ggsave(
   ggarrange(
     plots$number_of_crimes + scale_fill_distiller(palette = "Spectral", n.breaks = 4, name = "Observed \ncrime count", lim = count_lims), 
     plots$p_Z  +  scale_fill_distiller(palette = "Spectral", n.breaks = 4, name = "Predicted \ncrime count", lim = count_lims), 
-    plots$interval_90_Z + scale_fill_distiller(palette = "BrBG", n.breaks = 4, name = "90% prediction \ninterval width"), 
+    plots$interval90_Z + scale_fill_distiller(palette = "BrBG", n.breaks = 4, name = "90% prediction \ninterval width"), 
     align = "hv", nrow = 1, legend = "top"),
   filename = "Chicago_data_pred_uncertainty.png", device = "png", width = 11, height = 7,
   path = "./img/"

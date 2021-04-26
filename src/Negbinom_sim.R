@@ -187,8 +187,8 @@ plot_list <- lapply(
   function(gg) gg + xbreaks + ybreaks)
 
 ggsave( 
-  ggarrange(plot_list$p_prob, plot_list$interval_90_prob, 
-            plot_list$p_mu, plot_list$interval_90_mu, 
+  ggarrange(plot_list$p_prob, plot_list$interval90_prob, 
+            plot_list$p_mu, plot_list$interval90_mu, 
             nrow = 1, legend = "top"),
   filename = "Negbinom_sim_BAU_predictions.png", device = "png", 
   width = 13, height = 4,
@@ -210,11 +210,11 @@ RMSPE(mu_true, pred$newdata$p_mu)
 ## Coverage and MAPE
 diagnostics <- pred$newdata@data %>% 
   mutate(
-    true_in_pred_interval_90 = mu_percentile_5 <= true & true <= mu_percentile_95,
+    true_in_pred_interval90 = mu_percentile_5 <= true & true <= mu_percentile_95,
     absolute_percentage_error = abs(p_mu - true)/true
   ) %>%
   summarise(
-    coverage_90 = mean(true_in_pred_interval_90),
+    coverage_90 = mean(true_in_pred_interval90),
     MAPE = mean(absolute_percentage_error) * 100, 
     RMSPE = RMSPE(true, p_mu)  
   ) 
@@ -236,7 +236,7 @@ pred_over_polygons <- predict(S, newdata = newdata)
 plot_list <- plot(S, pred_over_polygons, colour = "black")
 
 ggsave( 
-  ggarrange(plot_list$p_mu, plot_list$interval_90_mu, nrow = 1, align = "hv"),
+  ggarrange(plot_list$p_mu, plot_list$interval90_mu, nrow = 1, align = "hv"),
   filename = "Negbinom_sim_arbitrary_polygon_predictions.png", device = "png", 
   width = 10, height = 3,
   path = "./img"

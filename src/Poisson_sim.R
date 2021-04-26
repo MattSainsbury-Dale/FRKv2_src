@@ -58,21 +58,28 @@ Poisson_simulated <- sample_n(BAUs_df, n) %>%
 
 # save(Poisson_simulated, file = "~/FRK/data/Poisson_simulated.rda")
 
-# ---- FRK: nres = 3 ----
-
 ## scalar matrix for fine scale variation, and converts to SpatialPixelsDF
 BAUs$fs <- rep(1, length(BAUs)) 
 
 ## Convert Poisson_simulated to Spatial* obejct
 coordinates(Poisson_simulated) <- ~ x + y
 
-S <- FRK(f = Z ~ 1, data = list(Poisson_simulated),
-         BAUs = BAUs, response = "poisson", link = "log")
 
-pred <- predict(S, type = c("link", "mean"))
+
+# ---- Predictive performance with changing number of basis functions ----
+
+max_nres <- 3
+pred_list <- S_list <- timings <- list()
+for (i in 1:max_nres) {
+  S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
+              nres = i, BAUs = BAUs, 
+              response = "poisson", link = "log")
+  RNGversion("3.6.0"); set.seed(1)
+  pred_list[[i]] <- predict(S_list[[i]], type = c("link", "mean"))
+}
 
 ## Predictions, uncertainty, and data
-plot_list <- plot(S, pred, Poisson_simulated)
+plot_list <- plot(S_list[[3]], pred_list[[3]], Poisson_simulated)
 
 ## True mean process
 plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +
@@ -80,16 +87,19 @@ plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +
   labs(fill = bquote("\U03BC(\U00B7)")) +
   theme_bw() + coord_fixed()
 
-## Adjust the breaks
+## Adjust the breaks and remove the fill name
 plot_list <- lapply(
   plot_list, 
   function(gg) gg + scale_x_continuous(breaks=c(0, 0.5, 1)) + 
     scale_y_continuous(breaks=c(0, 0.5, 1)))
 
 ## Adjust the scale of the mean prediction, so it is the same as the data scale
-data_scale <- range(pred$newdata$p_mu, Poisson_simulated$Z)
+data_scale <- range(pred_list[[3]]$newdata$p_mu, Poisson_simulated$Z)
 plot_list$p_mu <- plot_list$p_mu +  scale_fill_distiller(palette = "Spectral", 
-                                                         limits = data_scale)
+                                                         limits = data_scale, 
+                                                         breaks = c(100, 300, 500))
+
+
 
 ggsave(
   ggarrange(plot_list$mu_true, plot_list$Z, nrow = 1),
@@ -98,28 +108,13 @@ ggsave(
 )
 
 ggsave(
-  ggarrange(plot_list$p_Y, plot_list$interval_90_Y, 
-            plot_list$p_mu, plot_list$interval_90_mu, 
+  ggarrange(plot_list$p_Y, plot_list$interval90_Y, 
+            plot_list$p_mu, plot_list$interval90_mu, 
             nrow = 1, legend = "top"),
   filename = "Poisson_sim.png", 
-  path = "./img", device = "png", width = 13, height = 4
+  path = "./img", device = "png", width = 14, height = 4
 )
 
-# ---- Predictive performance with changing number of basis functions ----
-
-timings <- list()
-max_nres <- 2
-pred_list <- lapply(1:max_nres, function(nres){
-  timings[[nres]] <<- system.time({
-    S    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
-                nres = nres, BAUs = BAUs, 
-                response = "poisson", link = "log")
-    RNGversion("3.6.0")
-    set.seed(1)
-    pred <- predict(S, type = "mean")
-  })
-  return(pred)
-})
 
 ## Diagnostic functions
 .RMSPE <- function(pred, true) sqrt(mean((pred - true)^2))
