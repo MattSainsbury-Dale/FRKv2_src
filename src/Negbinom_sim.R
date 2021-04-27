@@ -86,7 +86,7 @@ if (link == "logit") {
   BAUs$prob <- general_logistic(BAUs$prob, L = 0.95, a = 0.05, x0 = 0.5, k = 4)
   
   g_prob_BAU <-  plot_spatial_or_ST(BAUs, "prob")[[1]] + 
-    labs(fill = expression(pi("\U00B7"))) + 
+    labs(fill = "\U03C0(\U00B7)") + 
     xbreaks + ybreaks 
   
   ## We need the size parameter at the BAU level
@@ -100,7 +100,7 @@ if (link == "logit") {
 }
 
 g_mu_BAU <- plot_spatial_or_ST(BAUs, "mu")[[1]] + 
-  labs(fill = expression(mu("\U00B7"))) + 
+  labs(fill = "\U03BC(\U00B7)") + 
   xbreaks + ybreaks 
 
 ## Now aggregate the mean process over the data supports
@@ -115,7 +115,7 @@ data_breaks <- c(3000, 6000, 9000)
 
 ## Plot the aggregated mean process
 g_mu <- plot_spatial_or_ST(obs, "mu", colour = "black", size = 0.1)[[1]] + 
-  labs(fill = expression(mu("\U00B7"))) + 
+  labs(fill = "\U03BC(\U00B7)") + 
   xbreaks + ybreaks + 
   scale_fill_distiller(palette = "Spectral", breaks = data_breaks)
 
