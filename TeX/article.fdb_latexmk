@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex article"] 1619399788 "article.aux" "article.bbl" "article" 1619399790
+["bibtex article"] 1619399788 "article.aux" "article.bbl" "article" 1619485356
   "./jss.bst" 1538581053 32989 20bb38cc9c684ce32025a8fa283a9df6 ""
   "article.aux" 1619399790 28623 3407feabf34b7e1e9e5b8b7398887cf4 "pdflatex"
   "refs.bib" 1617684078 46394 51644702b51b4e39283aed87525f8adf ""
   (generated)
   "article.bbl"
   "article.blg"
-["pdflatex"] 1619399788 "article.tex" "article.pdf" "article" 1619399790
+["pdflatex"] 1619399788 "article.tex" "article.pdf" "article" 1619485356
   "/Users/MattSainsbury/Library/texlive/2020/texmf-var/fonts/pk/ljfour/public/bbm/bbm10.657pk" 1617433920 7808 30cbdb4bdad0e6f6ed8af1efb2796f29 ""
   "/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2020/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
@@ -212,8 +212,8 @@
   "/usr/local/texlive/2020/texmf-var/web2c/pdftex/pdflatex.fmt" 1590047151 2432464 9d496730964f400c26eada14d4ba3834 ""
   "/usr/local/texlive/2020/texmf.cnf" 1586288231 577 d60164b4589a341208aff7a667fbbdcb ""
   "article.aux" 1619399790 28623 3407feabf34b7e1e9e5b8b7398887cf4 "pdflatex"
-  "article.bbl" 1619399788 12791 4a5da3e746fc2c26dcf9a8c44f1fa5eb "bibtex article"
-  "article.out" 1619399790 3293 c4f7e0c2a4529fdd7444a3c7adb99d6a "pdflatex"
+  "article.bbl" 1618530845 12791 4a5da3e746fc2c26dcf9a8c44f1fa5eb "bibtex article"
+  "article.out" 1619399784 3293 c4f7e0c2a4529fdd7444a3c7adb99d6a "pdflatex"
   "article.tex" 1619398955 265371 a3dc8be07338e3fae7dd149ae61a0c9d ""
   "img/Am_comparison.png" 1619399165 208427 c2c751dd9a2e1c5b554fbebce667cc67 ""
   "img/Am_data_and_blocks.png" 1619399165 269912 811f62c98a9e3b2069ce618f2418ffa1 ""
@@ -235,7 +235,7 @@
   "jss.cls" 1538581054 15426 7baa85d872f568b77b27c84ff3f3efee ""
   "jsslogo.jpg" 1525079271 22731 b9564ddd59a06782310989e8f33db55e ""
   (generated)
-  "article.log"
   "article.out"
   "article.pdf"
   "article.aux"
+  "article.log"

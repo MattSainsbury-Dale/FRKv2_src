@@ -66,16 +66,20 @@ coordinates(Poisson_simulated) <- ~ x + y
 
 
 
-# ---- Predictive performance with changing number of basis functions ----
+# ---- FRK ----
 
+## Predictive performance with changing number of basis functions: Fit the SRE 
+## object using 1, 2, and 3 resolutions of basis functions.
 max_nres <- 3
 pred_list <- S_list <- timings <- list()
 for (i in 1:max_nres) {
-  S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
-              nres = i, BAUs = BAUs, 
-              response = "poisson", link = "log")
-  RNGversion("3.6.0"); set.seed(1)
-  pred_list[[i]] <- predict(S_list[[i]], type = c("link", "mean"))
+  timings[[i]] <- system.time({
+    S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
+                          nres = i, BAUs = BAUs, 
+                          response = "poisson", link = "log")
+    RNGversion("3.6.0"); set.seed(1)
+    pred_list[[i]] <- predict(S_list[[i]], type = c("link", "mean"))
+  })
 }
 
 ## Predictions, uncertainty, and data
@@ -131,7 +135,7 @@ ggsave(
 }
 
 ## Only consider out-of-sample locations
-unobsidx <- unobserved_BAUs(S) 
+unobsidx <- unobserved_BAUs(S_list[[1]]) # doesn't matter which object we use 
 
 ## Compute the diagnostics
 diagnostics <- lapply(pred_list, function(pred) {
