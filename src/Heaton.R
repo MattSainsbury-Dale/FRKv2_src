@@ -48,7 +48,11 @@ system.time({
            basis = basis, BAUs = BAUs, K_type = "precision")
   
   ## Model fitting
-  M <- SRE.fit(M, method = "TMB") 
+  tol <- 0.1
+  M <- SRE.fit(
+    M, method = "TMB", 
+    control = list(abs.tol = tol, rel.tol = tol, x.tol = tol)
+  ) 
 
   ## Prediction
   RNGversion("3.6.0")

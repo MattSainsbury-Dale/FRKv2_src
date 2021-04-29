@@ -172,14 +172,14 @@ ST_BAUs$x4 <- year * ST_BAUs$x3
 
 # ---- Basis functions ----
 
-basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 2)
+basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
 
 # ---- Model fitting ----
 
-M <- FRK(f = number_of_crimes ~ -1 + log(population) + x1 + x2 + x3 + x4,   
+M <- FRK(f = number_of_crimes ~ -1 + sqrt(population) + x1 + x2 + x3 + x4,   
          data = list(chicago_crimes_fit), basis = basis, BAUs = ST_BAUs,         
          response = "poisson", link = "square-root", 
-         sum_variables = "number_of_crimes", fs_by_spatial_BAU = FALSE) 
+         sum_variables = "number_of_crimes", fs_by_spatial_BAU = TRUE) 
 
 print(object.size(M), units = "Mb")
 Chicago_SRE_object <- M
