@@ -17,6 +17,7 @@ new_packages <- DEPENDS[!(DEPENDS %in% rownames(installed.packages()))]
 if (!("FRK" %in% new_packages) && packageVersion("FRK") < 2)
   new_packages <- c(new_packages, "FRK")
 
-if(length(new_packages)) install.packages(new_packages, repos = CRANMIRROR)
-
-
+if(length(new_packages)) {
+  warning("Uninstalled package dependencies are being installed automatically by the script src/DEPENDS.R")
+  install.packages(new_packages, repos = CRANMIRROR)
+}

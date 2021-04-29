@@ -68,8 +68,10 @@ Sydney_OBJECTS = img/Sydney_training_data.png img/Sydney_SA1_predictions.png img
 
 Sydney: DEPENDS $(Sydney_OBJECTS)
 
-$(Sydney_OBJECTS): src/Sydney.R
+$(Sydney_OBJECTS): src/Sydney.R 
 	Rscript src/Sydney.R
+	
+src/Sydney.R: src/Sydney_prep.R
 
 
 Chicago_OBJECTS = img/Chicago_data_pred_uncertainty.png img/Chicago_focused_CAs_time_series.png img/Chicago_focused_CAs_predictive_distributions.png results/Chicago_coverage_and_MAPE.csv

@@ -1,9 +1,9 @@
-\documentclass[article]{jss}
-%\documentclass[nojss]{jss}
+%\documentclass[article]{jss}
+\documentclass[nojss]{jss}
 
 % Just for editing
 \usepackage{setspace}
-\doublespacing
+%\doublespacing
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
@@ -189,13 +189,14 @@ We demonstrate innovative features in \pkg{FRK} and compare it to alternative pa
 
 \section{Introduction}\label{sec:intro}
 
+\pkg{FRK}, introduced by \cite{FRK_paper}, is an \proglang{R} \citep{Rcoreteam_2020} package for spatial/spatio-temporal statistical modelling and prediction. 
+ It can handle large point- and areally-referenced data sets, and it seamlessly deals with the so-called spatial change-of-support problem. 
+ This first version of \pkg{FRK}, which we henceforth refer to as \pkg{FRK} v.1, catered for Gaussian data only. 
+% However, many spatial/spatio-temporal data sets are distinctly non-Gaussian. 
+ The main purpose of this article is to present version 2, which caters for many distributions within the exponential family using a generalised linear modelling framework; we henceforth refer to is as \pkg{FRK} v.2. 
+ It also allows for the use of substantially more basis functions when modelling the spatial process and, therefore, it can also often achieve more accurate predictions in a Gaussian setting than \pkg{FRK} v.1. 
+%To our knowledge, this is the first time that a flexible GLMM framework built on a fixed-rank spatial/spatio-temporal random effects model, with the capacity to include observations with differing supports, has been made accessible in a user-friendly package. 
 
-
-\pkg{FRK}, introduced by \cite{FRK_paper}, is an \proglang{R} \citep{Rcoreteam_2020} package for spatial/spatio-temporal statistical modelling and prediction. It can handle large point- and areally-referenced data sets, and it seamlessly deals with the so-called spatial change-of-support problem. 
- This first version of \pkg{FRK}, which we henceforth refer to as \pkg{FRK} v.1, catered for Gaussian data only.
-%; however, many spatial/spatio-temporal data sets are non-Gaussian. 
-%In such cases, the assumption of Gaussianity is inappropriate, and may lead to inaccurate predictions and prediction interval estimation.
- This paper presents version 2, which caters for many distributions within the exponential family using a generalised linear modelling framework; we henceforth refer to is as \pkg{FRK} v.2. It also allows for the use of many more basis functions when modelling the spatial process and, therefore, it can also often achieve more accurate predictions in a Gaussian setting than \pkg{FRK} v.1. 
 
 There are several approaches to spatial and spatio-temporal modelling in a non-Gaussian setting.
 One widespread method to deal with non-Gaussian data is \textit{trans-Gaussian kriging} \citep[pg.~137--138]{Cressie_1993_stats_for_spatial_data}, in which standard kriging (i.e., spatial optimal linear prediction) is used after applying a non-linear transformation to the data, and predictions are made on the original scale using a delta-method approximation. 
@@ -203,13 +204,14 @@ One widespread method to deal with non-Gaussian data is \textit{trans-Gaussian k
   The spatial GLMM was pioneered by \cite{Diggle_1998_spatial_GLMM}, who used a stationary model for $Y(\cdot)$ and a Markov chain Monte Carlo (MCMC) algorithm to obtain posterior predictive distributions. 
 These methods typically suffer from computational inefficiencies in a `big data' setting, and some form of dimension-reduction is required. 
 \cite{Lopes_2011_spatial_GLMM_reduced_rank_factor_analytic_model} used the spatial GLMM framework, but with a reduced-rank factor analytic model for $Y(\cdot)$. 
-%\cite{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data,  Bradley_2020_Bayesian_Hierarchical_Models_With_Conjugate_Full-Conditional_Distributions_for_Dependent_Data_From_the_Natural_Exponential_Family} used Bayesian hierarchical modelling to model dependent data from the natural exponential family; they introduced the `conjugate multivariate distribution', which is the multivariate version of the conjugate prior for distributions in the natural exponential family presented by \cite{Diaconis_Ylvisaker_1979_conjugate_prior_natural_exponential_family}.
 \cite{Lindgren_Rue_2011_GF_GMRF_SPDE} provided a low-rank method using stochastic partial differential equations to link Gaussian fields to Gaussian Markov random fields, which combined the interpretability of the former with the computational efficiency of the latter. 
 \cite{Sengupta_Cressie_2013_spatial_GLMM_FRK} employed the spatial GLMM framework, where the spatial error of the latent process $Y(\cdot)$ is modelled as a linear combination of a fixed number of spatial basis functions with random coefficients \citep{Cressie_Johannesson_2008_FRK}. The basis-function coefficients were modelled with an unconstrained covariance matrix, which was estimated using a Laplace approximation in an expectation maximisation (EM) algorithm. Finally, the empirical predictive distribution was generated using an MCMC algorithm. 
-\red{Need to add Bradley et al. papers.} 
+\red{\cite{Bradley_2016_Bayesian_spatial_COS_lattice_data}: Bayesian Spatial Change of Support for Count-Valued Survey Data With Application to the American Community Survey.  \cite{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data,  Bradley_2020_Bayesian_Hierarchical_Models_With_Conjugate_Full-Conditional_Distributions_for_Dependent_Data_From_the_Natural_Exponential_Family} modelled dependent data from the natural exponential family using the `conjugate multivariate distribution', which is the multivariate version of the conjugate prior for distributions in the natural exponential family presented by \cite{Diaconis_Ylvisaker_1979_conjugate_prior_natural_exponential_family}.} 
+ \cite{Finley_2020_spNNGP} modelled binary data using a nearest neighbour Gaussian process \citep[NNGP; ][]{Datta_2016_NNGP_spatial} GLMM, making use of an efficient data-augmented Gibbs sampler whereby, through the use of Pólya-Gamma prior distributions \citep{Polson_2013_Polya-Gamma_Bayesian_logistic} on the random effects, the Gibbs updates are available in closed form.  
 \cite{Lee_2020_partitioned_domain_basis_function_non_Gaussian} used a clustering algorithm to partition the spatial domain into disjoint subregions and, for each subregion, a spatial GLMM model with a thin-plate-splines representation for $Y(\cdot)$ was used independently of the other subregions. 
  Then the global process was constructed as a weighted sum of the local processes. However, the basis-function covariance matrices in each subregion were assumed to be diagonal. 
 %To alleviate overfitting issues which may arise when assuming uncorrelated basis-function coefficients, \cite{Lee_2020_partitioned_domain_basis_function_non_Gaussian} used lasso regression to select a reduced set of basis functions. 
+ \red{The preceding models used latent Gaussian random vectors within a GLMM framework; in contrast, Hu and Bradley (2018) used a spatio-temporal Pareto GLMM with latent log-Gamma random vectors (Bradley et. al, 2017) to model earthquake magnitudes.} 
 
 
 
@@ -223,7 +225,7 @@ A project aimed at facilitating spatial modelling using \pkg{INLA} is the \pkg{i
 Generalised additive models (GAMs), which rely on constructing smooth functions of the covariates (and in a spatio-temporal setting the covariates would include space and time),  can be implemented efficiently with the package \pkg{mgcv} \citep{Wood_2017_GAM:R}. 
 The package yields excellent computational times, however it does not cater for areal data or spatial change-of-support.
 The function \fct{spGLM} from the package \pkg{spBayes} \citep{Finley_2015_spBayes} fits univariate Bayesian generalised linear spatial regression models but with limitations: It only supports the modelling of binary and count (Poisson distributed) data in a non-Gaussian setting; it only caters for point-referenced data; and, as the basis functions depend on covariance-function parameters, computationally it can only handle a small number of predictive-process knots which causes a high degree of smoothing.
-The package \pkg{spNNGP} \citep{Finley_2020_spNNGP} facilitates dimension-reduction using a nearest neighbour Gaussian Process \citep{Datta_2016_NNGP_spatial}, and it carries out inference using an efficient data-augmented Gibbs sampler. 
+The package \pkg{spNNGP} \citep{Finley_2020_spNNGP} facilitates dimension-reduction using a NNGP \citep{Datta_2016_NNGP_spatial}. %, and it carries out inference using an efficient data-augmented Gibbs sampler. 
 %(whereby, through the use of Pólya-Gamma prior distributions \citep{Polson_2013_Polya-Gamma_Bayesian_logistic} on the random effects, the Gibbs updates are available in closed form). 
  Currently \pkg{spNNGP} caters only for point-referenced spatial data, and it is limited to binomial data in a non-Gaussian setting. 
  
@@ -240,9 +242,13 @@ The package \pkg{spNNGP} \citep{Finley_2020_spNNGP} facilitates dimension-reduct
 %%   (For executed code see the next section.)
 
 % \marginnote{Possibly remove `main purpose paragraph'? We already said this in the first paragraph of this section.}
- The main purpose of this article is to describe developments in \pkg{FRK} v.2 that allow for the modelling of `big', point-and-areal-support, non-Gaussian spatial and spatio-temporal data in a user-friendly and computationally efficient manner. 
- In addition, \pkg{FRK} v.2 can now use substantially more basis functions than was possible in \pkg{FRK} v.1, and it deals coherently with the spatial change-of-support problem. 
-To our knowledge, this is the first time that a flexible GLMM framework built on a fixed-rank spatial/spatio-temporal random effects model, with the capacity to include observations with differing supports, has been made accessible in a user-friendly package. 
+% The main purpose of this article is to describe developments in \pkg{FRK} v.2 that allow for the modelling of `big', point-and-areal-support, non-Gaussian spatial and spatio-temporal data in a user-friendly and computationally efficient manner. 
+% In addition, \pkg{FRK} v.2 can now use substantially more basis functions than was possible in \pkg{FRK} v.1, and it deals coherently with the spatial change-of-support problem. 
+%To our knowledge, this is the first time that a flexible GLMM framework built on a fixed-rank spatial/spatio-temporal random effects model, with the capacity to include observations with differing supports, has been made accessible in a user-friendly package. 
+
+
+
+
 
 
 The remainder of this paper is organised as follows. 

@@ -14,3 +14,11 @@ data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp
 untracked
 src/MODIS_optimise_args.R
 
+
+# Auxilliary files that don't need to be tracked
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+

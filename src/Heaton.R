@@ -31,7 +31,7 @@ system.time({
   basis <- auto_basis(plane(),            # we are on the plane
                       data = dat,         # data around which to make basis
                       regular = 1,        # regular basis
-                      nres = 3,           # 3 resolutions
+                      nres = 4,           # 3 resolutions
                       scale_aperture = 1) # aperture scaling of basis functions 
   
   ## Remove basis functions in problematic region
@@ -39,15 +39,13 @@ system.time({
     basis_df <- data.frame(basis)
     rmidx <- which(basis_df$loc2 > 36.5 &
                      basis_df$loc1 > -94.5 &
-                     # basis_df$res == 3)
-                     basis_df$res >= 3)
+                     basis_df$res == 4)
     basis <- remove_basis(basis, rmidx)
   }
   
   ## Construct SRE object
   M <- SRE(f = MaskTemp ~ 1 + Lon + Lat, data = list(dat), 
-           basis = basis, BAUs = BAUs, 
-           K_type = "precision", response = "gaussian", link = "identity")
+           basis = basis, BAUs = BAUs, K_type = "precision")
   
   ## Model fitting
   M <- SRE.fit(M, method = "TMB") 

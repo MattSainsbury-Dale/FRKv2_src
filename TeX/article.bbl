@@ -1,4 +1,4 @@
-\begin{thebibliography}{42}
+\begin{thebibliography}{47}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -35,6 +35,29 @@ Bivand R (2020).
 \newblock \url{https://CRAN.R-project.org/view=Spatial}.
 \newblock Accessed: 2020-04-03.
 
+\bibitem[{Bradley \emph{et~al.}(2018)Bradley, Holan, and
+  Wikle}]{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}
+Bradley JR, Holan SH, Wikle CK (2018).
+\newblock \enquote{{Computationally efficient multivariate spatio-temporal
+  models for high-dimensional count-valued data (with discussion)}.}
+\newblock \emph{Bayesian Analysis}, \textbf{13}, 253--310.
+
+\bibitem[{Bradley \emph{et~al.}(2020)Bradley, Holan, and
+  Wikle}]{Bradley_2020_Bayesian_Hierarchical_Models_With_Conjugate_Full-Conditional_Distributions_for_Dependent_Data_From_the_Natural_Exponential_Family}
+Bradley JR, Holan SH, Wikle CK (2020).
+\newblock \enquote{Bayesian hierarchical models with conjugate full-conditional
+  distributions for dependent data from the natural exponential family.}
+\newblock \emph{Journal of the American Statistical Association}, \textbf{115},
+  2037--2052.
+
+\bibitem[{Bradley \emph{et~al.}(2016)Bradley, Wikle, and
+  Holan}]{Bradley_2016_Bayesian_spatial_COS_lattice_data}
+Bradley JR, Wikle CK, Holan SH (2016).
+\newblock \enquote{Bayesian spatial change of support for count-valued survey
+  data with application to the {A}merican {C}ommunity {S}urvey.}
+\newblock \emph{Journal of the American Statistical Association}, \textbf{111},
+  472--487.
+
 \bibitem[{{Chicago Metropolitan Agency for
   Planning}(2017)}]{Chicago_community_data_snapshots}
 {Chicago Metropolitan Agency for Planning} (2017).
@@ -66,6 +89,12 @@ Datta A, Banerjee S, Finley AO, Gelfand AE (2016).
   large geostatistical datasets}.}
 \newblock \emph{Journal of the American Statistical Association}, \textbf{111},
   800--812.
+
+\bibitem[{Diaconis and
+  Ylvisaker(1979)}]{Diaconis_Ylvisaker_1979_conjugate_prior_natural_exponential_family}
+Diaconis P, Ylvisaker D (1979).
+\newblock \enquote{{Conjugate priors for exponential families}.}
+\newblock \emph{{Annals of Statistics}}, \textbf{7}, 269--281.
 
 \bibitem[{Diggle \emph{et~al.}(1998)Diggle, Tawn, and
   Moyeed}]{Diggle_1998_spatial_GLMM}
@@ -228,6 +257,14 @@ Pebesma EJ, Bivand RS (2005).
 \newblock \enquote{Classes and methods for spatial data in {R}.}
 \newblock \emph{R News}, \textbf{5}, 9--13.
 \newblock \urlprefix\url{https://CRAN.R-project.org/doc/Rnews/}.
+
+\bibitem[{Polson \emph{et~al.}(2013)Polson, Scott, and
+  Windle}]{Polson_2013_Polya-Gamma_Bayesian_logistic}
+Polson NG, Scott JG, Windle J (2013).
+\newblock \enquote{{Bayesian inference for logistic models using Pólya–Gamma
+  latent variables}.}
+\newblock \emph{Journal of the American Statistical Association}, \textbf{108},
+  1339--1349.
 
 \bibitem[{{\texttt{R} Core Team}(2020)}]{Rcoreteam_2020}
 {\texttt{R} Core Team} (2020).
