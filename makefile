@@ -80,6 +80,8 @@ Chicago: DEPENDS $(Chicago_OBJECTS)
 
 $(Chicago_OBJECTS): src/Chicago.R
 	Rscript src/Chicago.R
+	
+src/Chicago.R: src/Chicago_prep.R
 
 clean:
 	rm -f img/*
