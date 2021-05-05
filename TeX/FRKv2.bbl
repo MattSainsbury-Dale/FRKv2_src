@@ -1,4 +1,4 @@
-\begin{thebibliography}{45}
+\begin{thebibliography}{44}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -28,12 +28,6 @@ Bell BM (2005).
 \newblock \enquote{{CppAD: a package for C++ algorithmic differentiation.}}
 \newblock \url{http://www.coin-or.org/CppAD}.
 \newblock Accessed: 2019-06-15.
-
-\bibitem[{Bivand(2020)}]{CRAN_Task_View:spatial}
-Bivand R (2020).
-\newblock \enquote{{CRAN Task View: Analysis of Spatial Data}.}
-\newblock \url{https://CRAN.R-project.org/view=Spatial}.
-\newblock Accessed: 2020-04-03.
 
 \bibitem[{Bradley \emph{et~al.}(2018)Bradley, Holan, and
   Wikle}]{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}
@@ -151,12 +145,27 @@ Hersbach H (2000).
   ensemble prediction systems.}
 \newblock \emph{American Meteorological Society}, \textbf{15}, 559--570.
 
+\bibitem[{Hu and Bradley(2018)}]{Hu_2018_log-gamma_earthquake_magnitudes}
+Hu G, Bradley J (2018).
+\newblock \enquote{A {B}ayesian spatial-temporal model with latent multivariate
+  log-gamma random effects with application to earthquake magnitudes.}
+\newblock \emph{Stat}, \textbf{7}, e179.
+
 \bibitem[{Huang \emph{et~al.}(2009)Huang, Yao, Cressie, and
   Hsing}]{Huang_2009_multivar_intrinsic_rand_functions_cokriging}
 Huang C, Yao Y, Cressie N, Hsing T (2009).
 \newblock \enquote{{Multivariate intrinsic random functions for cokriging}.}
 \newblock \emph{{International Association for Mathematical Geosciences}},
   \textbf{41}, 887--904.
+
+\bibitem[{Hughes(2014)}]{ngspatial_2014}
+Hughes J (2014).
+\newblock \enquote{{\pkg{ngspatial}: A Package for Fitting the Centered
+  Autologistic and Sparse Spatial Generalized Linear Mixed Models for Areal
+  Data}.}
+\newblock \emph{{The R Journal}}, \textbf{6}(2), 81--95.
+\newblock \doi{10.32614/RJ-2014-026}.
+\newblock \urlprefix\url{https://doi.org/10.32614/RJ-2014-026}.
 
 \bibitem[{Kassambara(2020)}]{Kassambara_2020_ggpubr}
 Kassambara A (2020).
@@ -178,18 +187,19 @@ Lee BS, Park J (2020).
   nonstationary non-Gaussian spatial datasets}.}
 \newblock \textit{arXiv:2001.09111}.
 
-\bibitem[{Lindgren and Rue(2011)}]{Lindgren_Rue_2011_GF_GMRF_SPDE}
-Lindgren F, Rue H (2011).
-\newblock \enquote{{An explicit link between Gaussian fields and Gaussian
-  Markov random fields: The stochastic partial differential equation
-  approach}.}
-\newblock \emph{Journal of the Royal Statistical Society}, \textbf{73},
-  423--498.
-
 \bibitem[{Lindgren and Rue(2015)}]{Lindgren_2015_R-INLA}
 Lindgren F, Rue H (2015).
 \newblock \enquote{{Bayesian spatial modelling with \texttt{R-INLA}.}}
 \newblock \emph{Journal of Statistical Software}, \textbf{63}, 1--25.
+
+\bibitem[{Lindgren \emph{et~al.}(2011)Lindgren, Rue, and
+  Lindstr{\"o}m}]{Lindgren_Rue_2011_GF_GMRF_SPDE}
+Lindgren F, Rue H, Lindstr{\"o}m J (2011).
+\newblock \enquote{An explicit link between {Gaussian fields and Gaussian
+  Markov} random fields: {T}he stochastic partial differential equation
+  approach.}
+\newblock \emph{Journal of the Royal Statistical Society: Series B},
+  \textbf{73}, 423--498.
 
 \bibitem[{Lopes \emph{et~al.}(2011)Lopes, Gamerman, and
   Salazar}]{Lopes_2011_spatial_GLMM_reduced_rank_factor_analytic_model}
@@ -238,23 +248,11 @@ Pebesma E (2018).
 \newblock \doi{10.32614/RJ-2018-009}.
 \newblock \urlprefix\url{https://doi.org/10.32614/RJ-2018-009}.
 
-\bibitem[{Pebesma(2020)}]{CRAN_Task_View:spatio-temporal}
-Pebesma E (2020).
-\newblock \enquote{{CRAN Task View: Handling and Analyzing Spatio-Temporal
-  Data}.}
-\newblock \url{https://CRAN.R-project.org/view=SpatioTemporal}.
-\newblock Accessed: 2020-04-03.
-
 \bibitem[{Pebesma and Bivand(2005)}]{Pebesma_2005_sp_package}
 Pebesma EJ, Bivand RS (2005).
 \newblock \enquote{Classes and methods for spatial data in {R}.}
 \newblock \emph{R News}, \textbf{5}, 9--13.
 \newblock \urlprefix\url{https://CRAN.R-project.org/doc/Rnews/}.
-
-\bibitem[{{\texttt{R} Core Team}(2020)}]{Rcoreteam_2020}
-{\texttt{R} Core Team} (2020).
-\newblock \emph{R: A Language and Environment for Statistical Computing}.
-\newblock \texttt{R} Foundation for Statistical Computing, Vienna, Austria.
 
 \bibitem[{Rue \emph{et~al.}(2009)Rue, Martino, and Chopin}]{Rue_2009_INLA}
 Rue H, Martino S, Chopin N (2009).

@@ -85,7 +85,7 @@ convex.poly <- function(nSides, area)
 }
 
 ## coords: list of matrices containing the coordinates of the polygons
-## This function is based on the simply example from vignette("sp")
+## This function is based on the simple example from vignette("sp")
 coords_to_SpatialPolygons <- function(coords) {
   
   ## Convert to Polygon
