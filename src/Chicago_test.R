@@ -108,7 +108,7 @@ for (nres in 1) {
       subset_time <- c(2010, 2019) ## Years we wish to analyse
       
       ## NB: plotting zdf works provided the column name to plot is all.vars(M@f)[1]
-      plots <- plot(M, pred, zdf = ST_pred, 
+      plots <- plot(M, pred$newdata, 
                     map_layer = chicago_map, subset_time = subset_time, 
                     colour = "black", size = 0.3, alpha = 0.85)
       

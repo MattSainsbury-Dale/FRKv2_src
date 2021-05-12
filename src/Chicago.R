@@ -103,9 +103,15 @@ ST_pred@data$number_of_crimes <- df_val$number_of_crimes
 subset_time <- c(2010, 2019) ## Years we wish to analyse
 
 ## NB: plotting zdf works provided the column name to plot is all.vars(M@f)[1]
-plots <- plot(M, pred, zdf = ST_pred, 
+plots <- plot(M, pred$newdata,
               map_layer = chicago_map, subset_time = subset_time, 
               colour = "black", size = 0.3, alpha = 0.85)
+
+plots <- c(plots, plot_spatial_or_ST(
+  ST_pred, all.vars(M@f)[1],
+  map_layer = chicago_map, subset_time = subset_time, 
+  colour = "black", size = 0.3, alpha = 0.85
+  ))
 
 ## Change layout of each quantity to a single column, and edit axis
 plots <- lapply(plots, function(gg) gg + 
