@@ -137,7 +137,7 @@ ggsave(
 
 RNGversion("3.6.0"); set.seed(1)
 pred <- predict(S, newdata = SA3_NSW_sub)
-plots <- plot(S, pred, colour = "black")
+plots <- plot(S, pred$newdata, colour = "black")
 plots <- lapply(plots, function(gg) gg + lab1 + lab2)
 
 ggsave( 

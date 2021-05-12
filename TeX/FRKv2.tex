@@ -2,13 +2,30 @@
 \documentclass[nojss]{jss}
 
 % Just for editing
-\usepackage{setspace}
-\doublespacing
+%\usepackage{setspace}
+%\doublespacing
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
 \usepackage{marginnote}
 \newcommand{\revmarginnote}[1]{{\reversemarginpar\marginnote{#1}}}
+
+
+% Same indentation over multiple lines in algorithm environment: use tabularx to figure out the width of a box that would fit until the end of the line:
+\usepackage{tabularx}
+\makeatletter
+\newcommand{\multiline}[1]{%
+  \begin{tabularx}{\dimexpr\linewidth-\ALG@thistlm}[t]{@{}X@{}}
+    #1
+  \end{tabularx}
+}
+\makeatother
+
+%% algorithm environments
+\usepackage{algpseudocode,algorithm,algorithmicx}
+\newcommand*\Let[2]{\State #1 $\gets$ #2}
+\algrenewcommand\algorithmicrequire{\textbf{Precondition:}}
+\algrenewcommand\algorithmicensure{\textbf{Postcondition:}}
 
 
 \usepackage{siunitx} % si units
@@ -174,22 +191,6 @@ We demonstrate innovative features in \pkg{FRK} and compare it to alternative pa
 
 \sloppy % Make latex less fussy and prevent words going into the margin.
 
-%\red{2: Remove the commands I don't use from the preamble. 4: Sort references (including markup).}
-
-
-%% -- Introduction -------------------------------------------------------------
-
-%% - In principle "as usual".
-%% - But should typically have some discussion of both _software_ and _methods_.
-%% - Use \proglang{}, \pkg{}, and \code{} markup throughout the manuscript.
-%% - If such markup is in (sub)section titles, a plain text version has to be
-%%   added as well.
-%% - All software mentioned should be properly \cite-d.
-%% - All abbreviations should be introduced.
-%% - Unless the expansions of abbreviations are proper names (like "Journal
-%%   of Statistical Software" above) they should be in sentence case (like
-%%   "generalized linear models" below).
-
 \section{Introduction}\label{sec:intro}
 
  Non-Gaussian spatial and spatio-temporal data arise from a vast array of sources, including studies on small area demographics \citep{Bradley_2016_Bayesian_spatial_COS_lattice_data}, earthquake magnitudes \citep{Hu_2018_log-gamma_earthquake_magnitudes}, contaminated soil \citep{Paul_Cressie_2011_lognormal_kriging_block_prediction}, and global remote sensing  \citep{Sengupta_2016_MODIS}.  
@@ -294,29 +295,6 @@ Several other approaches hinge on the use of a spatial version of the generalise
    Some general purpose packages, like \pkg{INLA} \citep{Rue_2009_INLA, Lindgren_2015_R-INLA}, can in principle handle the wide array of modelling challenges posed by non-Gaussian spatial and spatio-temporal data; however, as they are not specifically designed for this purpose, they can be difficult for an unfamiliar user to implement. 
  A project aimed at facilitating spatial modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}, although spatio-temporal modelling was still not implemented at the time of writing.
  
- 
- %% -- Manuscript ---------------------------------------------------------------
-
-%% - In principle "as usual" again.
-%% - When using equations (e.g., {equation}, {eqnarray}, {align}, etc.
-%%   avoid empty lines before and after the equation (which would signal a new
-%%   paragraph.
-%% - When describing longer chunks of code that are _not_ meant for execution
-%%   (e.g., a function synopsis or list of arguments), the environment {Code}
-%%   is recommended. Alternatively, a plain {verbatim} can also be used.
-%%   (For executed code see the next section.)
-
-% \marginnote{Possibly remove `main purpose paragraph'? We already said this in the first paragraph of this section.}
-% The main purpose of this article is to describe developments in \pkg{FRK} v.2 that allow for the modelling of `big', point-and-areal-support, non-Gaussian spatial and spatio-temporal data in a user-friendly and computationally efficient manner. 
-% In addition, \pkg{FRK} v.2 can now use substantially more basis functions than was possible in \pkg{FRK} v.1, and it deals coherently with the spatial change-of-support problem. 
-%To our knowledge, this is the first time that a flexible GLMM framework built on a fixed-rank spatial/spatio-temporal random effects model, with the capacity to include observations with differing supports, has been made accessible in a user-friendly package. 
-
-
-%The preceding discussion highlights some approaches and software packages that cater for a subset of the features that \pkg{FRK} v.2 is designed for. 
-%These software packages can, individually, handle only a subset of the modelling situations that \pkg{FRK} v.2 is designed for;  or they are in principle able to handle most situations, but they are relatively unfriendly to novice users (e.g., \pkg{INLA}).  
- %To reiterate, 
- 
-  
 
  \pkg{FRK}, introduced by \cite{FRK_paper}, is an \proglang{R} %\citep{Rcoreteam_2020} 
  package for spatial/spatio-temporal statistical modelling and prediction. 
@@ -362,17 +340,6 @@ In Section \ref{sec:spatio-temporal} we outline our approach for spatio-temporal
 
 
 
-%The statistical model used in \pkg{FRK} v.2 is hierarchical, consisting of two layers. In the %first layer, which we refer to as the 
-%\textit{data layer}, we use a conditionally independent exponential-family model for the data. 
-%In the %second layer, the 
-%\textit{process layer}, we model the conditional mean of the data as a transformation of a latent spatial process. 
-%This hierarchical model is a spatial GLMM \citep{Diggle_1998_spatial_GLMM}. 
-%In \pkg{FRK} v.2, we model the spatial process as a low-rank spatial random-effects model, as used in the spatial GLMM setting by \cite{Sengupta_Cressie_2013_spatial_GLMM_FRK}. 
-%The remainder of this section is organised as follows. 
-%In Sections \ref{subsection:04-01:ProcessLayer} and \ref{subsection:04-02:DataLayer} we provide details on how we model the process and data layers, respectively. 
-%In Section \ref{subsection:02-03:Estimation} we discuss parameter estimation, and in Section \ref{subsection:04-03:Prediction} we discuss spatial prediction and uncertainty quantification of predictions.
-%Finally, in Section \ref{sec:spatio-temporal} we outline our approach for spatio-temporal data. 
-
 
 
 
@@ -386,7 +353,7 @@ The process layer, which governs the conditional mean of the data, retains many 
  Denote the latent spatial process as $Y(\cdot) \equiv \{Y(\vec{s}) \colon \vec{s}\in D\}$, where $\vec{s}$ indexes space in the spatial domain of interest $D$. 
  The model for the latent process is
 \begin{equation}\label{eqn:04-01:Y(s)}
-    Y(\vec{s}) = \vec{t}(\vec{s})^\tp \vec{\alpha} + v(\vec{s}) + \xi(\vec{s}); \quad \vec{s} \in D,
+    Y(\vec{s}) = \vec{t}(\vec{s})^\tp \vec{\alpha} + v(\vec{s}) + \xi(\vec{s}); \quad \vec{s} \in D.
 \end{equation}
 Each term in (\ref{eqn:04-01:Y(s)}) is intended to capture a different form of spatial variability. 
 First, spatially referenced covariates $\vec{t}(\cdot)$, and the associated regression parameters $\vec{\alpha}$, capture spatial variability that is linked to known, usually large-scale, explanatory variables. 
@@ -1209,11 +1176,6 @@ Furthermore, it is also possible that the fine-scale variation is not constant o
 In these situations, a better fit may be obtained by allowing each spatial BAU to be associated with its own fine-scale variance parameter. 
 Let $N_s$ and $N_t$ denote the number of spatial and temporal BAUs, respectively (so that $N = N_sN_t$).
 Then, instead of modelling $\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{I})$, \pkg{FRK} v.2 also allows one to model
-% \[\vec{\xi} \sim \Gau\left(\vec{0}, \text{diag}(\text{vec}(\vec{\Sigma}_\xi))\right),\] 
-% where $\vec{\Sigma}_\xi \equiv
-% (\underbrace{
-% \vec{\sigma}^2_\xi, \dots, \vec{\sigma}^2_\xi
-% }_{N_t \text{ times}})$, and $\vec{\sigma}^2_\xi \equiv (\sigma^2_{\xi, 1}, \dots, \sigma^2_{\xi, N_s})^\tp$,
 $\vec{\xi} \sim \Gau\left(\vec{0}, \vec{\Sigma}_\xi\right)$,
 where 
 \begin{equation}
@@ -1227,22 +1189,6 @@ where
 $\vec{\sigma}^2_\xi \equiv (\sigma^2_{\xi, 1}, \dots, \sigma^2_{\xi, N_s})^\tp$,
 and the BAUs are assumed to be ordered such that space runs faster than time. 
 This model for $\vec{\Sigma}_\xi$ is flagged by setting \code{fs\_by\_spatial\_BAU = TRUE} in the \fct{SRE} function, and is particularly useful when the number of spatial BAUs (and hence variance parameters to estimate) is relatively low and we have observed each spatial BAU over many time-points; see, for instance, the study presented in Section \ref{sec:ST_example}. 
-
-
-%% -- Illustrations ------------------------------------------------------------
-
-%% - Virtually all JSS manuscripts list source code along with the generated
-%%   output. The style files provide dedicated environments for this.
-%% - In R, the environments {Sinput} and {Soutput} - as produced by Sweave() or
-%%   or knitr using the render_sweave() hook - are used (without the need to
-%%   load Sweave.sty).
-%% - Equivalently, {CodeInput} and {CodeOutput} can be used.
-%% - The code input should use "the usual" command prompt in the respective
-%%   software system.
-%% - For R code, the prompt "R> " should be used with "+  " as the
-%%   continuation prompt.
-%% - Comments within the code chunks should be avoided - these should be made
-%%   within the regular LaTeX text.
 
 
 \section{Usage of new features}\label{SEC:IllustrativeExample}
@@ -1391,7 +1337,7 @@ The second element is a list of matrices containing Monte Carlo samples of the q
 
 Finally, we generate a list of \class{ggplot} \citep{Wickham_2016_ggplot2} objects of the predictions and associated uncertainty using the function \fct{plot}. 
 \begin{Code}
-R> plots <- plot(S, pred)
+R> plots <- plot(S, pred$newdata)
 \end{Code}
 The \class{ggplot} objects can then easily be arranged in a grid using various dedicated packages; in this article, we used the \fct{ggarrange} from the package \pkg{ggpubr} \citep{Kassambara_2020_ggpubr}. Figure \ref{fig:Poisson_nres3} shows prediction and prediction uncertainty quantification for both the latent process $Y(\cdot)$ and the mean process $\mu(\cdot)$. %, when using the data shown in Figure \ref{fig:Poisson_true_and_Z}. 
 The prediction of the mean process seems reasonable given the data. 
@@ -2048,7 +1994,7 @@ Now we predict over the SA1 regions.
 R> SA1_predictions <- predict(S)
 \end{Code}
 Since the SA1 regions are the BAUs, we can predict both the probability and mean processes over the SA1 regions: We focus on the probability process, which is independent of the size parameter. 
-The predictions and associated uncertainty over the SA1 regions are shown in Figure \ref{fig:SA1_predictions}, which was generated using \code{plot(S, SA1_predictions)}.
+The predictions and associated uncertainty over the SA1 regions are shown in Figure \ref{fig:SA1_predictions}, which was generated using \fct{plot}.
  \begin{figure}[t!]
     \centering
     \includegraphics[width = \linewidth]{img/Sydney_SA1_predictions.png}
@@ -2064,7 +2010,7 @@ Predicting over different spatial supports is straightforward with \pkg{FRK} v.2
 \begin{Code}
 R> SA3_predictions <- predict(S, newdata = SA3s)
 \end{Code}
-Figure \ref{fig:SA3_predictions} shows the SA3 region predictions and associated uncertainty quantification: Since the SA3 regions are not the BAUs, this time we are restricted to prediction of the mean process. Again, this graphic was generated with \code{plot(S, SA3_predictions)}. 
+Figure \ref{fig:SA3_predictions} shows the SA3 region predictions and associated uncertainty quantification: Since the SA3 regions are not the BAUs, this time we are restricted to prediction of the mean process. Again, this graphic was generated using \fct{plot}. 
 
 \begin{figure}[t!]
     \centering
@@ -2196,7 +2142,7 @@ Finally, we predict over the spatio-temporal BAUs (which use the CAs as spatial 
 %pred <- predict(S)
 %
 %subset_time <- c(2010, 2019) 
-%plots <- plot(S, pred, binned_data, 
+%plots <- plot(S, pred$newdata, binned_data, 
 %              map_layer = chicago_map, subset_time = subset_time, 
 %              colour = "black", size = 0.3, alpha = 0.85)
 %
@@ -3244,165 +3190,188 @@ We do not consider SA2 regions where the total number of families (the size para
 (Note that there is nothing in the framework preventing us from \textit{predicting} over these `empty' SA2 regions, however, for interpretability reasons, we choose not to do so.)
 
 
-%\section{Implementation details}\label{appendix:implementation_details}
-%
-%In this appendix, we provide some esoteric implementation details. In Appendix \ref{appendix:implementation_details:fitting_with_only_observed_fine-scale}, we describe the model we construct within the \proglang{C++} template passed to \pkg{TMB}. 
-%This model is equivalent to that described in Section \ref{SEC:Methodology}, however, for computational reasons, some minor adjustments are made. 
-%In Appendix \ref{subsection:04-04:Initialisations}, we describe the process of parameter initialisation. 
-%
-%
-%\subsection{Fitting with only the observed fine-scale random effects}\label{appendix:implementation_details:fitting_with_only_observed_fine-scale}
-%
-%Recall that the model described by (\ref{eqn:new_model_Z}) -- (\ref{eqn:new_model_priors}) includes $N$ fine-scale random effects $\vec{\xi}$; that is, a vector of fine-scale random effects at all $N$ BAUs. 
-%However, the fine-scale random effects at unobserved locations do not have any influence on the objective function whatsoever; this means that the posterior variability of the fine-scale effects can be extremely large, and can cause issues with model fitting.
-%Hence, in practice, when using \pkg{TMB} for model fitting, we do not explicitly fit the model (\ref{eqn:new_model_Z}) -- (\ref{eqn:new_model_priors}), but rather an equivalent and more stable version which considers the observed BAUs only; this model is outlined subsequently. 
-%
-%Define an $m^* \times N$ matrix $\vec{A}$, where $m^*$ is the number of observed BAUs, and $N$ is the total number of BAUs, consisting entirely of 0s and 1s, with the following properties. 
-%After left-multiplying a matrix (or vector) with $N$ rows by $\vec{A}$, the resultant product is the original matrix (or vector) but with only the rows corresponding to observed BAUs retained; for example, $\vec{Y}_O \equiv \vec{A}\vec{Y}$ is the latent process evaluated over the \textit{observed} BAUs.
-%Similarly, right-multiplying a matrix with $N$ columns by $\vec{A}^\tp$ extracts the columns corresponding to observed BAUs only; for example, the matrix $\vec{C}_O \equiv \vec{C}_Z\vec{A}^\tp$ is the incidence matrix with columns corresponding to observed BAUs only.
-%% The $\vec{A}$ matrix will always have $N$ columns, but the number of rows can vary; at one extreme, with point-referenced data, the matrix will have $m$ rows, and at the other extreme, with areal data in which all BAUs are observed, the matrix will have $N$ rows. 
-%The model we use for estimation is
-%\begin{gather}
-%    Z_j \mid \vec{\mu}_{Z,j} \inddist \text{EF}(\vec{\mu}_{Z,j}), \quad j = 1, \dots, m,  \label{eqn:new_model2_Z}\\
-%    \vec{\mu}_Z = \vec{C}_O \vec{\mu}_O,\\
-%    g(\vec{\mu}_O) = \vec{Y}_O, \\
-%    \vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O \equiv 
-%    \begin{cases} 
-%    \vec{Y}_O = \vec{A}\vec{Y}\\
-%    \vec{Y} = \vec{T} \vec{\alpha} + \vec{S} \vec{\eta} + \vec{\xi} \\
-%    \end{cases},\\
-%    \vec{\eta} \mid \vec{\vartheta} \sim \Gau(\vec{0}, \vec{Q}^{-1}), \\
-%    \vec{\xi} \mid \vec{\sigma}^2_\xi \sim \Gau(\vec{0}, \vec{\Sigma}_\xi), \label{eqn:new_model2_priors}
-%\end{gather}
-%where $\vec{T}_O \equiv \vec{A} \vec{T}$, $\vec{S}_O \equiv \vec{A} \vec{S}$, and $\vec{\xi}_O \equiv \vec{A} \vec{\xi}$.
-%At first glance, the model (\ref{eqn:new_model2_Z} -- \ref{eqn:new_model2_priors}) seems quite different to that described by (\ref{eqn:new_model_Z}) -- (\ref{eqn:new_model_priors}). 
-%However, the models are equivalent, because the columns in the incidence matrix $\vec{C}_Z$ corresponding to unobserved BAUs are zero-vectors, and so the elements of $\vec{\mu}$ corresponding to unobserved BAUs get mapped to zero when computing $\vec{\mu}_Z = \vec{C}_Z \vec{\mu}$.
-%Another key point is that we merge levels $\vec{Y}_O = \vec{A}\vec{Y}$ and $\vec{Y} = \vec{T} \vec{\alpha} + \vec{S} \vec{\eta} + \vec{\xi}$ into a single step, $\vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O$. 
-%By doing so, we never construct the full vector $\vec{Y}$ (or $\vec{\xi}$) in the \proglang{C++} template, and hence avoid identifiability issues with estimating the unobserved elements of $\vec{\xi}$. 
-%There are slight computational benefits too, as we deal with smaller matrices; however, as these matrices are sparse with portions corresponding to unobserved BAUs being zero, the benefits are only marginal.
-%
-%
-%
-%\subsection{Parameter and Random Effect Initialisation}\label{subsection:04-04:Initialisations}
-%
-%
-%\pkg{TMB} requires initialisation for all parameters and random effects in the model. 
-%In this section we demonstrate how reasonable values are chosen. 
-%Accurate initial values are useful in their own right; however, in a spatial change-of-support setting, whereby some observations are associated with multiple BAUs, the initialisation of the fine-scale variance parameter becomes particularly important, as, for numerical reasons and identifiability issues, it must be fixed throughout the estimation procedure. 
-%Specifically, \pkg{FRK} v.2 imposes that if any row of the incidence matrix $\vec{C}_Z$ contains more than one non-zero element (i.e., any observations are associated with multiple BAUs), then the fine-scale variance parameter must be fixed. 
-%
-%We denote initial values by a superscript of $(0)$ (e.g., the initial value for $\vec{\alpha}$ is denoted as $\vec{\alpha}^{(0)}$).
-%The general approach is to use the data vector $\vec{Z}$ to obtain an estimate of $\vec{Y}_O$, and then take advantage of the Gaussian assumptions at the latent Gaussian scale. 
-%Guided by the model in (\ref{eqn:new_model2_Z}) -- (\ref{eqn:new_model2_priors}), we proceed as follows. 
-%
-%\begin{enumerate}
-%    \item\label{step_mu_Z} Estimate the observation level mean process $\vec{\mu}_Z$ with the data $\vec{Z}$; that is, set $\hat{\vec{\mu}}_Z \equiv \vec{Z}$. 
-%    \item We need an estimate of the mean vector evaluated over the observed BAUs, $\vec{\mu}_O$. 
-%    The relevant relationship is $\vec{C}_O\vec{\mu}_O = \vec{\mu}_Z$, so solving 
-%    \begin{equation}\label{eqn:C_O_system_to_solve}
-%        \vec{C}_O\hat{\vec{\mu}}_O = \hat{\vec{\mu}}_Z 
-%    \end{equation}
-%    should yield a reasonable estimate of $\vec{\mu}_O$. 
-%    Recall that $\vec{C}_O$ is a $m \times m^*$ matrix, where $m$ is the number of observations (after binning), and $m^*$ is the number of observed BAUs. 
-%    Define
-%    \begin{equation}\label{eqn:MooresPenroseSolution}
-%        \hat{\vec{\mu}}_O = \vec{C}_O^{+} \vec{\mu}_Z,
-%    \end{equation}
-%    where $\vec{C}_O^{+}$ is the \textit{Moores-Penrose inverse}, a \textit{generalised inverse} which always exists and is unique for any matrix \citep[see, e.g., ][Ch.~8]{Searle_1982_MAUFS}, and can be used to obtain least norm and least squares solutions in the absence of a unique solution. 
-%    When $\vec{C}_O$ is full rank, $\vec{C}_O^{+}$ may be computed in closed form; if $m < m^*$, then $\vec{C}_O^{+} = \vec{C}_O^\tp (\vec{C}_O\vec{C}_O^\tp)^{-1}$, and if $m > m^*$, then $\vec{C}_O^{+} = (\vec{C}_O^\tp\vec{C}_O)^{-1}\vec{C}_O^\tp$. 
-%    When $m = m^*$ and $\vec{C}_O$ is full rank, the Moores-Penrose inverse is the regular inverse, $\vec{C}_O^{+} = \vec{C}_O^{-1}$. 
-%    When $\vec{C}_O$ is rank deficient, \pkg{FRK} v.2 uses the function \fct{MPinv} from the \pkg{VCA} package to compute $\vec{C}_O^{+}$, which is a re-implementation of the \fct{ginv} function from the \pkg{MASS} package to deal with sparse matrices.
-%    
+\section{Implementation details}\label{appendix:implementation_details}
+
+In this appendix, we provide some esoteric implementation details. In Appendix \ref{appendix:implementation_details:fitting_with_only_observed_fine-scale}, we describe the model we construct within the \proglang{C++} template passed to \pkg{TMB}. 
+This model is equivalent to that described in Section \ref{SEC:Methodology}, however, for computational reasons, some minor adjustments are made. 
+In Appendix \ref{subsection:04-04:Initialisations}, we describe the process of parameter initialisation. 
+
+
+\subsection{Fitting with only the observed fine-scale random effects}\label{appendix:implementation_details:fitting_with_only_observed_fine-scale}
+
+Recall that the model described by (\ref{eqn:new_model_Z}) -- (\ref{eqn:new_model_priors}) includes $N$ fine-scale random effects $\vec{\xi}$; that is, a vector of fine-scale random effects at all $N$ BAUs. 
+However, the fine-scale random effects at unobserved locations do not have any influence on the objective function whatsoever; this means that the posterior variability of the fine-scale effects can be extremely large, and can cause issues with model fitting.
+Hence, in practice, when using \pkg{TMB} for model fitting, we do not explicitly fit the model (\ref{eqn:new_model_Z}) -- (\ref{eqn:new_model_priors}), but rather an equivalent and more stable version which considers the observed BAUs only; this model is outlined subsequently. 
+
+Define an $m^* \times N$ matrix $\vec{A}$, where $m^*$ is the number of observed BAUs, and $N$ is the total number of BAUs, consisting entirely of 0s and 1s, with the following properties. 
+After left-multiplying a matrix (or vector) with $N$ rows by $\vec{A}$, the resultant product is the original matrix (or vector) but with only the rows corresponding to observed BAUs retained; for example, $\vec{Y}_O \equiv \vec{A}\vec{Y}$ is the latent process evaluated over the \textit{observed} BAUs.
+Similarly, right-multiplying a matrix with $N$ columns by $\vec{A}^\tp$ extracts the columns corresponding to observed BAUs only; for example, the matrix $\vec{C}_O \equiv \vec{C}_Z\vec{A}^\tp$ is the incidence matrix with columns corresponding to observed BAUs only.
+% The $\vec{A}$ matrix will always have $N$ columns, but the number of rows can vary; at one extreme, with point-referenced data, the matrix will have $m$ rows, and at the other extreme, with areal data in which all BAUs are observed, the matrix will have $N$ rows. 
+The model we use for estimation is
+\begin{gather}
+    Z_j \mid \vec{\mu}_{Z,j} \inddist \text{EF}(\vec{\mu}_{Z,j}), \quad j = 1, \dots, m,  \label{eqn:new_model2_Z}\\
+    \vec{\mu}_Z = \vec{C}_O \vec{\mu}_O,\\
+    g(\vec{\mu}_O) = \vec{Y}_O, \\
+    \vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O \equiv 
+    \begin{cases} 
+    \vec{Y}_O = \vec{A}\vec{Y}\\
+    \vec{Y} = \vec{T} \vec{\alpha} + \vec{S} \vec{\eta} + \vec{\xi} \\
+    \end{cases},\\
+    \vec{\eta} \mid \vec{\vartheta} \sim \Gau(\vec{0}, \vec{Q}^{-1}), \\
+    \vec{\xi} \mid \vec{\sigma}^2_\xi \sim \Gau(\vec{0}, \vec{\Sigma}_\xi), \label{eqn:new_model2_priors}
+\end{gather}
+where $\vec{T}_O \equiv \vec{A} \vec{T}$, $\vec{S}_O \equiv \vec{A} \vec{S}$, and $\vec{\xi}_O \equiv \vec{A} \vec{\xi}$.
+At first glance, the model (\ref{eqn:new_model2_Z} -- \ref{eqn:new_model2_priors}) seems quite different to that described by (\ref{eqn:new_model_Z}) -- (\ref{eqn:new_model_priors}). 
+However, the models are equivalent, because the columns in the incidence matrix $\vec{C}_Z$ corresponding to unobserved BAUs are zero-vectors, and so the elements of $\vec{\mu}$ corresponding to unobserved BAUs get mapped to zero when computing $\vec{\mu}_Z = \vec{C}_Z \vec{\mu}$.
+Another key point is that we merge levels $\vec{Y}_O = \vec{A}\vec{Y}$ and $\vec{Y} = \vec{T} \vec{\alpha} + \vec{S} \vec{\eta} + \vec{\xi}$ into a single step, $\vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O$. 
+By doing so, we never construct the full vector $\vec{Y}$ (or $\vec{\xi}$) in the \proglang{C++} template, and hence avoid identifiability issues with estimating the unobserved elements of $\vec{\xi}$. 
+There are slight computational benefits too, as we deal with smaller matrices; however, as these matrices are sparse with portions corresponding to unobserved BAUs being zero, the benefits are only marginal.
+
+
+
+\subsection{Parameter and Random Effect Initialisation}\label{subsection:04-04:Initialisations}
+
+
+
+
+%\begin{algorithm}
+%  \caption{Simple interpolation of $\vec{\mu}_O$ from $\hat{\vec{\mu}}_Z$} \label{alg:Updated_Cpp_template_structure_FRK}
+%  \begin{algorithmic}[1]
+%%    \Require{$\hat{\vec{\mu}}_Z$, $\vec{C}_O$}
+%    % \Statex
+%    \State For notational convenience, denote $\vec{C}_O$ simply by $\vec{C}$. 
+%    \For{$j \in (1, \dots, m)$}
+%    \State \multiline{$\vec{w}_j \equiv \vec{C}_{j:} / (\vec{C}_{j:}\vec{1})$, where the division is applied element-wise. The non-zero entries in $\vec{w}_j$ correspond to the BAUs associated with the $j$-th observation, $\vec{Z}_j$.} 
+%    \State $\vec{m}_j \equiv \{\vec{Z}\}_j\vec{w}_j$
+%    \EndFor
+%%    \If{}
+%%        \State 
+%%        \State 
+%%    \Else
+%%        \State \multiline{} 
+%%        \State 
+%%    \EndIf
+%  \end{algorithmic}
+%\end{algorithm}
+
+
+\pkg{TMB} requires initialisation for all parameters and random effects in the model. 
+In this section we demonstrate how reasonable initial values are chosen. 
+Accurate initial values are useful in their own right; however, in a spatial change-of-support setting, whereby some observations are associated with multiple BAUs, the initialisation of the fine-scale variance parameter becomes particularly important because, for numerical reasons and identifiability issues, it must be fixed throughout the estimation procedure. 
+Specifically, \pkg{FRK} v.2 imposes that if all rows of the incidence matrix $\vec{C}_Z$ contain more than one non-zero element (i.e., all observations are associated with multiple BAUs), then the fine-scale variance parameter must be fixed. 
+
+We denote initial values by a superscript of $(0)$ (e.g., the initial value for $\vec{\alpha}$ is denoted as $\vec{\alpha}^{(0)}$).
+The general approach is to use the data vector $\vec{Z}$ to obtain an estimate of $\vec{Y}_O$, and then take advantage of the Gaussian assumptions at the latent Gaussian scale. 
+Guided by the model in (\ref{eqn:new_model2_Z}) -- (\ref{eqn:new_model2_priors}), we proceed as follows. 
+
+\begin{enumerate}
+    \item\label{step_mu_Z} Estimate the observation level mean process $\vec{\mu}_Z$ with the data $\vec{Z}$; that is, set $\hat{\vec{\mu}}_Z \equiv \vec{Z}$. 
+    \item Estimate the mean vector evaluated over the observed BAUs, $\vec{\mu}_O$, based on the relation $\vec{C}_O\vec{\mu}_O = \vec{\mu}_Z$. This system of equations can be solved using a generalised-inverse approach. However, for simplicity, in \pkg{FRK} v.2 we use a ``simple interpolation'' of $\vec{\mu}_Z$, where values are imputed proportionally based on the weights of the incidence matrix $\vec{C}_O$ or, when the data is binomial or negative-binomial, based on the size parameters at the BAU level \citep[see, e.g.,][who discussed this approach using areal-based proportionality]{Bradley_2016_Bayesian_spatial_COS_lattice_data}. Note that the use of size parameters in this way is possible because, when the data is binomial or negative-binomial, \pkg{FRK} v.2 does not allow overlapping areal data supports, requires \code{average\_in\_BAU = TRUE}, and enforces all weights of the incidence matrices to be 1. The approach in the general case can be summarised with the following code:
+\begin{Code}
+R>  mu_O <- vector(mode = "list", length = mstar)
+R>  for (Bj in 1:m) {       # for each observation (obs.) j
+
+    w_j <- C_O[Bj, ]        # extract incidence matrix weights for obs. j
+    idx <- which(w_j > 0)   # find BAUs associated with obs. j
+    w   <- w_j[idx]
+
+    ## Interpolate mu_Z[j] to each BAU associated with obs. j
+    mu_O_j <- w_j / sum(w_j) * mu_Z[Bj]  
+    
+    ## Assign mu_O_j[i] to BAU i
+    for (i in 1:length(idx)) {  # for each BAU associated with obs. j,
+      mu_O[[idx[i]]] <- c(mu_O[[idx[i]]], mu_O_j[i]) 
+    }
+  }
+R> mu_O <- sapply(mu_O, mean)
+\end{Code}
+    \item \red{(Original approach using generalised inverses)} We need an estimate of the mean vector evaluated over the observed BAUs, $\vec{\mu}_O$. 
+    The relevant relationship is $\vec{C}_O\vec{\mu}_O = \vec{\mu}_Z$, so solving 
+    \begin{equation}\label{eqn:C_O_system_to_solve}
+        \vec{C}_O\hat{\vec{\mu}}_O = \hat{\vec{\mu}}_Z 
+    \end{equation}
+    should yield a reasonable estimate of $\vec{\mu}_O$. 
+    Recall that $\vec{C}_O$ is a $m \times m^*$ matrix, where $m$ is the number of observations (after binning), and $m^*$ is the number of observed BAUs. 
+    Define
+    \begin{equation}\label{eqn:MooresPenroseSolution}
+        \hat{\vec{\mu}}_O = \vec{C}_O^{+} \hat{\vec{\mu}}_Z,
+    \end{equation}
+    where $\vec{C}_O^{+}$ is the \textit{Moores-Penrose inverse}, a \textit{generalised inverse} which always exists and is unique for any matrix \citep[][Ch.~8]{Searle_1982_MAUFS}, and can be used to ``solve'' (\ref{eqn:C_O_system_to_solve}) in the absence of a unique solution (see below). 
+    When $\vec{C}_O$ is full rank, $\vec{C}_O^{+}$ may be computed in closed form; if $m < m^*$, then $\vec{C}_O^{+} = \vec{C}_O^\tp (\vec{C}_O\vec{C}_O^\tp)^{-1}$, and if $m > m^*$, then $\vec{C}_O^{+} = (\vec{C}_O^\tp\vec{C}_O)^{-1}\vec{C}_O^\tp$. 
+    When $m = m^*$ and $\vec{C}_O$ is full rank, the Moores-Penrose inverse is the regular inverse, $\vec{C}_O^{+} = \vec{C}_O^{-1}$. 
+    When $\vec{C}_O$ is rank deficient, \pkg{FRK} v.2 uses the function \fct{MPinv} from the \pkg{VCA} package to compute $\vec{C}_O^{+}$, which is a re-implementation of the \fct{ginv} function from the \pkg{MASS} package to deal with sparse matrices.
+    
 %    The interpretation of (\ref{eqn:MooresPenroseSolution}) depends on the consistency of the system (\ref{eqn:C_O_system_to_solve}). 
-%    If (\ref{eqn:C_O_system_to_solve}) is inconsistent, then (\ref{eqn:MooresPenroseSolution}) provides a least squares solution; that is, it minimises $\norm{\vec{C}_O\vec{x} - \hat{\vec{\mu}}_Z}^2$ over all possible values $\vec{x} \in \mathbb{R}^{m^*}$. 
-%    If $\vec{C}_O$ is full column rank, then this least squares solution is unique; otherwise, there are infinitely many minimising solutions, and (\ref{eqn:MooresPenroseSolution}) is the solution with the minimum Euclidean norm.
-%        % \[
-%        % \vec{C}_O\hat{\vec{\mu}}_O = \hat{\vec{\mu}}_Z \text{ such that } \norm{\vec{C}_O\hat{\vec{\mu}}_O - \hat{\vec{\mu}}_Z}^2 \text{is minimised}.
-%        % \]
-%    If (\ref{eqn:C_O_system_to_solve}) is consistent with exactly one solution, then  (\ref{eqn:MooresPenroseSolution}) will provide that solution. 
-%    If (\ref{eqn:C_O_system_to_solve}) is consistent with infinitely many solutions, then  (\ref{eqn:MooresPenroseSolution}) provides a minimum Euclidean norm solution; that is, it solves the system (\ref{eqn:C_O_system_to_solve}) such that $\norm{\hat{\vec{\mu}}_O}$ is minimum with respect to all possible solutions.
-%    
-%
-%    
-%
-%    
-%    % \begin{itemize}
-%    %     \item $m = m^*$, with every BAU associated with at most one observation. This can occur when we have point-referenced observations with \code{average\_in\_BAU = TRUE}, or point-referenced observations with every observation location falling into a separate BAU by chance, or areally-referenced observations with data supports equal to the BAUs. 
-%    %     In this case, $\vec{C}_O$ is full rank and hence invertible, and the Moores-Penrose inverse is the regular inverse, $\vec{C}_O^{+} = \vec{C}_O^{-1}$. Then, (\ref{eqn:MooresPenroseSolution}) is the unique solution to the system (\ref{eqn:C_O_system_to_solve}). 
-%    %     \item $m < m^*$; fewer observations than observed BAUs. This occurs when we have areally-referenced data with data supports spanning multiple BAUs. 
-%    %     \item $m > m^*$ (i.e., more observations than observed BAUs). 
-%    %     This may occur when we have point-referenced data and \code{average\_in\_BAU = FALSE}, or areal data with overlapping data supports \red{(I have never tried to see if it works for overlapping data supports)}. 
-%    %     \end{itemize}
-%    
-%    
-%    % There are of course situations in which obtainable a reasonable estimate for $\hat{\mu}_O$ is more difficult. 
-%    % For instance, consider a toy example with completely overlapping areal data supports, $B_1 = A_1 \cup A_2$ and $B_2 = A_1 \cup A_2$. 
-%    % Then $m = m^* = 2$, and, irrespective of the weights of the incidence matrix, the rows of $\vec{C}_O$ are identical; $\vec{C}_O$ is rank deficient, and hence singular. 
-%    % As a simple `catch-all' solution which will handle all possible edge cases, \pkg{FRK} v.2 uses the \pkg{MASS} package to compute the Moores-Penrose inverse, which is unique for any matrix, and can be used to obtain a least-squares solution \citep[see, e.g., ][Ch.~8]{Searle_1982_MAUFS}. 
-%    
-%    As an aside, this step of the initialisation stage also benefits from fitting with only the observed BAUs (see Appendix \ref{appendix:implementation_details:fitting_with_only_observed_fine-scale}). 
-%    For instance, consider a least norm solution to the system $\vec{C}_Z \hat{\vec{\mu}} = \hat{\vec{\mu}}_Z$ (i.e., using the full incidence matrix, $\vec{C}_Z$, and the mean over all of the BAUs, $\vec{\mu}$); since the columns in $\vec{C}_Z$ corresponding to unobserved BAUs are zero vectors, the corresponding elements of $\hat{\vec{\mu}}$ are unconstrained, and hence any least norm solution will, by definition, set these unconstrained elements to zero.
-%    
-%    Note that in a binomial or negative-binomial setting when we have observations associated with multiple BAUs, we do not take the generalised inverse approach, and instead simply divide each element of $\hat{\vec{\mu}}_Z$ over its associated BAUs, weighting by the size parameter; this is possible as, when the data is binomial or negative-binomial, \pkg{FRK} v.2 does not allow overlapping data supports, requires \code{average\_in\_BAU = TRUE}, and the weights of the incidence matrices are restricted to being 1. 
-%    %replacing the incidence matrix weight of each BAU with the BAU's associated size parameter. 
-%    
-%    \item\label{step_Y_O} Estimate the latent $Y$ process over the observed BAUs as
-%    \[
-%    \hat{\vec{Y}}_O \equiv g(\hat{\vec{\mu}}_O).
-%    \]
-%    (First creating an estimate of probability process over the observed BAUs, $\hat{\vec{\pi}}_O$, if in a binomial or negative-binomial setting and the link function is appropriate for modelling probabilities, and then creating $\hat{\vec{Y}}_O$.) 
-%    In practice, applying $g(\cdot)$ directly to $\hat{\vec{\mu}}_O$ can be problematic. For instance, when the log link is used with count data, there is a possibility that the logarithm of zero is computed. To avoid this, $\hat{\vec{\mu}}_O$ is adjusted as appropriate before being passed into $g(\cdot)$.
-%    \item Use $\vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O$ to estimate the fixed and random effects. 
-%    \begin{enumerate}[i.]
-%        \item\label{step_alpha} To initialise $\vec{\alpha}$, we ignore spatial dependence and use the ordinary least squares estimate
-%        \[
-%        \vec{\alpha}^{(0)} = \left(\vec{T}_O^\tp \vec{T}_O\right)^{-1}\vec{T}_O^\tp \hat{\vec{Y}}_O.
-%        \]
-%        \item Next, we initialise the variance components in $\vec{\vartheta}$. This includes the dispersion parameter, $\phi$, and the variance components used to parameterise the prior variance/precision matrix of the $\vec{\eta}$ random effects. 
-%        
-%        
-%        For many data models (Poisson, Bernoulli, binomial, and negative-binomial), the dispersion parameter, $\phi$, is equal to 1, and so we do not need to estimate it. Furthermore, for Gaussian data, $\phi$ is equal to the measurement error variance, and is confounded with the fine-scale variance; we estimate and fix it offline prior to model fitting.  
-%        For those data models that do require estimation of $\phi$, we use a naive estimate of the variance of the data; this will likely be an overestimate, so we (somewhat arbitrarily) divide this estimate by 10. 
-%        
-%        For the variance components of the $\vec{\eta}$ random effects, we set
-%        \[
-%        {\sigma^2_k}^{(0)} = \var{\hat{\vec{Y}}_O} (0.1)^{k-1},
-%        \]
-%        where $k$ is the resolution level. The rationale behind this approach is that the variance of the random effects should be related to the variance of the data, and should also decrease with increasing resolution. For the correlation within resolutions, we set
-%        \[
-%        {\tau_k}^{(0)} = \frac{1}{3^{k}},
-%        \]
-%        which is chosen to reflect the fact that effective correlation distances should decrease as the resolution increases. If the precision matrix formulation is specified, we simply invert these quantities.
-%        \item\label{step_eta} The basis-function random coefficients $\vec{\eta}$: recall that 
-%        \[
-%        \E{\vec{Y}_O \mid \vec{\alpha}, \vec{\eta}} = \vec{X}_O\vec{\alpha} + \vec{S}_O\vec{\eta}, 
-%        \]
-%        and so a naive initialisation could involve fitting $\vec{\eta}$ as fixed effects in an ordinary least squares solution. 
-%        However, this results in considerable over-fitting, and so some form of regularisation is required. We use the maximum a posteriori probability (MAP) estimate via the posterior distribution of $\vec{\eta}$, conditional on $\vec{Y}_O$ and the initial values of the parameters and fixed effects.
-%        It can be shown that the MAP for $\vec{\eta}$ is
-%        \[
-%        \vec{\eta}^{(0)}
-%            =
-%            \frac{1}{{\sigma^2_\xi}^{(0)}}\left(\frac{\vec{S}_O^\tp\vec{S}_O}{{\sigma^2_\xi}^{(0)}} + \vec{K}^{-1}\right)^{-1}\vec{S}_O^\tp\left(\vec{Y}_O - \vec{T}_O\vec{\alpha}^{(0)}\right).
-%        \]
-%        At this stage of the first iteration of the initialisation procedure, we do not have an initial value for the fine-scale variance parameter.  We simply set it equal to the initial value for the variance of the first resolution of basis functions, ${\sigma^2_1}^{(0)}$, for the purpose of generating a MAP estimate for $\vec{\eta}$. 
-%        After the first iteration, we use the current value of the fine-scale variance parameter.
-%        \item\label{step_xi_O} We initialise the observed fine-scale effects as
-%        \[
-%        \vec{\xi}_O^{(0)} = \vec{Y}_O - \vec{T}_O \vec{\alpha}^{(0)} - \vec{S}_O \vec{\eta}^{(0)}.
-%        \]
-%        \item\label{step_sigma^2_xi} Finally, we initialise the fine-scale variance parameter as 
-%        \[
-%        {\sigma^2_\xi}^{(0)} \equiv \var{\vec{\xi}_O^{(0)}}.
-%        \]
-%    \end{enumerate}
-%\end{enumerate}
-%We typically repeat Steps \ref{step_eta} -- \ref{step_sigma^2_xi} several times to give more accurate initialisations. 
-%In a spatio-temporal setting, we simply initialise the variance components associated with the temporal random coefficients as ${\sigma^2_t}^{(0)} = 1$ and ${\rho_t}^{(0)} = 0.1$.
-%At the end of the intitialisation procedure, if \code{fs\_by\_spatial\_BAU = TRUE}, we simply replicate the initial value of the fine-scale variance parameter $N_s$ (the number of spatial BAUs) times. 
-% When we must fix the fine-scale variance parameter in a spatial change-of-support setting, and the user has not supplied a known value for it, we repeat 
-% %Steps \ref{step_mu_Z} -- \ref{step_Y_O}, and 
-% Steps \ref{step_xi_O} and \ref{step_sigma^2_xi} after model fitting with \pkg{TMB}, but using the posterior modes for $\vec{\alpha}^{(0)}$ and $\vec{\eta}^{(0)}$. 
+    If (\ref{eqn:C_O_system_to_solve}) is inconsistent (no solutions exist), then (\ref{eqn:MooresPenroseSolution}) provides a least-squares solution; that is, it minimises $\norm{\vec{C}_O\vec{x} - \hat{\vec{\mu}}_Z}^2$ over all possible values of $\vec{x} \in \mathbb{R}^{m^*}$. 
+    If $\vec{C}_O$ is full column rank, then this least-squares solution is unique; otherwise, there are infinitely many minimising solutions, and (\ref{eqn:MooresPenroseSolution}) is the solution with the minimum Euclidean norm. 
+        % \[
+        % \vec{C}_O\hat{\vec{\mu}}_O = \hat{\vec{\mu}}_Z \text{ such that } \norm{\vec{C}_O\hat{\vec{\mu}}_O - \hat{\vec{\mu}}_Z}^2 \text{is minimised}.
+        % \]
+    If (\ref{eqn:C_O_system_to_solve}) is consistent with exactly one solution, then  (\ref{eqn:MooresPenroseSolution}) will provide that solution. 
+    If (\ref{eqn:C_O_system_to_solve}) is consistent with infinitely many solutions, then  (\ref{eqn:MooresPenroseSolution}) provides a minimum Euclidean norm solution; that is, it solves the system (\ref{eqn:C_O_system_to_solve}) such that $\norm{\hat{\vec{\mu}}_O}$ is minimum with respect to all possible solutions.
+    
+    As an aside, this step of the initialisation stage also benefits by fitting the model using only the observed BAUs (see Appendix \ref{appendix:implementation_details:fitting_with_only_observed_fine-scale}). 
+    For instance, consider a least-norm solution to the system $\vec{C}_Z \hat{\vec{\mu}} = \hat{\vec{\mu}}_Z$; that is, using the full incidence matrix, $\vec{C}_Z$, and the mean over all of the BAUs, $\vec{\mu}$. Since the columns in $\vec{C}_Z$ corresponding to unobserved BAUs are zero vectors, the corresponding elements of $\hat{\vec{\mu}}$ are unconstrained, and hence any least-norm solution will, by definition, set these elements to zero.
+    
+    When the data are binomial or negative-binomial, we use a ``simple interpolation'', where values are imputed proportionally based on the size parameters of each of the BAUs \citep[see, e.g.,][who discussed this approach using areal-based proportionality]{Bradley_2016_Bayesian_spatial_COS_lattice_data}. This is possible as, when the data is binomial or negative-binomial, \pkg{FRK} v.2 does not allow overlapping data supports, requires \code{average\_in\_BAU = TRUE}, and enforces all weights of the incidence matrices to be 1. 
+    
+    \item\label{step_Y_O} Estimate the latent $Y$ process over the observed BAUs as
+    \[
+    \hat{\vec{Y}}_O \equiv g(\hat{\vec{\mu}}_O).
+    \]
+    (If the data is binomial or negative-binomial and the link function is appropriate for modelling probabilities, we first estimate of probability process over the observed BAUs, $\hat{\vec{\pi}}_O$.) 
+    In practice, applying $g(\cdot)$ directly to $\hat{\vec{\mu}}_O$ can be problematic. For instance, when the log link is used with count data, there is a possibility that the logarithm of zero is computed. To avoid this, $\hat{\vec{\mu}}_O$ is adjusted as appropriate before being passed into $g(\cdot)$.
+    \item Use $\vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O$ to estimate the fixed and random effects. 
+    \begin{enumerate}[i.]
+        \item\label{step_alpha} To initialise $\vec{\alpha}$, we ignore spatial dependence and use the ordinary least squares estimate
+        \[
+        \vec{\alpha}^{(0)} = \left(\vec{T}_O^\tp \vec{T}_O\right)^{-1}\vec{T}_O^\tp \hat{\vec{Y}}_O.
+        \]
+        \item Next, we initialise the variance components in $\vec{\vartheta}$. This includes the dispersion parameter, $\phi$, and the variance components used to parameterise the prior variance/precision matrix of the $\vec{\eta}$ random effects. 
+        
+        
+        For many data models (Poisson, Bernoulli, binomial, and negative-binomial), the dispersion parameter, $\phi$, is equal to 1, and so we do not need to estimate it. Furthermore, for Gaussian data, $\phi$ is equal to the measurement error variance, and is confounded with the fine-scale variance; we estimate and fix it offline prior to model fitting.  
+        For those data models that do require estimation of $\phi$, we use a naive estimate of the variance of the data; this will likely be an overestimate, so we (somewhat arbitrarily) divide this estimate by 10. 
+        
+        For the variance components of the $\vec{\eta}$ random effects, we set
+        \[
+        {\sigma^2_k}^{(0)} = \var{\hat{\vec{Y}}_O} (0.1)^{k-1},
+        \]
+        where $k$ is the resolution level. The rationale behind this approach is that the variance of the random effects should be related to the variance of the data, and should also decrease with increasing resolution. For the correlation within resolutions, we set
+        \[
+        {\tau_k}^{(0)} = \frac{1}{3^{k}},
+        \]
+        which is chosen to reflect the fact that effective correlation distances should decrease as the resolution increases. If the precision matrix formulation is specified, we simply invert these quantities.
+        \item\label{step_eta} The basis-function random coefficients $\vec{\eta}$: recall that 
+        \[
+        \E{\vec{Y}_O \mid \vec{\alpha}, \vec{\eta}} = \vec{X}_O\vec{\alpha} + \vec{S}_O\vec{\eta}, 
+        \]
+        and so a naive initialisation could involve fitting $\vec{\eta}$ as fixed effects in an ordinary least squares solution. 
+        However, this results in considerable over-fitting, and so some form of regularisation is required. We use the maximum a posteriori probability (MAP) estimate via the posterior distribution of $\vec{\eta}$, conditional on $\vec{Y}_O$ and the initial values of the parameters and fixed effects.
+        It can be shown that the MAP for $\vec{\eta}$ is
+        \[
+        \vec{\eta}^{(0)}
+            =
+            \frac{1}{{\sigma^2_\xi}^{(0)}}\left(\frac{\vec{S}_O^\tp\vec{S}_O}{{\sigma^2_\xi}^{(0)}} + \vec{K}^{-1}\right)^{-1}\vec{S}_O^\tp\left(\vec{Y}_O - \vec{T}_O\vec{\alpha}^{(0)}\right).
+        \]
+        At this stage of the first iteration of the initialisation procedure, we do not have an initial value for the fine-scale variance parameter.  We simply set it equal to the initial value for the variance of the first resolution of basis functions, ${\sigma^2_1}^{(0)}$, for the purpose of generating a MAP estimate for $\vec{\eta}$. 
+        After the first iteration, we use the current value of the fine-scale variance parameter.
+        \item\label{step_xi_O} We initialise the observed fine-scale effects as
+        \[
+        \vec{\xi}_O^{(0)} = \vec{Y}_O - \vec{T}_O \vec{\alpha}^{(0)} - \vec{S}_O \vec{\eta}^{(0)}.
+        \]
+        \item\label{step_sigma^2_xi} Finally, we initialise the fine-scale variance parameter as 
+        \[
+        {\sigma^2_\xi}^{(0)} \equiv \var{\vec{\xi}_O^{(0)}}.
+        \]
+    \end{enumerate}
+\end{enumerate}
+We typically repeat Steps \ref{step_eta} -- \ref{step_sigma^2_xi} several times to give more accurate initialisations. 
+In a spatio-temporal setting, we simply initialise the variance components associated with the temporal random coefficients as ${\sigma^2_t}^{(0)} = 1$ and ${\rho_t}^{(0)} = 0.1$.
+At the end of the intitialisation procedure, if \code{fs\_by\_spatial\_BAU = TRUE}, we simply replicate the initial value of the fine-scale variance parameter $N_s$ (the number of spatial BAUs) times. 
+ When we must fix the fine-scale variance parameter in a spatial change-of-support setting, and the user has not supplied a known value for it, we repeat 
+ %Steps \ref{step_mu_Z} -- \ref{step_Y_O}, and 
+ Steps \ref{step_xi_O} and \ref{step_sigma^2_xi} after model fitting with \pkg{TMB}, but using the posterior modes for $\vec{\alpha}^{(0)}$ and $\vec{\eta}^{(0)}$. 
 
 
 %% \subsection{\proglang{C++} User Template}\label{appendix:C++template}

@@ -4,6 +4,7 @@ library("sp")
 library("ggplot2")
 library("ggpubr")
 library("dplyr")
+library("raster")
 
 ## set the seed once at the start of the script. Results should be reproducible.
 RNGversion("3.6.0")
@@ -180,7 +181,7 @@ pred <- predict(S)
 
 # ---- Plotting results ----
 
-plot_list <- plot(S, pred)
+plot_list <- plot(S, pred$newdata)
 
 plot_list <- lapply(
   plot_list,
@@ -233,7 +234,7 @@ write.csv(diagnostics, file = "./results/Negbinom_sim.csv", row.names = FALSE)
 ##NB: Cannot make predictions of pi(.) over arbitrary polygons, only the mean process
 pred_over_polygons <- predict(S, newdata = newdata)
 
-plot_list <- plot(S, pred_over_polygons, colour = "black")
+plot_list <- plot(S, pred_over_polygons$newdata, colour = "black")
 
 ggsave( 
   ggarrange(plot_list$p_mu, plot_list$interval90_mu, nrow = 1, align = "hv"),

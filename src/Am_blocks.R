@@ -30,20 +30,23 @@ construct_block_scheme <- function() {
     blocks[[i]] <- Polygons(list(blocks[[i]]), paste0("block", i))
   }
   
-  ## Now shift away from GZ
-  centre <- GZ_df
-  centre[, 1] <- GZ_df[, 1] - 153
-  centre[, 2] <- GZ_df[, 2] + 125
-  for(i in (n_block + 1):(2 * n_block)) {
-    blocks[[i]] <- makeRectangle(centre = centre, w = w[i - n_block], h = h[i- n_block])
-    blocks[[i]] <- Polygons(list(blocks[[i]]), paste0("block", i))
+  if (n_schemes == 2) {
+    ## Now shift away from GZ
+    centre <- GZ_df
+    centre[, 1] <- GZ_df[, 1] - 153
+    centre[, 2] <- GZ_df[, 2] + 125
+    for(i in (n_block + 1):(2 * n_block)) {
+      blocks[[i]] <- makeRectangle(centre = centre, w = w[i - n_block], h = h[i- n_block])
+      blocks[[i]] <- Polygons(list(blocks[[i]]), paste0("block", i))
+    }
   }
+
   
   ## (set the plotting order from largest to smallest)
-  pred_polygons <- SpatialPolygons(blocks, (2 * n_block):1)
+  pred_polygons <- SpatialPolygons(blocks, (n_schemes * n_block):1)
   coordnames(pred_polygons) <- c("Easting", "Northing")
   
-  pred_polygons$Scheme <- rep(c("2", "1"), each = length(pred_polygons)/2) 
+  pred_polygons$Scheme <- rep(as.character(n_schemes:1), each = length(pred_polygons)/n_schemes) 
   
   return(pred_polygons)
 }

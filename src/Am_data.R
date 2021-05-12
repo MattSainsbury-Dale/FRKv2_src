@@ -6,7 +6,9 @@ GZ_df <- read.csv("./intermediates/Am_GZ.csv")
 Am_data$Easting   <- Am_data$Easting * 0.3048
 Am_data$Northing  <- Am_data$Northing * 0.3048
 Am_data$Am        <- Am_data$Americium
-Am_data$Americium <- NULL
+Am_data$Level <- Am_data$Americium <- NULL
+
+# save(Am_data, file="~/Dropbox/FRK/data/Am_data.rda")
 
 ## Add covariates required for plotting figures from Paul and Cressie (2011), 
 ## and for prediction with georob.
