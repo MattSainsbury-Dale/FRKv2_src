@@ -83,7 +83,8 @@ for (i in 1:max_nres) {
 }
 
 ## Predictions, uncertainty, and data
-plot_list <- plot(S_list[[3]], pred_list[[3]]$newdata, Poisson_simulated)
+plot_list <- plot(S_list[[3]], pred_list[[3]]$newdata)
+plot_list <- c(plot_spatial_or_ST(Poisson_simulated, "Z"), plot_list)
 
 ## True mean process
 plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +

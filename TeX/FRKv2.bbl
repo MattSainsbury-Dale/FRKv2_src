@@ -261,11 +261,6 @@ Rue H, Martino S, Chopin N (2009).
 \newblock \emph{Journal of the Royal Statistical Society}, \textbf{71},
   3319--392.
 
-\bibitem[{Searle(1982)}]{Searle_1982_MAUFS}
-Searle SR (1982).
-\newblock \emph{{Matrix Algebra Useful For Statistics}}.
-\newblock John Wiley \& Sons, Hoboken, NJ.
-
 \bibitem[{Sengupta and Cressie(2013)}]{Sengupta_Cressie_2013_spatial_GLMM_FRK}
 Sengupta A, Cressie N (2013).
 \newblock \enquote{{Hierarchical statistical modelling of big spatial datasets
@@ -319,5 +314,11 @@ Zammit-Mangion A, Ng TLJ, Vu Q, Filippone M (2021).
 \newblock \enquote{{Deep compositional spatial models}.}
 \newblock \emph{Journal of the American Statistical Association}, \textbf{In
   press}.
+
+\bibitem[{Zhang and Cressie(2020)}]{Zhang_2020_spatio-temporal_Arctic_sea_ice}
+Zhang B, Cressie N (2020).
+\newblock \enquote{Bayesian inference of spatio-temporal changes of Arctic sea
+  ice.}
+\newblock \emph{Bayesian Analysis}, \textbf{15}(2), 605--631.
 
 \end{thebibliography}
