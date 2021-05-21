@@ -27,11 +27,11 @@ library("ggpubr")
 f <- function(x, y, a = 0, b = 0, l = 1) exp(-l * sqrt((x - a)^2 + (y - b)^2))
 logistic <- function(x, L = 1, k=1, x0 = 0) L / (1 + exp(-k * (x - x0)))
 smooth_Y_process <- function(x, y) {
-  a <- 2 * sin(5 * x) + 2 * cos(4 * y) + 2 * sin(3 * x * y)+
+  a <- 6 * sin(5 * x) + 2 * cos(4 * y) + 2 * sin(3 * x * y)+
     sin(7 * x) + cos(9 * y) +
     sin(12 * x) + cos(17 * y) + sin(14 * x) * cos(16 * y)  +
     sin(23 * x) + cos(22 * y) + sin(24 * x) * cos(26 * y) +
-    x + y + x^2 + y^2 + x * y + 4 +
+    x + y + x^2 + y^2 + x * y + 
     sin(10 * pi * x * y) + cos(20 * x * y - 3) + sin(40 * x * y)
   
   logistic(a, x0 = 2, L = 6, k = 0.35)

@@ -1,7 +1,11 @@
-all: DEPENDS Poisson_sim Negbinom_sim Heaton MODIS Sydney Am Chicago
+all: DEPENDS DATA Poisson_sim Negbinom_sim Heaton MODIS Sydney Am Chicago 
 
 DEPENDS: src/DEPENDS.R
 	Rscript src/DEPENDS.R
+
+DATA: DATA.sh
+	chmod +x DATA.sh
+	./DATA.sh
 
 Poisson_sim_OBJECTS = img/Poisson_sim.png img/Poisson_sim_true_process_and_data.png results/Poisson_nres_comparison.csv
 

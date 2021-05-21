@@ -119,7 +119,7 @@ write.csv(data.frame(coverage = coverage),
 ## for a useful blog post on the rgba notation.
 
 plots <- plot(
-  S, pred, 
+  S, pred$newdata, 
   map_layer = SA2_bg,            # optional layer to put below the plotting geom
   colour = "black", size = 0.025 # optional arguments to plotting geom via ...
   ) 
