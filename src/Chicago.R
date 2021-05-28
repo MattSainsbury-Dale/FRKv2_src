@@ -43,7 +43,8 @@ ST_BAUs$x4 <- year * ST_BAUs$x3
 
 # ---- Model fitting ----
 
-basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
+# basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
+basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 1)
 
 M <- FRK(f = number_of_crimes ~ -1 + sqrt(population) + x1 + x2 + x3 + x4,   
          data = list(chicago_crimes_fit), basis = basis, BAUs = ST_BAUs,         
@@ -100,18 +101,19 @@ ST_pred@data$number_of_crimes <- df_val$number_of_crimes
 
 # ---- Prediction and forecasting years ----
 
-subset_time <- c(2010, 2019) ## Years we wish to analyse
+subset_time <- c(10, 19) ## Years we wish to analyse
 
-## NB: plotting zdf works provided the column name to plot is all.vars(M@f)[1]
 plots <- plot(M, pred$newdata,
               map_layer = chicago_map, subset_time = subset_time, 
               colour = "black", size = 0.3, alpha = 0.85)
 
-plots <- c(plots, plot_spatial_or_ST(
+## plot() does plot the data, but since 2010 and 2019 are validation years, 
+## we don't have any data to plot! Construct the plot manually:
+plots$number_of_crimes <- plot_spatial_or_ST(
   ST_pred, all.vars(M@f)[1],
   map_layer = chicago_map, subset_time = subset_time, 
   colour = "black", size = 0.3, alpha = 0.85
-  ))
+  )[[1]]
 
 ## Change layout of each quantity to a single column, and edit axis
 plots <- lapply(plots, function(gg) gg + 
@@ -120,9 +122,9 @@ plots <- lapply(plots, function(gg) gg +
 
 ## Ensure predictions and observed are on same scale, for easy comparisons
 count_lims <- ST_pred@data %>% 
-  subset(t %in% subset_time) %>%
+  subset(t %in% c(2010, 2019)) %>%
   select(c("number_of_crimes", "p_Z")) %>%
-  c() %>%range()
+  c() %>% range()
 
 suppressMessages(ggsave( 
   ggarrange(

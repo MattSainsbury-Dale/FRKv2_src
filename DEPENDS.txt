@@ -6,12 +6,12 @@ ggpubr
 scales
 reshape2
 georob
-geosphere
 ggmap
 htmltab
 maptools
 spacetime
 stringr
+renv
 scoringRules
 INLA
 mgcv
@@ -21,5 +21,4 @@ spNNGP
 stargazer
 tidyr
 raster
-renv
 plyr

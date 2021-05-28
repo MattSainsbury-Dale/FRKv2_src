@@ -31,7 +31,7 @@ MODIS_FRK_pred <- function(pred_locs, FRK_object) {
   ## Convert prediction locations to SpatialPointsDataFrame
   coordinates(pred_locs) = ~ x + y
   pred <- predict(FRK_object, type = "mean", 
-                  newdata = pred_locs, 
+                  newdata = pred_locs, k = rep(1, length(FRK_object@BAUs)),
                   percentiles = NULL)  
   
   return(pred$newdata$p_mu)

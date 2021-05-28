@@ -27,7 +27,7 @@ library("ggpubr")
 f <- function(x, y, a = 0, b = 0, l = 1) exp(-l * sqrt((x - a)^2 + (y - b)^2))
 logistic <- function(x, L = 1, k=1, x0 = 0) L / (1 + exp(-k * (x - x0)))
 smooth_Y_process <- function(x, y) {
-  a <- 6 * sin(5 * x) + 2 * cos(4 * y) + 2 * sin(3 * x * y)+
+  a <- 4 + 2 * sin(5 * x) + 2 * cos(4 * y) + 2 * sin(3 * x * y)+
     sin(7 * x) + cos(9 * y) +
     sin(12 * x) + cos(17 * y) + sin(14 * x) * cos(16 * y)  +
     sin(23 * x) + cos(22 * y) + sin(24 * x) * cos(26 * y) +
@@ -83,7 +83,7 @@ for (i in 1:max_nres) {
 }
 
 ## Predictions, uncertainty, and data
-plot_list <- plot(S_list[[3]], pred_list[[3]]$newdata)
+plot_list <- plot(S_list[[max_nres]], pred_list[[max_nres]]$newdata)
 plot_list <- c(plot_spatial_or_ST(Poisson_simulated, "Z"), plot_list)
 
 ## True mean process

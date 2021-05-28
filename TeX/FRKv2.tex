@@ -552,64 +552,57 @@ Given $m$ observations with (possibly overlapping) spatial support defined on on
 (Right panel) The observation domain, $D^O$. The observation supports that comprise $D^O$ are; $B_1 \equiv A_1 \cup A_4$ with $c_1 \equiv \{1, 4\}$;  $B_2 \equiv A_6$ with $c_2 \equiv \{6\}$; and $B_3 \equiv A_{10} \cup A_{11}$ with $c_3 \equiv \{10, 11\}$.}\label{fig:BAU_intuition}
 \end{figure}
 
-Define the observation level mean as $\vec{\mu}_Z \equiv (\E{Z_1}, \dots, \E{Z_m})^\tp$. Then since each $B_j \in D^O$ is either a BAU or a union of BAUs, one can construct an $m\times N$ matrix 
+Define the observation level mean as $\vec{\mu}_Z \equiv (\E{Z_1}, \dots, \E{Z_m})^\tp$. Then, since each $B_j \in D^O$ is either a BAU or a union of BAUs, one can construct an $m\times N$ matrix 
 %\begin{equation}
 %\vec{C}_Z \equiv \Big(w_i\mathbb{I}(A_i \subset B_j) : i = 1, \dots, N; j = 1, \dots, m\Big),
 %\end{equation}
 \begin{equation}
-\vec{C}_Z \equiv \Big(w_{i, j}\mathbb{I}(i \in c_j) : i = 1, \dots, N; j = 1, \dots, m\Big),
+\vec{C}_Z \equiv \Big(w_{ij}\mathbb{I}(i \in c_j) : i = 1, \dots, N; j = 1, \dots, m\Big),
 \end{equation} 
 where $\mathbb{I}(\cdot)$ is the indicator function, such that
 \begin{equation}\label{eqn:04-01:mu_Z}
 \vec{\mu}_Z = \vec{C}_Z\vec{\mu}.  
 \end{equation} 
 Note that \cite{FRK_paper} applied $\vec{C}_Z$ directly to $\vec{Y}$; with an identity link function, implicit in \pkg{FRK} v1, $\vec{\mu}$ and $\vec{Y}$ are equivalent.  
-In \pkg{FRK} v2, the weights $w_{i, j}$ may be controlled through the \code{wts} field of the BAUs object and the argument \mbox{\code{normalise\_wts}}. 
- Specifically, the \code{wts} field allows one to attribute each BAU with some proportionality constant, $\{v_i: i = 1, \dots, N\}$, such that $w_{i, j} \propto v_i$.  
+In \pkg{FRK} v2, the weights $w_{ij}$ may be controlled through the \code{wts} field of the BAUs object and the argument \mbox{\code{normalise\_wts}}. 
+ Specifically, the \code{wts} field allows one to attribute each BAU to some proportionality constant $v_i$, $i = 1, \dots, N$, such that $w_{ij} \propto v_i$.  
  For example, if the BAUs are of unequal area, then one may wish to set $v_i = |A_i|$. 
- By default (and implicit in \pkg{FRK} v1), each $v_i$ is set to 1, so that $w_{i, j}$ is constant for a given observation support $j$. 
- The argument \mbox{\code{normalise\_wts}} controls whether $\vec{C}_Z$ corresponds to a weighted sum or a weighted average; if it is \mbox{\code{TRUE}} (default, and implicit in \pkg{FRK} v1), then the weights $w_{i, j}$ are normalised so that each row of $\vec{C}_Z$ sums to 1, and the mapping represents a weighted average. 
-  Note that if $v_i = |A_i|$ and \mbox{\code{normalise\_wts = TRUE}}, the $j$th row sum of $\vec{C}_Z$ is $\sum_{i \in c_j} |A_i| = |B_j|$, so that the normalised weights are $w_{i, j} = |A_i|/|B_j|$.  
-% Note that $w_{i, j} = |A_i|/|B_j|$ is achieved by setting $v_i = |A_i|$ and \mbox{\code{normalise\_wts = TRUE}}, in which case, the $j$th row sum of $\vec{C}_Z$ is $\sigma_j \equiv \sum_{i \in c_j} |A_i| = |B_j|$, so that the normalised weights are $w_{i, j} = v_i / \sigma_j = |A_i|/|B_j|$. 
-% This exploits the fact that the normalisation process, whereby each $w_{i, j}$ is divided by $\sum_{i \in c_j} w_{i, j}$ (the $j$th row sum of $\vec{C}_Z$), cancels out any term that is constant for a given $j$. 
-%  To see why this is so, consider the $j$th row sum of $\vec{C}_Z$, $\sigma_j \equiv \sum_{i \in c_j} w_{i, j}$. If $w_{i, j} = |A_i|/|B_j|$, then $\sigma_j = |B_j|^{-1}\sum_{i \in c_j} |A_i|$, and the normalised weights are 
-%  \[
-%  \tilde{w}_{i, j} = w_{i, j} / \sigma_j = (|A_i||B_j|^{-1}) / (|B_j|^{-1}\sum_{i \in c_j} |A_i|) = |A_i| / \sum_{i \in c_j} |A_i|.
-%  \] 
+ By default (and implicit in \pkg{FRK} v1), each $v_i$ is set to 1. 
+  The argument \mbox{\code{normalise\_wts}} controls whether $\vec{C}_Z$ corresponds to a weighted sum or a weighted average. If set to \code{FALSE}, then $w_{ij} = v_i$ for all $j$; if set to \mbox{\code{TRUE}} (default, and implicit in \pkg{FRK} v1), then $w_{ij}$ are normalised so that each row of $\vec{C}_Z$ sums to 1.  
+  Note that if $v_i = |A_i|$ and \mbox{\code{normalise\_wts = TRUE}}, the $j$th row sum of $\vec{C}_Z$ is $\sum_{i \in c_j} |A_i| = |B_j|$, so that the normalised weights are $w_{ij} = |A_i|/|B_j|$.  
+% The argument \mbox{\code{normalise\_wts}} controls whether $\vec{C}_Z$ corresponds to a weighted sum or a weighted average; if set to \mbox{\code{TRUE}} (default, and implicit in \pkg{FRK} v1), then the weights $w_{ij}$ are normalised so that each row of $\vec{C}_Z$ sums to 1, and the mapping represents a weighted average.  
+%  Note that if $v_i = |A_i|$ and \mbox{\code{normalise\_wts = TRUE}}, the $j$th row sum of $\vec{C}_Z$ is $\sum_{i \in c_j} |A_i| = |B_j|$, so that the normalised weights are $w_{ij} = |A_i|/|B_j|$.  
 
  
 
 
-
-
-
-Denoting the mean of $Z_j$, that is, the $j$th element of $\vec{\mu}_Z$, by $\{\vec{\mu}_{Z}\}_j$, we assume that 
+Denoting the mean of $Z_j$, that is, the $j$th element of $\vec{\mu}_Z$, by $\vec{\mu}_{Zj}$, we assume that 
 \begin{equation}\label{eqn:Z_j|mu(.)}
-[Z_j \mid \mu(\cdot), \psi] = \text{EF}(\{\vec{\mu}_{Z}\}_j, \psi),
+[Z_j \mid \mu(\cdot), \psi] = \text{EF}(\vec{\mu}_{Zj}, \psi),
 \end{equation}
 where EF corresponds to a probability distribution in the exponential family with dispersion parameter $\psi$, and, for generic random quantities $A$ and $B$, $[A \mid B]$ denotes the probability distribution of $A$ given $B$. 
  We assume that $\psi$ is spatially invariant, and note that $\psi = 1$ for some distributions in the exponential family (e.g., binomial, negative-binomial, and Poisson distributions). 
 Equation (\ref{eqn:Z_j|mu(.)}) implies that a given observation depends only on the value of the mean process at the corresponding observation support, rather than on the process over the whole domain. 
-As a result, conditional on the latent spatial process, all observations are conditionally independent:
+Further, we assume that, all observations are conditionally independent given the latent spatial process:
 \[
-[\vec{Z} \mid \mu(\cdot), \psi] = [\vec{Z} \mid \vec{\mu_Z}, \psi] = \prod_{j=1}^m \text{EF}(\{\vec{\mu}_{Z}\}_j, \psi).
+[\vec{Z} \mid \mu(\cdot), \psi] = [\vec{Z} \mid \vec{\mu}_Z, \psi] = \prod_{j=1}^m \text{EF}(\vec{\mu}_{Zj}, \psi).
 \]
-Further, as we only consider data models in the exponential family, $\ln{[\vec{Z}  \mid  \vec{\mu}_Z, \psi]}$ may be expressed as  
+As we only consider data models in the exponential family, $\ln{[\vec{Z}  \mid  \vec{\mu}_Z, \psi]}$ may be expressed as  
 \begin{equation}\label{eqn:ln[Z|Y],ExpFam}
 \ln{[\vec{Z} \mid \vec{\mu}_Z, \psi]}
 =
 \sum_{j=1}^m\left\{
-\frac{Z_j\lambda(\{\vec{\mu}_{Z}\}_j) - b(\lambda(\{\vec{\mu}_{Z}\}_j))}{a(\psi)} + c(Z_j, \psi)\right\},
+\frac{Z_j\lambda(\vec{\mu}_{Zj}) - b(\lambda(\vec{\mu}_{Zj}))}{a(\psi)} + c(Z_j, \psi)\right\},
 \end{equation}
 where $a(\cdot)$, $b(\cdot)$, and $c(\cdot, \cdot)$ are deterministic functions specific to the exponential family member, and $\lambda(\cdot)$ is the canonical parameter.
-%We model the conditional distribution $[Z_j \mid \{\vec{\mu}_{Z}\}_j, \psi]$ as a member of the exponential family \citep[Sec.~2.2.2]{McCullagh_Nelder_1989_GLM}, with conditional expectation $\mu(B_j) \equiv \ECurly{Z_j \mid \{\vec{\mu}_{Z}\}_j, \psi}$.  
+%We model the conditional distribution $[Z_j \mid \vec{\mu}_{Zj}, \psi]$ as a member of the exponential family \citep[Sec.~2.2.2]{McCullagh_Nelder_1989_GLM}, with conditional expectation $\mu(B_j) \equiv \ECurly{Z_j \mid \vec{\mu}_{Zj}, \psi}$.  
 
 Note that two distributions catered for by \pkg{FRK} v2, namely the binomial and negative-binomial distributions, have a known constant `size' parameter, $k_j$, and a `probability of success' parameter, $\pi_j$, associated with each datum, $Z_j$; see Appendix \ref{sec:Distributions with size parameters} for details on how we link the latent process $Y(\cdot)$ to the mean process $\mu(\cdot)$ when these distributions are chosen. 
  
 
 The model employed by \pkg{FRK} v2 can be summarised as follows. 
 \begin{gather}
-    Z_j \mid \{\vec{\mu}_{Z}\}_j, \psi \inddist \text{EF}(\{\vec{\mu}_{Z}\}_j, \psi), \quad j = 1, \dots, m, \label{eqn:new_model_Z}\\
+    Z_j \mid \vec{\mu}_{Zj}, \psi \inddist \text{EF}(\vec{\mu}_{Zj}, \psi), \quad j = 1, \dots, m, \label{eqn:new_model_Z}\\
     \vec{\mu}_Z = \vec{C}_Z \vec{\mu}, \label{eqn:new_model_muZ}\\
     g(\vec{\mu}) = \vec{Y}, \\
     \vec{Y} = \vec{T} \vec{\alpha} + \vec{S} \vec{\eta} + \vec{\xi}, \label{eqn:new_model_Y}\\
@@ -1388,9 +1381,9 @@ The \code{percentiles} argument allows the computation of percentiles of the pos
 \begin{Code}
 R> pred <- predict(S, type = c("link", "mean"))
 \end{Code}
-When \code{method = "TMB"}, the returned object is a list containing two elements. 
+When \code{method = "TMB"}, the returned object is a \class{list} containing two elements. 
 The first element is an object of the same class as \code{newdata} (if \code{newdata} is unspecified, prediction is done over the BAUs), and contains the predictions and uncertainty quantification of the predictions for each term in \code{type}.
-The second element is a list of matrices containing MC samples for each term in \code{type} at each prediction location. Finally, we can generate a list of \class{ggplot} \citep{Wickham_2016_ggplot2} objects of the predictions and associated uncertainty using the function \fct{plot}. 
+The second element is a \class{list} of matrices containing MC samples for each term in \code{type} at each prediction location. Finally, we can generate a \class{list} of \class{ggplot} \citep{Wickham_2016_ggplot2} objects of the predictions and associated uncertainty using the function \fct{plot}. 
 \begin{Code}
 R> plots <- plot(S, pred$newdata)
 \end{Code}
@@ -3253,7 +3246,7 @@ We do not consider SA2 regions where the total number of families (the size para
 %% The $\vec{A}$ matrix will always have $N$ columns, but the number of rows can vary; at one extreme, with point-referenced data, the matrix will have $m$ rows, and at the other extreme, with areal data in which all BAUs are observed, the matrix will have $N$ rows. 
 %The model we use for estimation is
 %\begin{gather}
-%    Z_j \mid \{\vec{\mu}_{Z}\}_j \inddist \text{EF}(\{\vec{\mu}_{Z}\}_j), \quad j = 1, \dots, m,  \label{eqn:new_model2_Z}\\
+%    Z_j \mid \vec{\mu}_{Zj} \inddist \text{EF}(\vec{\mu}_{Zj}), \quad j = 1, \dots, m,  \label{eqn:new_model2_Z}\\
 %    \vec{\mu}_Z = \vec{C}_O \vec{\mu}_O,\\
 %    g(\vec{\mu}_O) = \vec{Y}_O, \\
 %    \vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O \equiv 
