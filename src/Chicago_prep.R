@@ -73,7 +73,7 @@ rownames(community_areas@data) <- NULL
 # ---- Population covariates (community area level) ----
 
 ## Read the HTML table on the community areas wikipedia page 
-tab <- htmltab("https://en.wikipedia.org/wiki/Community_areas_in_Chicago",1)
+tab <- htmltab("https://en.wikipedia.org/w/index.php?title=Community_areas_in_Chicago&oldid=1012989271",1)
 rownames(tab) <- NULL
 
 ## The last row corresponds to column totals, so remove it
