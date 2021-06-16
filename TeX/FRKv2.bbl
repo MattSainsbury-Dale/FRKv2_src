@@ -61,8 +61,8 @@ Bradley JR, Wikle CK, Holan SH (2019).
 
 \bibitem[{Cressie(1993)}]{Cressie_1993_stats_for_spatial_data}
 Cressie N (1993).
-\newblock \emph{{Statistics for Spatial Data}}.
-\newblock revised edition. John Wiley \& Sons, Hoboken, NJ.
+\newblock \emph{{Statistics for Spatial Data, revised edition}}.
+\newblock John Wiley \& Sons, New York, NY.
 
 \bibitem[{Cressie(2006)}]{Cressie_2006_block_kriging_lognormal_spatial_processes}
 Cressie N (2006).
@@ -72,8 +72,8 @@ Cressie N (2006).
 \bibitem[{Cressie and Johannesson(2008)}]{Cressie_Johannesson_2008_FRK}
 Cressie N, Johannesson G (2008).
 \newblock \enquote{{Fixed rank kriging for very large spatial data sets}.}
-\newblock \emph{{Journal of the Royal Statistical Society}}, \textbf{70},
-  209--226.
+\newblock \emph{{Journal of the Royal Statistical Society: Series B}},
+  \textbf{70}, 209--226.
 
 \bibitem[{Datta \emph{et~al.}(2016)Datta, Banerjee, Finley, and
   Gelfand}]{Datta_2016_NNGP_spatial}
@@ -87,8 +87,8 @@ Datta A, Banerjee S, Finley AO, Gelfand AE (2016).
   Moyeed}]{Diggle_1998_spatial_GLMM}
 Diggle PJ, Tawn JA, Moyeed RA (1998).
 \newblock \enquote{{Model-based geostatistics}.}
-\newblock \emph{Journal of the Royal Statistical Society}, \textbf{47},
-  299--350.
+\newblock \emph{Journal of the Royal Statistical Society: Series C},
+  \textbf{47}, 299--350.
 
 \bibitem[{Finley \emph{et~al.}(2015)Finley, Banerjee, and
   Gelfand}]{Finley_2015_spBayes}
@@ -118,8 +118,8 @@ Furrer R, Nychka D, Genton MG (2006).
   Raftery}]{Gneiting_2007_scoring_rules}
 Gneiting T, Balabdaoui F, Raftery AE (2007).
 \newblock \enquote{{Probabilistic forecasts, calibration and sharpness}.}
-\newblock \emph{{Journal of the Royal Statistical Society}}, \textbf{69},
-  243--268.
+\newblock \emph{{Journal of the Royal Statistical Society: Series B}},
+  \textbf{69}, 243--268.
 
 \bibitem[{Guennebaud \emph{et~al.}(2010)Guennebaud, Jacob
   \emph{et~al.}}]{Eigen}
@@ -146,7 +146,7 @@ Hersbach H (2000).
 \newblock \emph{American Meteorological Society}, \textbf{15}, 559--570.
 
 \bibitem[{Hu and Bradley(2018)}]{Hu_2018_log-gamma_earthquake_magnitudes}
-Hu G, Bradley J (2018).
+Hu G, Bradley JR (2018).
 \newblock \enquote{A {B}ayesian spatial-temporal model with latent multivariate
   log-gamma random effects with application to earthquake magnitudes.}
 \newblock \emph{Stat}, \textbf{7}, e179.
@@ -155,8 +155,7 @@ Hu G, Bradley J (2018).
   Hsing}]{Huang_2009_multivar_intrinsic_rand_functions_cokriging}
 Huang C, Yao Y, Cressie N, Hsing T (2009).
 \newblock \enquote{{Multivariate intrinsic random functions for cokriging}.}
-\newblock \emph{{International Association for Mathematical Geosciences}},
-  \textbf{41}, 887--904.
+\newblock \emph{{Mathematical Geosciences}}, \textbf{41}, 887--904.
 
 \bibitem[{Hughes(2014)}]{ngspatial_2014}
 Hughes J (2014).
@@ -258,8 +257,8 @@ Pebesma EJ, Bivand RS (2005).
 Rue H, Martino S, Chopin N (2009).
 \newblock \enquote{{Approximate Bayesian inference for latent Gaussian models
   by using integrated nested Laplace approximations}.}
-\newblock \emph{Journal of the Royal Statistical Society}, \textbf{71},
-  3319--392.
+\newblock \emph{Journal of the Royal Statistical Society: Series B},
+  \textbf{71}, 3319--392.
 
 \bibitem[{Sengupta and Cressie(2013)}]{Sengupta_Cressie_2013_spatial_GLMM_FRK}
 Sengupta A, Cressie N (2013).
@@ -283,9 +282,9 @@ Sengupta A, Cressie N (2016).
   \url{https://www.lib.uchicago.edu/e/collections/maps/censusinfo.html}.
 \newblock Accessed: 2020-09-15.
 
-\bibitem[{{Urban Center for Computation and Data and University of
+\bibitem[{{Urban Center for Computation and Data of the University of
   Chicago}(2020)}]{Plenario_open_source_website}
-{Urban Center for Computation and Data and University of Chicago} (2020).
+{Urban Center for Computation and Data of the University of Chicago} (2020).
 \newblock \enquote{{Plenario}.}
 \newblock http://plenar.io/explore/discover.
 \newblock Accessed: 11-09-2020.
@@ -293,7 +292,7 @@ Sengupta A, Cressie N (2016).
 \bibitem[{Wickham(2016)}]{Wickham_2016_ggplot2}
 Wickham H (2016).
 \newblock \emph{ggplot2: Elegant Graphics for Data Analysis}.
-\newblock Springer-Verlag New York.
+\newblock Springer-Verlag, New York, NY.
 \newblock ISBN 978-3-319-24277-4.
 \newblock \urlprefix\url{https://ggplot2.tidyverse.org}.
 
@@ -306,7 +305,7 @@ Wood S (2017).
 Zammit-Mangion A, Cressie N (2021).
 \newblock \enquote{{\texttt{FRK}: an \texttt{R} package for spatial and
   spatio-temporal prediction with large datasets}.}
-\newblock \emph{Journal of Statistical Software}, \textbf{In press}.
+\newblock \emph{Journal of Statistical Software}, \textbf{98}, 1--48.
 
 \bibitem[{Zammit-Mangion \emph{et~al.}(2021)Zammit-Mangion, Ng, Vu, and
   Filippone}]{ZammitMangion_2021_Deep_compositional_spatial_model}
@@ -319,6 +318,6 @@ Zammit-Mangion A, Ng TLJ, Vu Q, Filippone M (2021).
 Zhang B, Cressie N (2020).
 \newblock \enquote{Bayesian inference of spatio-temporal changes of Arctic sea
   ice.}
-\newblock \emph{Bayesian Analysis}, \textbf{15}(2), 605--631.
+\newblock \emph{Bayesian Analysis}, \textbf{15}, 605--631.
 
 \end{thebibliography}
