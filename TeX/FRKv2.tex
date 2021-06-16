@@ -1457,7 +1457,7 @@ We show this through the comparative study published in \cite{Heaton_2019_compar
 %The training set consists of 105,569 observations, while the test set consists of 42,740 observations.
 The data used in that study was made up of a training and a test set consisting of 105,569 observations and 42,740 observations, respectively; see \cite{Heaton_2019_comparative_study} for a detailed description of the data.
 Table \ref{tab:Heaton_comparison} replicates Table 3 of \cite{Heaton_2019_comparative_study}, with an additional entry corresponding to \pkg{FRK} v2, wherein many more basis functions are used than was practical with \pkg{FRK} v1.
- Specifically, \pkg{FRK} v1 used 485 basis functions, whilst \pkg{FRK} v2 used 12114.
+ Specifically, \pkg{FRK} v1 used 485 basis functions, whilst \pkg{FRK} v2 used 12,114.
 The results show that the increased number of basis functions significantly improves the diagnostic scores of \pkg{FRK} v1, and the results for \pkg{FRK} v2 are now comparable to those of MRA.  
 To achieve these improvements over \pkg{FRK} v1, we only had to specify \code{nres = 4}, \code{K\_type = "precision"} and \code{method = "TMB"} in \fct{auto\_basis}, \fct{SRE}, and \fct{SRE.fit}, respectively; the rest of the \pkg{FRK} v1 code as used in the competition was left unchanged. 
 
