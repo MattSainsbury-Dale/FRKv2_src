@@ -43,8 +43,7 @@ ST_BAUs$x4 <- year * ST_BAUs$x3
 
 # ---- Model fitting ----
 
-# basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
-basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 1)
+basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
 
 M <- FRK(f = number_of_crimes ~ -1 + sqrt(population) + x1 + x2 + x3 + x4,   
          data = list(chicago_crimes_fit), basis = basis, BAUs = ST_BAUs,         

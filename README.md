@@ -24,6 +24,6 @@ The file DEPENDS.txt contains the `R` package dependencies for this repo. To aut
 
 Some data files were too large to be stored on Github; these include the Chicago crime data, and the shapefiles using in the Sydney spatial change-of-support example. To download this data, navigate to the top directory of this repo, and run `make DATA` to download these files and place them in the appropriate place. 
 
-### MODIS
+### Long run times
 
-The MODIS study is computationally demanding (upwards of 10 hours). To simply test that the code works, one may use extremely low rank versions of the models by setting `LOWRANK = TRUE` within src/MODIS_control.R. In fact, `LOWRANK = TRUE` is the default, so that people do not inadvertently get stuck in some lengthy computations. Further, one can reproduce the results from a subset of packages by editing the object `PACKAGES` in src/MODIS_control.R.
+The MODIS study is computationally demanding, taking upwards of 10 hours to reproduce the results of the manuscript. To simply test that the code works, one may use extremely low-rank versions of the models by setting `LOWRANK = TRUE` within src/MODIS_control.R. Further, one can reproduce the results from a subset of packages by editing the object `PACKAGES` in src/MODIS_control.R. The Chicago application study is also computationally demanding: A low-rank version of the model can be used by setting nres = 1 instead of nres = 3 within src/Chicago.R.

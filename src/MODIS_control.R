@@ -27,7 +27,7 @@ PACKAGES <- c("FRK", "INLA", "mgcv", "spNNGP", "spBayes")
 
 ## Use extremely low-rank versions of the models to establish that the 
 ## code works (relatively) quickly
-LOWRANK <- TRUE
+LOWRANK <- FALSE
 if (LOWRANK) {
   ARGS <- list(max.edge.interior = 50, nres = 1, k = 20, n.neighbours = 2, knots_squared = 9) 
 } else {
