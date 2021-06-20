@@ -45,7 +45,7 @@ ST_BAUs$x4 <- year * ST_BAUs$x3
 
 basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
 
-M <- FRK(f = number_of_crimes ~ -1 + sqrt(population) + x1 + x2 + x3 + x4,   
+M <- FRK(f = number_of_crimes ~ -1 + log(population) + x1 + x2 + x3 + x4,   
          data = list(chicago_crimes_fit), basis = basis, BAUs = ST_BAUs,         
          response = "poisson", link = "log", 
          sum_variables = "number_of_crimes", fs_by_spatial_BAU = TRUE) 

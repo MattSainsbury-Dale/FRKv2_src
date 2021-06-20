@@ -326,7 +326,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
 
  Software packages that facilitate in a straightforward manner the modelling of non-Gaussian spatial and spatio-temporal data include \pkg{ngspatial} \citep{ngspatial_2014}, \pkg{spBayes} \citep{Finley_2015_spBayes}, \pkg{mgcv} \citep{Wood_2017_GAM:R}, \pkg{spNNGP} \citep{Finley_2020_spNNGP}, and \pkg{georob} \citep{georob}. 
  Individually, these packages all have one or more major limitations: \pkg{spBayes}, \pkg{mgcv}, and \pkg{spNNGP} are limited to point-referenced data; \pkg{spBayes} uses basis functions that depend on covariance-function parameters, so computationally it can only handle a small number of predictive-process knots, resulting in a high degree of smoothing; \pkg{georob} is not designed for large data sets; \pkg{ngspatial}, \pkg{spBayes}, \pkg{spNNGP}, and \pkg{georob} are restricted to the spatial setting, and they cater for only a small number of non-Gaussian distributions. Further, these software packages do not cater for spatial change-of-support. 
-   Some general-purpose packages, like \pkg{INLA} \citep{Rue_2009_INLA, Lindgren_2015_R-INLA} can, in principle, handle the wide array of modelling challenges posed by non-Gaussian spatial and spatio-temporal data; however, they are not specifically designed for this purpose and can be difficult for an unfamiliar user to implement. 
+   Some general-purpose packages, like \pkg{INLA} \citep{Rue_2009_INLA, Lindgren_2015_R-INLA}, can, in principle, handle the wide array of modelling challenges posed by non-Gaussian spatial and spatio-temporal data; however, they are not specifically designed for this purpose and can be difficult for an unfamiliar user to implement. 
  A project aimed at facilitating spatial statistical modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}; at the time of writing,  spatio-temporal modelling was not implemented in \pkg{inlabru}.
  
 
@@ -1542,13 +1542,6 @@ Setting \code{n.omp.threads} to be greater than 1 did not work (a known issue do
 
 
 
-
-
-
-
-
-
-
  For each method and each sampling scheme, we predicted the probability of 'Cloud' at each pixel. 
  Figure \ref{fig:MODIS:pred_MR} shows the predictions resulting from the MR data shown in Figure \ref{fig:03-04-Modis1}. 
 The predictions of \pkg{FRK} v2, \pkg{INLA}, and \pkg{spNNGP} are similar, 
@@ -1559,13 +1552,6 @@ The predictions of \pkg{FRK} v2, \pkg{INLA}, and \pkg{spNNGP} are similar,
  \pkg{FRK} and \pkg{INLA} return predictive probabilities close to 0.5, while \pkg{mgcv} and \pkg{spBayes} are more confident in their predictions. 
  There is an interesting pattern in the \pkg{spNNGP} predictions; this is an expected artefact of the nearest-neighbour approach. 
  
- 
- 
-
-
-
-
-
 
  
 % In a binary setting, the task of assessing prediction uncertainty quantification is difficult, as prediction intervals (based on the probability samples) are in the range $(0, 1)$, and so they will \textit{never} contain the validation data, which take a value in the set $\{0, 1\}$.
@@ -1588,15 +1574,15 @@ For this reason, we do not attempt to validate the prediction intervals, and ins
     \hline
    Scheme &  Method  & Brier score & AUC &  Run Time (Min.) \\
    \hline
-  MR & FRK & 0.09 & \textbf{0.96} & \textbf{5.47} \\ 
+  MR & FRK & 0.09 & 0.95 & \textbf{5.47} \\ 
    & INLA & 0.09 & 0.95 & 54.44 \\ 
    & mgcv & 0.09 & 0.95 & 45.77 \\ 
    & spBayes & 0.11 & 0.93 & 68.01 \\ 
    & spNNGP & \textbf{0.08} & \textbf{0.96} & 12.35 \\  
    \hline 
-MB & FRK & \textbf{0.19} & \textbf{0.77} & \textbf{9.29} \\ 
+MB & FRK & \textbf{0.19} & \textbf{0.78} & \textbf{9.29} \\ 
    & INLA & 0.20 & 0.76 & 141.85 \\ 
-   & mgcv & 0.22 & 0.70 & 186.67 \\ 
+   & mgcv & 0.23 & 0.69 & 186.67 \\ 
    & spBayes & 0.25 & 0.63 & 489.41 \\ 
    & spNNGP & 0.20 & 0.75 & 59.30 \\     
    \hline    
@@ -2003,10 +1989,10 @@ For both years, Figure \ref{fig:chicago_validation_predictions} shows agreement 
 %we can observe a distinct relationship between the prediction and the prediction uncertainty; specifically, 
  the prediction uncertainty is roughly proportional to the predicted value, as one may expect when modelling counts.
 For these validation years, we also computed the empirical coverage when using 90\%, 80\%, 70\%, and 60\% prediction intervals, and the mean absolute percentage error (MAPE; see Appendix \ref{app:ScoringRules}). 
-We consistently observed that the empirical coverage in the year 2010 was slightly (4\% on average) higher than the nominal coverage, whilst it was lower (16\% on average) in the forecast year.
+We consistently observed that the empirical coverage in the year 2010 was slightly (3\% on average) higher than the nominal coverage, whilst it was lower (17\% on average) in the forecast year.
 % For these validation years, we also computed the empirical coverage when using 90\%, prediction intervals, and the mean absolute percentage error (MAPE; see Appendix \ref{app:ScoringRules}). 
 % We empirical coverage in the year 2010 was slightly higher (94.7\%) than the purported coverage, whilst it was lower (76.3\%) in the forecast year. 
-We observed MAPE scores of 4.4\% and 9.0\% in the years 2010 and 2019, respectively.
+We observed MAPE scores of 4\% and 9\% in the years 2010 and 2019, respectively.
 The slightly worse results in the year 2019 is possibly expected, as forecasting into the future is, in general, a harder task than predicting within the time span of the data.
 Nonetheless, these predictions are cause for optimism given the difficulties in modelling crime in a spatio-temporal setting. 
 
