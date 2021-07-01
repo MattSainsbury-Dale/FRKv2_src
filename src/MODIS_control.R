@@ -45,6 +45,8 @@ invisible(
 ## miscellaneous functions to make the comparison study script easier to read.
 source("./src/MODIS_diagnostic_and_misc_fns.R")
 
+## Some plotting functions
+source("./src/plotting_helpers.R")
 
 # ---- Load MODIS data  ----
 
@@ -103,6 +105,7 @@ blocks <- do.call("rbind", block_list) %>%
 write.csv(blocks,
           file = "./intermediates/MODIS_blocks.csv",
           row.names = FALSE)
+blocks <- read.csv("./intermediates/MODIS_blocks.csv")
 
 
 ## Combine data frames, and save as a .csv
@@ -149,7 +152,6 @@ g_original_data <- common_layers +
   scale_fill_gradient(low = "black", high = "white") +
   labs(fill = "Radiance")
 
-
 ## Plot the thresholded data (which we use for our analyses)
 discrete_cloud_scale <- scale_fill_gradient(low = "black", high = "white",
                                             breaks = c(0, 1),
@@ -172,49 +174,76 @@ g_thresholded_data <- common_layers +
   discrete_cloud_scale + discrete_cloud_theme
 
 
-## Plot the training data.
-## Just plot a single training set at a time; even if we use many for the final
-## comparison, we will not include a plot of all sets, as it would take up 
-## too much space.
-plot_training_testing_data <- function(df, scheme) {
-  common_layers +
-    geom_raster(data = df %>% 
-                  filter(Sampling_scheme == scheme, Run == 1), 
-                aes(x, y, fill = z)) +
-    discrete_cloud_scale + discrete_cloud_theme + training_data_background
-}
-training_data_MAR_plot <- plot_training_testing_data(all_df_train, "MAR")
-test_data_MAR_plot <- plot_training_testing_data(all_df_test, "MAR")
-training_data_block_plot <- plot_training_testing_data(all_df_train, "block")
-suppressMessages(test_data_block_plot <- plot_training_testing_data(all_df_test, "block") +
-  lims(x = range(all_df_train$x), y = range(all_df_train$y)))
+# ## Plot the training data.
+# ## Just plot a single training set at a time; even if we use many for the final
+# ## comparison, we will not include a plot of all sets, as it would take up 
+# ## too much space.
+# plot_training_testing_data <- function(df, scheme) {
+#   common_layers +
+#     geom_raster(data = df %>% 
+#                   filter(Sampling_scheme == scheme, Run == 1), 
+#                 aes(x, y, fill = z)) +
+#     discrete_cloud_scale + discrete_cloud_theme + training_data_background
+# }
+# training_data_MAR_plot <- plot_training_testing_data(all_df_train, "MAR")
+# test_data_MAR_plot <- plot_training_testing_data(all_df_test, "MAR")
+# training_data_block_plot <- plot_training_testing_data(all_df_train, "block")
+# suppressMessages(test_data_block_plot <- plot_training_testing_data(all_df_test, "block") +
+#   lims(x = range(all_df_train$x), y = range(all_df_train$y)))
+# 
+# ## Now make common edits to the plots
+# plot_list_data <- list(training_data_MAR_plot, test_data_MAR_plot, 
+#                        training_data_block_plot, test_data_block_plot)
+# 
+# plot_list_data <- lapply(plot_list_data, function (gg) gg + theme(axis.text = element_text(size = 16),
+#                                                                   axis.title = element_text(size = 19), 
+#                                                                   legend.text = element_text(size = 16), 
+#                                                                   plot.title = element_text(hjust = 0.5, size = 19)))
+# 
+# ggsave(
+#   ggarrange(
+#     plotlist = plot_list_data,
+#     nrow = 2, ncol = 2, common.legend = TRUE, legend = "right"
+#   ),
+#   filename = "MODIS_data.png", device = "png", width = 10, height = 5.5,
+#   path = "./img/"
+# )
 
-
+## With facetting:
+tmp1 <- all_df_train %>% mutate(set = "training")
+tmp2 <- all_df_test %>% mutate(set = "test", time = NULL)
+tmp <- rbind(tmp1, tmp2) %>%
+  mutate(facet_var = paste(Sampling_scheme, set)) %>%
+  mutate(facet_var = factor(facet_var, 
+                            levels = c("MAR training", "MAR test", "block training", "block test"),
+                            labels = c("MR: training set", "MR: test set", "MB: training set", "MB: test set"))) %>%
+  filter(Run == 1)
 ggsave(
-  ggarrange(
-    training_data_MAR_plot, test_data_MAR_plot, 
-    training_data_block_plot, test_data_block_plot,
-    nrow = 1, common.legend = TRUE, legend = "right"
-  ),
-  filename = "MODIS_data.png", device = "png", width = 13, height = 2.2,
+  common_layers +
+    geom_raster(data = tmp, aes(x = x, y = y, fill = z))  +
+    facet_wrap(~facet_var, nrow = 1) +
+    theme(axis.text = element_text(size = 10),
+          axis.title = element_text(size = 13), 
+          legend.text = element_text(size = 10), 
+          strip.text = element_text(size = 12)) +
+    discrete_cloud_scale + discrete_cloud_theme + training_data_background,
+  filename = "MODIS_data.png", device = "png", width = 10, height = 2.2,
   path = "./img/"
 )
 
-# ## Could also do this with facetting:
-# tmp1 <- all_df_train %>% mutate(set = "training") 
+# ## 2x2 facet grid:
+# tmp1 <- all_df_train %>% mutate(set = "training")
 # tmp2 <- all_df_test %>% mutate(set = "test", time = NULL)
-# tmp <- rbind(tmp1, tmp2) %>% 
-#   mutate(facet_var = paste(Sampling_scheme, set)) %>%
-#   mutate(facet_var = factor(facet_var, levels = c("MAR training", "MAR test", "block training", "block test"))) %>%
-#   filter(Run == 1) 
+# tmp <- rbind(tmp1, tmp2) 
 # ggsave(
 #   common_layers +
-#     geom_raster(data = tmp, aes(x = x, y = y, fill = z))  + 
-#     facet_wrap(~facet_var, nrow = 1) + 
+#     geom_raster(data = tmp, aes(x = x, y = y, fill = z))  +
+#     facet_grid(Sampling_scheme ~ set) +
 #     discrete_cloud_scale + discrete_cloud_theme + training_data_background,
 #   filename = "MODIS_data.png", device = "png", width = 13, height = 2.2,
 #   path = "./img/"
 # )
+
 
 # ---- Compute diagnostics (Brier score and AUC) ----
 
@@ -279,6 +308,13 @@ df_plot <- all_df_test %>%
   mutate(time = NULL) %>% 
   rbind(all_df_train)
 
+## Add "Data" to Method: This represent the true, withheld data. 
+N_test_locations <- nrow(all_df_test) / length(PACKAGES)
+tmp <- all_df_test[1:N_test_locations, ]
+tmp$Method <- "Data"
+tmp$pred <- tmp$z
+all_df_test <- rbind(all_df_test, tmp)
+
 ## Re-order the levels of Method to change the order of the panels
 # df_plot$Method <- factor(df_plot$Method, levels = PACKAGES)
 
@@ -287,28 +323,26 @@ plot_predictions <- function(df_plot, scheme) {
     filter(Sampling_scheme == scheme, Run == 1) %>%
     ggplot() +
     geom_raster(aes(x, y, fill = pred)) +
-    facet_grid( ~ Method) +
+    # facet_grid( ~ Method) +
+    facet_wrap( ~ Method, nrow = 2) +
     scale_fill_gradient2(midpoint = 0.5, low = "black", mid = "gray", high = "white") +
     labs(fill = "") +
+    theme_bw() + coord_fixed() +
     scale_x_continuous(expand = c(0, 0)) +
-      scale_y_continuous(expand = c(0, 0)) +
-    theme_bw() + coord_fixed()
+    scale_y_continuous(expand = c(0, 0)) +
+    theme(axis.text = element_text(size = 10),
+          axis.title = element_text(size = 13), 
+          legend.text = element_text(size = 10), 
+          strip.text = element_text(size = 12))  
 }
 
 ggsave(
   plot_predictions(all_df_test, "MAR") + training_data_background,
-  filename = "MODIS_MAR_predictions.png", device = "png", width = 12, height = 2.35,
+  filename = "MODIS_MAR_predictions.png", device = "png", 
+  # width = 12, height = 2.35,
+  width = 10, height = 5.1,
   path = "./img/"
 )
-
-
-## Interestingly, although it may appear so, the fitted values of spNNGP are NOT 
-## simply the training value; they are just extremely close to the observed 
-## value:
-#plot_predictions(df_plot, "block")
-# all_df_train %>% 
-#   filter(Method == "spNNGP" & Sampling_scheme == "block") %>%
-#   head()
 
 
 
@@ -327,7 +361,11 @@ ggsave(
     labs(fill = "") +
     scale_x_continuous(limits = c(blocks$xmin[1], blocks$xmax[1]), expand = c(0, 0)) +
     scale_y_continuous(limits = c(blocks$ymin[1], blocks$ymax[1]), expand = c(0, 0)) +
-    theme_bw() + coord_fixed(),
+    theme_bw() + coord_fixed() + 
+    theme(axis.text = element_text(size = 10),
+          axis.title = element_text(size = 13), 
+          legend.text = element_text(size = 10), 
+          strip.text = element_text(size = 12)),
   filename = "MODIS_block_predictions.png", device = "png", width = 12, height = 2.5,
   path = "./img/"
 )   

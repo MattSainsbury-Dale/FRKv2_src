@@ -12,11 +12,12 @@ combined_df <- FRK_df %>%
   # rbind(PaC2011, georob_df) %>% 
   rbind(georob_df) %>% 
   mutate(fwk_sch = paste(Framework, Scheme, sep = ": ")) %>%
-  ## alter the levels to change the facet_wrap titles:
+  ## alter the labels to change the facet_wrap titles:
   mutate(variable = factor(
     variable, 
-    labels = c("'Block prediction /' ~ 10^3 ~ 'counts' ~ min^-1", 
-               "'RMSPE from block prediction /' ~ 10^3 ~ 'counts' ~ min^-1")
+    # labels = c("'Block prediction /' ~ 10^3 ~ 'counts' ~ min^-1", 
+    #            "'RMSPE from block prediction /' ~ 10^3 ~ 'counts' ~ min^-1")
+    labels = c("'Block prediction'", "'RMSPE from block prediction'")
     ))
 
 combined_df$Framework <- as.character(combined_df$Framework)
@@ -37,7 +38,8 @@ ggsave(
     labs(x = "Block size (m)", y = "", 
          colour = "Blocking Scheme") +
     theme_bw() + scale_y_continuous(labels = scales::scientific) + 
-    theme(text = element_text(size=17)),
+    theme(text = element_text(size = 20), 
+          strip.text = element_text(size = 20)),
   filename = "Am_comparison.png", device = "png", width = 13.6, height = 4.5,
   path = "./img/"
 )

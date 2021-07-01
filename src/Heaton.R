@@ -26,7 +26,7 @@ dat <- subset(df, !is.na(MaskTemp))   # No missing data in data frame
 coordinates(dat)  <- ~Lon+Lat         # Convert to SpatialPointsDataFrame
 dat$TrueTemp <- NULL                  # Remove TrueTemp
 
-system.time({
+runtime <- system.time({
   ## Construct the basis functions
   basis <- auto_basis(plane(),            # we are on the plane
                       data = dat,         # data around which to make basis
@@ -51,7 +51,7 @@ system.time({
   tol <- 0.1
   M <- SRE.fit(
     M, method = "TMB", 
-    control = list(abs.tol = tol, rel.tol = tol, x.tol = tol)
+    control = list(rel.tol = tol)
   ) 
 
   ## Prediction
@@ -78,6 +78,7 @@ intervalScore <- function(Z, l, u, a = 0.05) {
   (u - l) + (2 / a) * (l - Z) * (Z < l) + (2 / a) * (Z - u) * (Z > u) 
 }
 
+## FIXME: Add run-time
 write.csv(
   pred_df[validx, ] %>%
     summarise(RMSE = sqrt(mean((p_Z - TrueTemp)^2)),

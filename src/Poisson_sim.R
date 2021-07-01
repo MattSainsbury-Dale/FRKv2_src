@@ -1,7 +1,5 @@
-# File: resolution_comparison.R
-# Author: Matthew Sainsbury-Dale
 # About:
-#   This file conducts the example in Section 3.1 of simulated spatial, point-
+#   This file conducts the example in Section 3.1 of simulated, spatial, point-
 #   referenced, Poisson-distributed data, including producing plots of the true
 #   mean process mu(.), the data Z, and predictions and associated uncertainties 
 #   of the latent process Y(.) and mean process mu(.). 
@@ -22,6 +20,8 @@ library("ggplot2")
 library("sp")
 library("dplyr")
 library("ggpubr")
+
+RNGversion("3.6.0"); set.seed(1)
 
 ## Define some complicated smooth process 
 f <- function(x, y, a = 0, b = 0, l = 1) exp(-l * sqrt((x - a)^2 + (y - b)^2))
@@ -53,8 +53,8 @@ BAUs_df <- coordinates(BAUs) %>%
 ## Subsample n of the BAUs to act as observation locations, and simulate data
 n <- 750
 Poisson_simulated <- sample_n(BAUs_df, n) %>% 
-  mutate(Z = rpois(n, lambda = mu)) %>%
-  select(x, y, Z)
+  dplyr::mutate(Z = rpois(n, lambda = mu)) %>%
+  dplyr::select(x, y, Z)
 
 # save(Poisson_simulated, file = "~/FRK/data/Poisson_simulated.rda")
 
@@ -82,32 +82,68 @@ for (i in 1:max_nres) {
   })
 }
 
+{
 ## Predictions, uncertainty, and data
 plot_list <- plot(S_list[[max_nres]], pred_list[[max_nres]]$newdata)
 plot_list <- c(plot_spatial_or_ST(Poisson_simulated, "Z"), plot_list)
 
 ## True mean process
 plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +
-  scale_fill_distiller(palette = "Spectral") +
   labs(fill = bquote("\U03BC(\U00B7)")) +
   theme_bw() + coord_fixed()
 
-## Adjust the breaks and remove the fill name
+## Set the title of each plot using the legend labels, 
+# and then remove the legend labels. Also adjust the axis breaks, and 
+# increase the font size
 plot_list <- lapply(
-  plot_list, 
-  function(gg) gg + scale_x_continuous(breaks=c(0, 0.5, 1)) + 
-    scale_y_continuous(breaks=c(0, 0.5, 1)))
+  plot_list,
+  function(gg) {
+    gg + labs(title = gg$labels$fill) + 
+      labs(fill = "", colour = "") + 
+      scale_x_continuous(breaks=c(0, 0.5, 1)) + 
+      scale_y_continuous(breaks=c(0, 0.5, 1)) + 
+      theme(axis.text = element_text(size = 16),
+            axis.title = element_text(size = 19), 
+            legend.text = element_text(size = 16), 
+            plot.title = element_text(hjust = 0.5, size = 19))
+  })
+
+## Increase legend width for plots that will have the legend on the side. 
+## Also shift the title further to the right, so it looks better centred. 
+for (i in c("p_Y", "interval90_Y", "p_mu", "interval90_mu")) {
+  plot_list[[i]] <- plot_list[[i]] + 
+    theme(legend.key.width = unit(1.1, 'cm'), 
+          plot.title = element_text(hjust = 0.66, size = 19))
+}
+
+## Increase legend height for plots that will have vertical legends. 
+## Also shift the title further to the right, so it looks better centred. 
+for (i in c("Z", "mu_true")) {
+  plot_list[[i]] <- plot_list[[i]] + 
+    theme(legend.key.height = unit(0.8, 'cm'))
+}
+
 
 ## Adjust the scale of the mean prediction, so it is the same as the data scale
-data_scale <- range(pred_list[[3]]$newdata$p_mu, Poisson_simulated$Z)
-plot_list$p_mu <- plot_list$p_mu +  scale_fill_distiller(palette = "Spectral", 
-                                                         limits = data_scale, 
-                                                         breaks = c(100, 300, 500))
+data_scale  <- range(pred_list[[max_nres]]$newdata$p_mu, Poisson_simulated$Z, BAUs_df$mu)
+breaks_data <- c(100, 300, 500)
+for (i in c("p_mu", "mu_true")) {
+  plot_list[[i]] <- plot_list[[i]] + scale_fill_distiller(palette = "Spectral", 
+                                                          limits = data_scale, 
+                                                          breaks = breaks_data)
+}
 
+plot_list$Z <- plot_list$Z  + 
+  labs(title = "Z") + 
+  scale_colour_distiller(palette = "Spectral", name = "", 
+                         limits = data_scale, breaks = breaks_data) 
 
+plot_list$interval90_mu <- plot_list$interval90_mu + 
+  scale_fill_distiller(palette = "BrBG", name = "", breaks = c(100, 250, 400)) 
 
 ggsave(
-  ggarrange(plot_list$mu_true, plot_list$Z, nrow = 1),
+  ggarrange(plot_list$mu_true, plot_list$Z, 
+            nrow = 1, common.legend = TRUE, legend = "right", align = "hv"),
   filename = "Poisson_sim_true_process_and_data.png", 
   path = "./img", device = "png", width = 10, height = 4
 )
@@ -117,9 +153,9 @@ ggsave(
             plot_list$p_mu, plot_list$interval90_mu, 
             nrow = 1, legend = "top"),
   filename = "Poisson_sim.png", 
-  path = "./img", device = "png", width = 14, height = 4
+  path = "./img", device = "png", width = 14, height = 5.1
 )
-
+}
 
 ## Diagnostic functions
 .RMSPE <- function(pred, true) sqrt(mean((pred - true)^2))

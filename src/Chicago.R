@@ -11,8 +11,7 @@ library("htmltab")
 library("ggpubr")
 
 
-defaultW <- getOption("warn") 
-options(warn = -1)
+
 
 # ---- Preprocessing ----
 
@@ -42,10 +41,10 @@ ST_BAUs$x4 <- year * ST_BAUs$x3
 
 
 # ---- Model fitting ----
-
+ 
 basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
 
-M <- FRK(f = number_of_crimes ~ -1 + log(population) + x1 + x2 + x3 + x4,   
+M <- FRK(f = number_of_crimes ~ log(population),   
          data = list(chicago_crimes_fit), basis = basis, BAUs = ST_BAUs,         
          response = "poisson", link = "log", 
          sum_variables = "number_of_crimes", fs_by_spatial_BAU = TRUE) 
@@ -59,7 +58,7 @@ saveRDS(Chicago_SRE_object, file = "./intermediates/Chicago_SRE_object.rds")
 RNGversion("3.6.0")
 set.seed(1)
 system.time(
-  pred <- predict(M,type = "response", 
+  pred <- predict(M, type = "response", 
                   percentiles = c(5, 95, 10, 90, 15, 85, 20, 80, 25, 75))  
 )
 
@@ -102,6 +101,7 @@ ST_pred@data$number_of_crimes <- df_val$number_of_crimes
 
 subset_time <- c(10, 19) ## Years we wish to analyse
 
+{
 plots <- plot(M, pred$newdata,
               map_layer = chicago_map, subset_time = subset_time, 
               colour = "black", size = 0.3, alpha = 0.85)
@@ -125,15 +125,46 @@ count_lims <- ST_pred@data %>%
   select(c("number_of_crimes", "p_Z")) %>%
   c() %>% range()
 
-suppressMessages(ggsave( 
-  ggarrange(
-    plots$number_of_crimes + scale_fill_distiller(palette = "Spectral", n.breaks = 4, name = "Observed \ncrime count", lim = count_lims), 
-    plots$p_Z  +  scale_fill_distiller(palette = "Spectral", n.breaks = 4, name = "Predicted \ncrime count", lim = count_lims), 
-    plots$interval90_Z + scale_fill_distiller(palette = "BrBG", n.breaks = 4, name = "90% prediction \ninterval width"), 
-    align = "hv", nrow = 1, legend = "top"),
-  filename = "Chicago_data_pred_uncertainty.png", device = "png", width = 11, height = 7,
+
+## Edit titles and legends
+plots$number_of_crimes <- plots$number_of_crimes + 
+  scale_fill_distiller(palette = "Spectral",  breaks = c(1000, 3000, 5000), lim = count_lims) + 
+  labs(title = "True (withheld)\ncrime count", fill = "") + 
+  theme(axis.title.x = element_blank())
+
+plots$p_Z <- plots$p_Z + 
+  scale_fill_distiller(palette = "Spectral", breaks = c(1000, 3000, 5000), lim = count_lims) + 
+  labs(title = "Predicted \ncrime count", fill = "") + 
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank())
+
+plots$interval90_Z <- plots$interval90_Z + 
+  scale_fill_distiller(palette = "BrBG", n.breaks = 3) + 
+  labs(title = "90% prediction-\ninterval width", fill = "") + 
+  theme(axis.title.y = element_blank(), 
+        axis.text.y = element_blank(), 
+        axis.title.x = element_blank(), 
+        axis.ticks.y = element_blank())
+
+plots <- lapply(plots, function(gg) gg + 
+                  theme(axis.text = element_text(size = 12),
+                        axis.title = element_text(size = 14), 
+                        legend.text = element_text(size = 12), 
+                        plot.title = element_text(hjust = 0.5, size = 14), 
+                        legend.key.width = unit(0.9, "cm"), 
+                        strip.text = element_text(size = 12), 
+                        plot.margin = unit(c(0,0,0,0), "lines")) +
+                  scale_x_continuous(breaks = c(-87.6, -87.8), expand = c(0, 0)) + 
+                  scale_y_continuous(n.breaks = 3, expand = c(0, 0)))
+
+ggsave( 
+  ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
+            align = "hv", nrow = 1, legend = "top"),
+  filename = "Chicago_data_pred_uncertainty.png", device = "png", width = 10, height = 8.5,
   path = "./img/"
-))
+)
+}
 
 # ---- Time series plot ----
 
@@ -161,20 +192,29 @@ time_series_df_long <- time_series_df %>%
   select(community, t, number_of_crimes, p_Z) %>% 
   melt(id = c("community", "t"))
 
+time_series_plot <- ggplot() + 
+  geom_vline(xintercept = c(2010, 2019), colour = "grey", alpha = 0.5, size = 1.5) +
+  geom_errorbar(data = time_series_df, 
+                aes(x = t, y = p_Z, ymin = Z_percentile_5, ymax = Z_percentile_95),
+                width = 0.25, alpha = 0.5) +
+  geom_point(data = time_series_df_long, aes(x = t, y = value, colour = variable), 
+             size = 0.9 * (time_series_df_long$variable == "p_Z") + 1.2 * (time_series_df_long$variable == "number_of_crimes")) +
+  facet_wrap(~community, nrow = 3, ncol = 1, scales = "free_y") +
+  labs(colour = "", x = "Year", y = "Number of crimes") +
+  scale_colour_discrete(labels = c("Observed count", "Predicted count"))+
+  theme_bw() + 
+  theme(axis.text = element_text(size = 11),
+      axis.title = element_text(size = 13), 
+      legend.text = element_text(size = 13), 
+      strip.text = element_text(size = 12), 
+      legend.position = "top") + 
+  scale_x_continuous(breaks = c(2001, 2005, 2010, 2015, 2019)) + 
+  scale_y_continuous(n.breaks = 4)
+
 suppressMessages(ggsave( 
-  ggplot() + 
-    geom_vline(xintercept = c(2010, 2019), colour = "grey", alpha = 0.5, size = 1.5) +
-    geom_errorbar(data = time_series_df, 
-                  aes(x = t, y = p_Z, ymin = Z_percentile_5, ymax = Z_percentile_95),
-                  width = 0.25, alpha = 0.5) +
-    geom_point(data = time_series_df_long, aes(x = t, y = value, colour = variable), 
-               size = 0.9 * (time_series_df_long$variable == "p_Z") + 1.2 * (time_series_df_long$variable == "number_of_crimes")) +
-    facet_wrap(~community, nrow = 3, ncol = 1, scales = "free_y") +
-    labs(colour = "", x = "Year", y = "Number of crimes") +
-    scale_colour_discrete(labels = c("Observed count", "Predicted count"))+
-    theme_bw()
-  ,
-  filename = "Chicago_focused_CAs_time_series.png", device = "png", width = 9, height = 6,
+  time_series_plot,
+  filename = "Chicago_focused_CAs_time_series.png", device = "png", 
+  width = 9, height = 6,
   path = "./img/"
 ))
 
@@ -191,19 +231,26 @@ MC_df_val <- MC_df %>% subset(t %in% c(2010, 2019))
 time_series_df_long_val <- time_series_df_long  %>% subset(t %in% c(2010, 2019))
 MC_df_val$t <- MC_df_val$t %>% droplevels()
 
+predictive_distribution_plots <- ggplot() + 
+  geom_density(data = MC_df_val, 
+               aes(x = samples)) +
+  geom_segment(data = time_series_df_long_val, 
+               aes(x = value, xend = value, y = 0, yend = Inf, colour = variable), 
+               size = 0.5 * (time_series_df_long_val$variable == "p_Z") + 1 * (time_series_df_long_val$variable == "number_of_crimes")) +
+  facet_grid(t ~ community, scales = "free_x") + 
+  labs(colour = "", x = "Number of crimes") +
+  scale_colour_discrete(labels = c("Observed count", "Predicted count")) + 
+  theme_bw() + 
+  theme(axis.text = element_text(size = 11),
+      axis.title = element_text(size = 13), 
+      legend.text = element_text(size = 13), 
+      strip.text = element_text(size = 12), 
+      legend.position = "top") 
+
 suppressMessages(ggsave( 
-  ggplot() + 
-    geom_density(data = MC_df_val, 
-                 aes(x = samples)) +
-    geom_segment(data = time_series_df_long_val, 
-                 aes(x = value, xend = value, y = 0, yend = Inf, colour = variable), 
-                 size = 0.5 * (time_series_df_long_val$variable == "p_Z") + 1 * (time_series_df_long_val$variable == "number_of_crimes")) +
-    facet_grid(t ~ community, scales = "free_x") + 
-    labs(colour = "", x = "Number of crimes") +
-    scale_colour_discrete(labels = c("Observed count", "Predicted count")) + 
-    theme_bw()
-  ,
-  filename = "Chicago_focused_CAs_predictive_distributions.png", device = "png", width = 9, height = 6,
+  predictive_distribution_plots,
+  filename = "Chicago_focused_CAs_predictive_distributions.png", device = "png", 
+  width = 9, height = 6,
   path = "./img/"
 ))
 
@@ -244,4 +291,3 @@ write.csv(Chicago_coverage_and_MAPE,
           "./results/Chicago_coverage_and_MAPE.csv", 
           row.names = FALSE)
 
-options(warn = defaultW)

@@ -1,4 +1,4 @@
-\begin{thebibliography}{45}
+\begin{thebibliography}{46}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -75,6 +75,13 @@ Cressie N, Johannesson G (2008).
 \newblock \emph{{Journal of the Royal Statistical Society: Series B}},
   \textbf{70}, 209--226.
 
+\bibitem[{Cressie \emph{et~al.}(2021)Cressie, Sainsbury-Dale, and
+  Zammit-Mangion}]{Cressie_2021_review_spatial-basis-function_models}
+Cressie N, Sainsbury-Dale M, Zammit-Mangion A (2021).
+\newblock \enquote{{Basis-function models in spatial statistics}.}
+\newblock \emph{{Annual Review of Statistics and its Applications}}, \textbf{In
+  press}.
+
 \bibitem[{Datta \emph{et~al.}(2016)Datta, Banerjee, Finley, and
   Gelfand}]{Datta_2016_NNGP_spatial}
 Datta A, Banerjee S, Finley AO, Gelfand AE (2016).
@@ -95,7 +102,7 @@ Diggle PJ, Tawn JA, Moyeed RA (1998).
 Finley AO, Banerjee S, Gelfand AE (2015).
 \newblock \enquote{{\texttt{spBayes}} for large univariate and multivariate
   point-referenced spatio-temporal data models.}
-\newblock \emph{Journal of Statistical Software}, \textbf{63}, 1--28.
+\newblock \emph{Journal of Statistical Software}, \textbf{63}(13), 1--28.
 \newblock \urlprefix\url{http://www.jstatsoft.org/v63/i13/}.
 
 \bibitem[{Finley \emph{et~al.}(2020)Finley, Datta, and
@@ -177,7 +184,7 @@ Kassambara A (2020).
 Kristensen K, Nielsen A, Berg CW, Skaug H, Bell BM (2016).
 \newblock \enquote{{\texttt{TMB}: Automatic differentiation and Laplace
   approximation}.}
-\newblock \emph{Journal of Statistical Software}, \textbf{70}, 1--21.
+\newblock \emph{Journal of Statistical Software}, \textbf{70}(5), 1--21.
 
 \bibitem[{Lee and
   Park(2020)}]{Lee_2020_partitioned_domain_basis_function_non_Gaussian}
@@ -189,7 +196,7 @@ Lee BS, Park J (2020).
 \bibitem[{Lindgren and Rue(2015)}]{Lindgren_2015_R-INLA}
 Lindgren F, Rue H (2015).
 \newblock \enquote{{Bayesian spatial modelling with \texttt{R-INLA}.}}
-\newblock \emph{Journal of Statistical Software}, \textbf{63}, 1--25.
+\newblock \emph{Journal of Statistical Software}, \textbf{63}(19), 1--25.
 
 \bibitem[{Lindgren \emph{et~al.}(2011)Lindgren, Rue, and
   Lindstr{\"o}m}]{Lindgren_Rue_2011_GF_GMRF_SPDE}
@@ -305,14 +312,14 @@ Wood S (2017).
 Zammit-Mangion A, Cressie N (2021).
 \newblock \enquote{{\texttt{FRK}: an \texttt{R} package for spatial and
   spatio-temporal prediction with large datasets}.}
-\newblock \emph{Journal of Statistical Software}, \textbf{98}, 1--48.
+\newblock \emph{Journal of Statistical Software}, \textbf{98}(4), 1--48.
 
 \bibitem[{Zammit-Mangion \emph{et~al.}(2021)Zammit-Mangion, Ng, Vu, and
   Filippone}]{ZammitMangion_2021_Deep_compositional_spatial_model}
-Zammit-Mangion A, Ng TLJ, Vu Q, Filippone M (2021).
-\newblock \enquote{{Deep compositional spatial models}.}
-\newblock \emph{Journal of the American Statistical Association}, \textbf{In
-  press}.
+Zammit-Mangion A, Ng TLG, Vu Q, Filippone M (2021).
+\newblock \enquote{Deep compositional spatial models.}
+\newblock \emph{Journal of the American Statistical Association}.
+\newblock {doi: \url{10.1080/01621459.2021.1887741}}.
 
 \bibitem[{Zhang and Cressie(2020)}]{Zhang_2020_spatio-temporal_Arctic_sea_ice}
 Zhang B, Cressie N (2020).

@@ -15,6 +15,8 @@ set.seed(1)
 source("./src/SpatialPolygon_fns.R")
 
 
+
+
 # ---- Construct BAUs, data supports, and arbitrary regions to predict over ----
 
 BAUs <- makeGrid(n = 64)
@@ -69,39 +71,40 @@ BAUs$Y <- smooth_Y_process(BAUs$x, BAUs$y) + rnorm(length(BAUs), sd = sqrt(sigma
 xbreaks <- scale_x_continuous(breaks=c(0, 0.5, 1)) 
 ybreaks <- scale_y_continuous(breaks=c(0, 0.5, 1))
 
+## Legend breaks
+breaks_prob = c(0.25, 0.5, 0.75)
+breaks_mu_BAU = c(50, 100, 150)
+breaks_data = c(2500, 6000, 9500)
+
 ## Now create the mean process over the BAUs. 
-if (link == "logit") {
-  
-  ## First construct the probability process
-  BAUs$prob <- plogis(BAUs$Y)
-  
-  ## For visually appealing data, we don't want the probability process 
-  ## to be extremely close to 0 or 1, so lets squash it to be between, say, 
-  ## 0.1 and 0.9. We'll do this using the general logistic function shifted 
-  ## by a constant. As the input, p_O, is already restricted to be in [0, 1],
-  ## we will set the curves centre to be 0.5.
-  general_logistic <- function(x, L = 1, k = 1, x0 = 0, a = 0){
-    L / (1 + exp(-k * (x - x0))) + a
-  }
-  
-  BAUs$prob <- general_logistic(BAUs$prob, L = 0.95, a = 0.05, x0 = 0.5, k = 4)
-  
-  g_prob_BAU <-  plot_spatial_or_ST(BAUs, "prob")[[1]] + 
-    labs(fill = "\U03C0(\U00B7)") + 
-    xbreaks + ybreaks 
-  
-  ## We need the size parameter at the BAU level
-  BAUs$k_BAU <- rep(50, length(BAUs))
-  
-  if (response == "negative-binomial") 
-    BAUs$mu <- BAUs$k_BAU * (1 / BAUs$prob - 1)
-  
-} else if (link == "identity") {
-  BAUs$mu <- BAUs$Y
+## First construct the probability process
+BAUs$prob <- plogis(BAUs$Y)
+
+## For visually appealing data, we don't want the probability process 
+## to be extremely close to 0 or 1, so lets squash it to be between, say, 
+## 0.1 and 0.9. We'll do this using the general logistic function shifted 
+## by a constant. As the input, p_O, is already restricted to be in [0, 1],
+## we will set the curves centre to be 0.5.
+general_logistic <- function(x, L = 1, k = 1, x0 = 0, a = 0){
+  L / (1 + exp(-k * (x - x0))) + a
 }
 
+BAUs$prob <- general_logistic(BAUs$prob, L = 0.95, a = 0.05, x0 = 0.5, k = 4)
+
+g_prob_BAU <-  plot_spatial_or_ST(BAUs, "prob")[[1]] + 
+  scale_fill_distiller(palette = "Spectral", breaks = breaks_prob) + 
+  labs(title = "\U03C0(\U00B7)", fill = "") + 
+  xbreaks + ybreaks 
+
+## We need the size parameter at the BAU level
+BAUs$k_BAU <- rep(50, length(BAUs))
+
+## Mean over the BAUs
+BAUs$mu <- BAUs$k_BAU * (1 / BAUs$prob - 1)
+
 g_mu_BAU <- plot_spatial_or_ST(BAUs, "mu")[[1]] + 
-  labs(fill = "\U03BC(\U00B7)") + 
+  scale_fill_distiller(palette = "Spectral", breaks = breaks_mu_BAU) + 
+  labs(title = "\U03BC(\U00B7)", fill = "") + 
   xbreaks + ybreaks 
 
 ## Now aggregate the mean process over the data supports
@@ -111,22 +114,15 @@ BAUs_as_points <- SpatialPointsDataFrame(coordinates(BAUs),
 obs <- SpatialPolygonsDataFrame(obs, 
                                 over(obs, BAUs_as_points, fn = sum))
 
-## breaks for the data-support scale
-data_breaks <- c(3000, 6000, 9000)
-
 ## Plot the aggregated mean process
 g_mu <- plot_spatial_or_ST(obs, "mu", colour = "black", size = 0.1)[[1]] + 
-  labs(fill = "\U03BC(\U00B7)") + 
-  xbreaks + ybreaks + 
-  scale_fill_distiller(palette = "Spectral", breaks = data_breaks)
+  scale_fill_distiller(palette = "Spectral", breaks = breaks_data) + 
+  labs(title = "\U03BC(\U00B7)", fill = "") + 
+  xbreaks + ybreaks
+  
 
 ## Now simulate data over the data supports. 
-if (response == "negative-binomial") {
-  obs$Z <- rnbinom(n = length(obs), size = obs$k_BAU, mu = obs$mu)
-} else if (response == "Gaussian") {
-  sigma2e <- 3^2
-  obs$Z <- rnorm(n = length(obs), mean = obs$mu, sd = sqrt(sigma2e))
-}
+obs$Z <- rnbinom(n = length(obs), size = obs$k_BAU, mu = obs$mu)
 
 ## Use a subsample of the data for model fitting
 obsidx <- sample(1:length(obs), round(length(obs) * 0.8), replace = FALSE)
@@ -134,19 +130,42 @@ zdf <- obs[obsidx, ]
 
 ## Training data
 g_Z_training <- plot_spatial_or_ST(zdf, "Z", colour = "black", size = 0.1)[[1]] + 
-  xbreaks + ybreaks + scale_fill_distiller(palette = "Spectral", breaks = data_breaks)
+  xbreaks + ybreaks + 
+  scale_fill_distiller(palette = "Spectral", breaks = breaks_data) + 
+  labs(title = "Z", fill = "")
 
-if (response == "negative-binomial") {
-  ggsave( 
-    ggarrange(g_prob_BAU, g_mu_BAU, g_mu, g_Z_training, 
-              nrow = 1, align = "hv", legend = "top"),
-    filename = "Negbinom_sim_data.png", device = "png", 
-    width = 13, height = 4,
-    path = "./img"
-  )
-} else if (response == "Gaussian") {
-  ggarrange(g_mu_BAU, g_mu, g_Z_training, nrow = 1, align = "hv", legend = "top") 
+
+set_title_from_fill_legend <- function(gg) {
+  gg + labs(title = gg$labels$fill) + labs(fill = "")
 }
+
+change_font_size <- function(gg, size = 11) {
+  gg + theme(axis.text = element_text(size = 16),
+             axis.title = element_text(size = 19), 
+             legend.text = element_text(size = 16), 
+             plot.title = element_text(hjust = 0.5, size = 19))
+}
+
+change_legend_width <- function(gg, width = 1.1) {
+  gg + theme(legend.key.width = unit(width, 'cm'))
+}
+
+set_title_from_fill_legend <- function(gg) {
+  gg + labs(title = gg$labels$fill) + labs(fill = "")
+}
+
+
+data_plots <- list(g_prob_BAU, g_mu_BAU, g_mu, g_Z_training)
+data_plots <- lapply(data_plots, change_font_size)
+data_plots <- lapply(data_plots, change_legend_width)
+
+ggsave(ggarrange(plotlist = data_plots, 
+                 nrow = 1, align = "hv", legend = "top"),
+       filename = "Negbinom_sim_data.png", device = "png", 
+       width = 14, height = 5.1,
+       path = "./img"
+)
+
 
 
 # ---- Prep BAUs and zdf for FRK ----
@@ -154,9 +173,8 @@ if (response == "negative-binomial") {
 BAUs$fs <- 1 # scalar variance matrix for fine-scale random effects
 
 ## FRK expects the size parameter at the data level to be labelled 'k_Z'
-if (response == "negative-binomial") {
-  names(zdf)[names(zdf) == "k_BAU"] <- "k_Z"
-}
+names(zdf)[names(zdf) == "k_BAU"] <- "k_Z"
+
 
 ## Remove the true processes from zdf and BAUs, and Z from BAUs
 ## (so we could not possibly use them in fitting). 
@@ -168,13 +186,9 @@ zdf@data[, c("x", "y", "Y", "prob", "mu")] <- NULL
 
 # ---- FRK ----
 
-est_error <- FALSE
-if (response == "Gaussian" && !est_error) zdf$std <- 1
-
 S <- FRK(f = Z ~ 1, data = list(zdf), BAUs = BAUs, 
          response = response, link = link, 
-         normalise_wts = FALSE, method = "TMB", 
-         est_error = est_error)
+         normalise_wts = FALSE, method = "TMB")
 
 pred <- predict(S)
 
@@ -183,16 +197,20 @@ pred <- predict(S)
 
 plot_list <- plot(S, pred$newdata)
 
-plot_list <- lapply(
-  plot_list,
-  function(gg) gg + xbreaks + ybreaks)
+plot_list <- lapply(plot_list, function(gg) gg + xbreaks + ybreaks)
+plot_list <- lapply(plot_list, change_font_size)
+plot_list <- lapply(plot_list, change_legend_width)
+plot_list <- lapply(plot_list, set_title_from_fill_legend)
+
 
 ggsave( 
-  ggarrange(plot_list$p_prob, plot_list$interval90_prob, 
-            plot_list$p_mu, plot_list$interval90_mu, 
+  ggarrange(plot_list$p_prob + scale_fill_distiller(palette = "Spectral", breaks = breaks_prob, name = ""), 
+            plot_list$interval90_prob + scale_fill_distiller(palette = "BrBG", breaks = c(0.1, 0.17, 0.24), name = ""), 
+            plot_list$p_mu + scale_fill_distiller(palette = "Spectral", breaks = breaks_mu_BAU, name = ""), 
+            plot_list$interval90_mu + scale_fill_distiller(palette = "BrBG", breaks = c(20, 70, 120), name = ""), 
             nrow = 1, legend = "top"),
   filename = "Negbinom_sim_BAU_predictions.png", device = "png", 
-  width = 13, height = 4,
+  width = 14, height = 5.1,
   path = "./img"
 )
 
@@ -231,14 +249,28 @@ write.csv(diagnostics, file = "./results/Negbinom_sim.csv", row.names = FALSE)
 
 # ---- Predict over polygons ----
 
-##NB: Cannot make predictions of pi(.) over arbitrary polygons, only the mean process
+## NB: Cannot make predictions of pi(.) over arbitrary polygons, only the mean process
 pred_over_polygons <- predict(S, newdata = newdata)
 
 plot_list <- plot(S, pred_over_polygons$newdata, colour = "black")
 
+## Hack to make the correct x-axis and y-axis breaks appear
+invisible_point <- geom_point(data = data.frame(x = c(0, 1), y = c(1, 1)), alpha = 0)
+plot_list$p_mu <- plot_list$p_mu + invisible_point
+plot_list$interval90_mu <- plot_list$interval90_mu + invisible_point
+  
+
+plot_list <- lapply(plot_list, function(gg) gg + xbreaks + ybreaks)
+plot_list <- lapply(plot_list, change_font_size)
+plot_list <- lapply(plot_list, set_title_from_fill_legend)
+plot_list <- lapply(plot_list, function(gg) gg + theme(legend.key.height = unit(1.1, "cm")))
+
+plot_list$p_mu <- plot_list$p_mu + 
+  scale_fill_distiller(palette = "Spectral", breaks = c(8000, 12000, 16000))
+
 ggsave( 
   ggarrange(plot_list$p_mu, plot_list$interval90_mu, nrow = 1, align = "hv"),
   filename = "Negbinom_sim_arbitrary_polygon_predictions.png", device = "png", 
-  width = 10, height = 3,
+  width = 11, height = 4.7,
   path = "./img"
 )

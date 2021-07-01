@@ -1,16 +1,19 @@
 # ---- Chicago ggmap ----
 
 load("./data/chicago_map.RData")
+load("./data/chicago_bbox.RData")
 
 ## Create map layer to place under all plots
 chicago_map <- ggmap(chicago)
 
-## Define x (longitude) and y (latitude) limits here, so all plots are consistent
-x_lims <- xlim(c(-87.95,-87.49)) 
-y_lims <- ylim(c(41.62, 42.04))
+## Define x (longitude) and y (latitude) limits here. This will restrict the plots
+## that use chicago_map as a base layer. 
+x_lims <- xlim(c(chicago_bbox["left"], chicago_bbox["right"])) 
+y_lims <- xlim(c(chicago_bbox["bottom"], chicago_bbox["top"])) 
 
 ## Add axis labels/limits and theme choices to chicago_map to reduce code repetition
-chicago_map <- chicago_map + x_lims + y_lims +
+chicago_map <- chicago_map + 
+  x_lims + y_lims +
   xlab("lon (deg)") + ylab("lat (deg)") + 
   theme_bw() + coord_fixed()
 

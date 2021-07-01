@@ -35,7 +35,11 @@ SA2_bg <- geom_polygon(data = SpatialPolygonsDataFrame_to_df(SA2_NSW_sub_withk0)
                        fill = "light gray")
 
 column_names <- c("Total_families_of_interest", "Proportion_poverty")
-training_data_plots <- plot_spatial_or_ST(poly_fit, column_names, map_layer = SA2_bg, colour = "black", size = 0.1)
+
+
+training_data_plots <- plot_spatial_or_ST(poly_fit, column_names, 
+                                          map_layer = SA2_bg, colour = "black", 
+                                          size = 0.1)
 
 fill_label = c(
   Total_families_of_interest = "Number of families (k)",
@@ -44,14 +48,25 @@ fill_label = c(
 
 breaks <- list(c(2000, 6000), c(0.25, 0.75))
 
-suppressMessages(
-  training_data_plots <- lapply(1:length(training_data_plots), 
+
+training_data_plots <- lapply(1:length(training_data_plots), 
                                 function(i) training_data_plots[[i]] + 
                                   labs(fill = fill_label[i]) + lab1 + lab2 + 
-                                  scale_fill_distiller(palette = "Spectral", breaks = breaks[[i]])
-  )
-)
+                                  scale_fill_distiller(palette = "Spectral", breaks = breaks[[i]]))
+
 names(training_data_plots) <- column_names
+
+change_font_size_and_axis <- function(gg) {
+  gg + theme(axis.text = element_text(size = 11),
+             axis.title = element_text(size = 14), 
+             legend.text = element_text(size = 11),
+             legend.title = element_text(size = 14)) + 
+    scale_x_continuous(breaks = c(150.8, 151.0, 151.2))
+}
+
+training_data_plots <- lapply(training_data_plots, change_font_size_and_axis)
+
+
 
 ggsave( 
   ggarrange(plotlist = training_data_plots, align = "hv", nrow = 1, legend = "top"),
@@ -125,6 +140,8 @@ plots <- plot(
   ) 
 
 plots <- lapply(plots, function(gg) gg + lab1 + lab2)
+plots <- lapply(plots, change_font_size_and_axis)
+
 
 ggsave( 
   ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top"),
@@ -139,12 +156,13 @@ RNGversion("3.6.0"); set.seed(1)
 pred <- predict(S, newdata = SA3_NSW_sub)
 plots <- plot(S, pred$newdata, colour = "black")
 plots <- lapply(plots, function(gg) gg + lab1 + lab2)
+plots <- lapply(plots, change_font_size_and_axis)
+plots$p_mu <-  plots$p_mu + scale_fill_distiller(palette="Spectral", breaks = c(2000, 6000, 10000))
+plots$interval90_mu <-  plots$interval90_mu + scale_fill_distiller(palette="BrBG", breaks = c(150, 225, 300))
+
 
 ggsave( 
-    ggarrange(plots$p_mu, 
-              plots$interval90_mu + 
-                scale_fill_distiller(palette="BrBG", breaks = c(100, 200, 300)), 
-              nrow = 1, legend = "top"),
+  ggarrange(plots$p_mu, plots$interval90_mu, nrow = 1, legend = "top"),
   filename = "Sydney_SA3_predictions.png", device = "png", width = 9.5, height = 4.4,
   path = "./img/"
 )
