@@ -397,7 +397,12 @@ As in \pkg{FRK} v1, the elements of $\vec{\xi}$ are modelled as independent and 
 \[
 g\left(\mu(\vec{s})\right) = Y(\vec{s}); \quad \vec{s} \in D.
 \]
-Therefore the mean process evaluated over the BAUs is $\mu_i = g^{-1}(Y_i)$,  $i = 1, \dots, N$, where $g^{-1}(\cdot)$ is the inverse link function, and we define $\vec{\mu} \equiv (\mu_i: i = 1, \dots, N)^\tp$. 
+Therefore the mean process evaluated over the BAUs is $\mu_i = g^{-1}(Y_i)$,  $i = 1, \dots, N$, where $g^{-1}(\cdot)$ is the inverse link function, and we define $\vec{\mu} \equiv (\mu_i: i = 1, \dots, N)^\tp$.
+
+Two distributions considered in this framework, namely, the binomial and the negative-
+binomial distributions, have a known constant `size' parameter and a `probability of success'
+parameter associated with every datum. 
+ For these distributions, we also define a probability process, $\pi(\cdot)$, which is a function of the process, $\mu(\cdot)$, and the known size parameter: See Appendix \ref{Appendix:Distributions with size parameters} for further details.
 
 
 \subsection{The data layer}\label{subsection:04-02:DataLayer}
@@ -517,7 +522,7 @@ As we only consider data models in the exponential family, $\ln{[\vec{Z}  \mid  
 where $a(\cdot)$, $b(\cdot)$, and $c(\cdot, \cdot)$ are deterministic functions specific to the exponential family member, and $\lambda(\cdot)$ is the canonical parameter.
 
 
-Note that two distributions catered for by \pkg{FRK} v2, namely the binomial and negative-binomial distributions, have a known constant `size' parameter, $k_j$, and a `probability of success' parameter, $\pi_j$, associated with each datum, $Z_j$; see Appendix \ref{sec:Distributions with size parameters} for details on how we link the latent process $Y(\cdot)$ to the mean process $\mu(\cdot)$ when these distributions are used. 
+Note that two distributions catered for by \pkg{FRK} v2, namely the binomial and negative-binomial distributions, have a known constant `size' parameter, $k_j$, and a `probability of success' parameter, $\pi_j$, associated with each datum, $Z_j$; see Appendix \ref{Appendix:Distributions with size parameters} for details on how we link the latent process $Y(\cdot)$ to the mean process $\mu(\cdot)$ when these distributions are used. 
  
 
 The model employed by \pkg{FRK} v2 can be summarised as follows. 
@@ -1309,7 +1314,7 @@ First, we repeated the analysis in Section \ref{sec:03-01:Poisson} using one, tw
     \hline
     Method & MAE  & RMSPE & CRPS & IS95 & Cvg95 & Run Time (Min.) & Cores Used \\[0pt]
     \hline
-    \pkg{FRK} v2 & 1.29  & 1.75 & 0.96  & 11.38 & 0.86 & $72.27^{a}$ & $1^{b}$    \\[0pt]
+    \pkg{FRK} v2 & 1.38  & 1.81 & 0.98  & 9.02 & 0.89 & $72.27^{a}$ & $1^{b}$    \\[0pt]
     \pkg{FRK} v1 & 1.96   & 2.44 & 1.44  & 14.08 & 0.79 & 2.32 & 1\\[0pt]
     Gapfill & 1.33   & 1.86 & 1.17  & 34.78 & 0.36 & 1.39 & 40\\[0pt]
     Lattice Krig & 1.22   & 1.68 & 0.87  & 7.55 & 0.96 & 27.92 & 1\\[0pt]
@@ -1461,13 +1466,13 @@ For this reason, we do not attempt to validate the prediction intervals, and ins
     \hline
    Scheme &  Method  & Brier score & AUC &  Run Time (Min.) \\
    \hline
-  MR & FRK & 0.09 & 0.95 & \textbf{5.47} \\ 
+  MR & FRK & 0.09 & 0.95 & \textbf{9.78} \\ 
    & INLA & 0.09 & 0.95 & 54.44 \\ 
    & mgcv & 0.09 & 0.95 & 45.77 \\ 
    & spBayes & 0.11 & 0.93 & 68.01 \\ 
    & spNNGP & \textbf{0.08} & \textbf{0.96} & 12.35 \\  
    \hline 
-MB & FRK & \textbf{0.19} & \textbf{0.78} & \textbf{9.29} \\ 
+MB & FRK & \textbf{0.19} & \textbf{0.78} & \textbf{17.74} \\ 
    & INLA & 0.20 & 0.76 & 141.85 \\ 
    & mgcv & 0.23 & 0.69 & 186.67 \\ 
    & spBayes & 0.25 & 0.63 & 489.41 \\ 
@@ -1669,7 +1674,7 @@ It is often the case that sampling once from a large area is relatively inexpens
     Training data used for modelling the number (or proportion) of families `in poverty' (see Appendix \ref{Appendix:Sydney_data_description} for how we define `in poverty'). 
     (Left panel) The total number of families. % at the SA2 level. 
     (Right panel) The observed proportion of families in poverty, % at the SA2 level, 
-    computed by dividing the number of families in poverty by the total number of families. Grey regions correspond to SA regions in which the total number of families is zero. 
+    computed by dividing the number of families in poverty by the total number of families. Solid-grey regions correspond to SA2 regions in which the total number of families is zero. The data are overlayed on a Stamen base map, where the textured grey areas correspond to bushland, large black areas correspond to ocean, and lines correspond to major arterial roads. Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
 }   
   \label{fig:SA2_level_data}
 \end{figure}
@@ -1711,7 +1716,8 @@ The predictions and associated uncertainty over the SA1 regions are shown in Fig
     \includegraphics[width = \linewidth]{img/Sydney_SA1_predictions.png}
         \vspace{-15pt}
     \caption{SA1 level predictions. (Left panel) Prediction of the probability process, $\pi(\cdot)$, representing the proportion of families in poverty, over the SA1 regions. (Right panel) 90\% prediction-interval width of the probability process.
-    Grey regions correspond to SA2 regions in which the total number of families is zero, and hence are omitted from the study. 
+    Solid-grey regions correspond to SA2 regions in which the total number of families is zero, and hence are omitted from the study. 
+    For details on the underlying Stamen base map, refer to the caption of Figure \ref{fig:SA2_level_data}. 
 }   
   \label{fig:SA1_predictions}
 \end{figure}
@@ -1728,7 +1734,8 @@ Figure \ref{fig:SA3_predictions} shows the SA3-region predictions and associated
     \centering
     \includegraphics[width = \linewidth]{img/Sydney_SA3_predictions.png}
         \vspace{-15pt}
-    \caption{SA3 level predictions. (Left panel) Prediction of the mean process, $\mu(\cdot)$, representing the expected number of families in poverty, over the SA3 regions. (Right panel) The 90\% prediction-interval width of the mean process.
+    \caption{SA3 level predictions. (Left panel) Prediction of the mean process, $\mu(\cdot)$, representing the expected number of families in poverty, over the SA3 regions. (Right panel) The 90\% prediction-interval width of the mean process. 
+    For details on the underlying Stamen base map, refer to the caption of Figure \ref{fig:SA2_level_data}.
 }   
   \label{fig:SA3_predictions}
 \end{figure}
@@ -1788,6 +1795,8 @@ R> ST_BAUs <- auto_BAUs(manifold = STplane(), data = chicago_crimes_fit,
 \end{Code}
 
 
+
+
 When modelling crime, it is natural to include population, or population density, as a covariate. 
 As the CAs are of unequal area, we use population rather than population density. This covariate was obtained from the Combined Community Data Snapshots provided by the \cite{Chicago_community_data_snapshots}. It is difficult to obtain population data for every year, so we assume that population is constant over the time-span of the data.
 % We observed a distinct negative trend when plotting the total number of crimes in each year; hence, we also include time as a covariate.
@@ -1812,6 +1821,9 @@ Next, we generate spatio-temporal basis functions automatically using \fct{auto\
 \begin{Code}
 R> basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years")
 \end{Code}
+
+
+
 Then, we initialise and fit the \class{SRE} object using \fct{FRK}, setting \code{response = "poisson"} and \code{link = "log"}. 
  Each entry in our data set provides the location and time at which a given crime occurred. It also contains a column of ones called \code{"number\_of\_crimes"}; this will be used for counting the number of crimes when binning. 
  By default, \fct{SRE}, which is called internally within \fct{FRK}, bins and then averages data falling into the same BAU. 
@@ -1824,17 +1836,17 @@ R> S <- FRK(f = number_of_crimes ~ log(population),
 +    response = "poisson", link = "log", 
 +    sum_variables = "number_of_crimes", fs_by_spatial_BAU = TRUE) 
 \end{Code}
+
 Finally, we predict over the spatio-temporal BAUs (which use the CAs as spatial BAUs) using \fct{predict}, and plot the results using \fct{plot}.
 
 \begin{figure}[t!]
     \centering
     \includegraphics[width = \linewidth]{img/Chicago_data_pred_uncertainty.png}
         \vspace{-15pt}
-    \caption{True (withheld) number of crimes, predictions, and prediction-interval width over Chicago in the prediction (2010) and forecast (2019) years. The first row corresponds to the year 2010, and the second row corresponds to the year 2019. The first column shows the true (withheld) number of crimes; the second column shows the predicted number of crimes; and the third column shows the width of a prediction interval with a nominal coverage of 90\%.
+    \caption{True (withheld) number of crimes, predictions, and prediction-interval width over Chicago in the prediction (2010) and forecast (2019) years. The first row corresponds to the year 2010, and the second row corresponds to the year 2019. The first column shows the true (withheld) number of crimes; the second column shows the predicted number of crimes; and the third column shows the width of a prediction interval with a nominal coverage of 90\%. For details on the underlying Stamen base map, refer to the caption of Figure \ref{fig:SA2_level_data} (the large black regions in this figure correspond to lake Michigan).
 }   
   \label{fig:chicago_validation_predictions}
 \end{figure}
-
 
 \begin{figure}[t!]
     \centering
@@ -1899,7 +1911,8 @@ Matthew Sainsbury-Dale's research was supported by an Australian Government Rese
 Andrew Zammit-Mangion's and Noel Cressie's research was supported by an Australian Research Council (ARC) Discovery Project, DP190100180. Andrew Zammit-Mangion's research was also supported by an ARC Discovery Early Career Research Award, DE180100203.  
 The authors would like to thank Rajib Paul for providing the Americium data analysed in Section \ref{sec:block_prediction}, 
 %Dr.~Matt Moores for discussion on the ethics of modelling crime in the city of Chicago, 
-and Michael Bertolacci for discussions surrounding the MODIS comparison study.
+and Michael Bertolacci for discussions surrounding the MODIS comparison study. 
+% \red{Finally, this work would not be possible without the contribution of \proglang{R} packages \pkg{sp} \citep{Pebesma_2005_sp_package}, \pkg{ggplot2} \citep{Wickham_2016_ggplot2}, among others.}
 
 
 
@@ -2455,7 +2468,7 @@ where $\kappa_k$, $\rho_k$, and $\kappa_k$ are parameters that are estimated, an
   
  
 
-\section{Distributions with size parameters}\label{sec:Distributions with size parameters}
+\section{Distributions with size parameters}\label{Appendix:Distributions with size parameters}
 
 Two data models that can be used with \pkg{FRK} v2, namely, the binomial and the negative-binomial distributions, have a known constant `size' parameter $k_j$ and a `probability of success' parameter, $\pi_j$, associated with every datum $Z_j$.
 For binomial data models, $k_j$ represents the number of trials, and $Z_j$ the number of successes; for negative-binomial data models, $k_j$ represents the target number of successes, and $Z_j$ the number of failures. 

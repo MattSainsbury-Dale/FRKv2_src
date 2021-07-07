@@ -31,7 +31,7 @@ runtime <- system.time({
   basis <- auto_basis(plane(),            # we are on the plane
                       data = dat,         # data around which to make basis
                       regular = 1,        # regular basis
-                      nres = 4,           # 3 resolutions
+                      nres = 2,           # 3 resolutions
                       scale_aperture = 1) # aperture scaling of basis functions 
   
   ## Remove basis functions in problematic region
@@ -39,7 +39,7 @@ runtime <- system.time({
     basis_df <- data.frame(basis)
     rmidx <- which(basis_df$loc2 > 36.5 &
                      basis_df$loc1 > -94.5 &
-                     basis_df$res == 4)
+                     basis_df$res == 3)
     basis <- remove_basis(basis, rmidx)
   }
   
@@ -48,11 +48,7 @@ runtime <- system.time({
            basis = basis, BAUs = BAUs, K_type = "precision")
   
   ## Model fitting
-  tol <- 0.1
-  M <- SRE.fit(
-    M, method = "TMB", 
-    control = list(rel.tol = tol)
-  ) 
+  M <- SRE.fit(M, method = "TMB") 
 
   ## Prediction
   RNGversion("3.6.0")

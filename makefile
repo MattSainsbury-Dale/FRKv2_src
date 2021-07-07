@@ -1,4 +1,4 @@
-all: DEPENDS DATA Poisson_sim Negbinom_sim Heaton MODIS Sydney Am Chicago 
+all: DEPENDS DATA Poisson_sim Negbinom_sim Heaton MODIS Sydney Am Chicago Sydney_SA2_only
 
 DEPENDS: src/DEPENDS.R
 	Rscript src/DEPENDS.R
@@ -75,7 +75,18 @@ Sydney: DEPENDS $(Sydney_OBJECTS)
 $(Sydney_OBJECTS): src/Sydney.R 
 	Rscript src/Sydney.R
 	
-src/Sydney.R: src/Sydney_prep.R
+src/Sydney.R: src/Sydney_prep.R 
+
+
+Sydney_SA2_only_OBJECTS = img/Sydney_training_data_SA2_only.png img/Sydney_SA1_predictions_SA2_only.png img/Sydney_SA3_predictions_SA2_only.png results/Sydney_SA1_coverage_SA2_only.csv
+
+Sydney_SA2_only: $(Sydney_SA2_only_OBJECTS)
+
+$(Sydney_SA2_only_OBJECTS): src/Sydney_SA2_only.R
+	Rscript src/Sydney_SA2_only.R
+
+src/Sydney_SA2_only.R: src/Sydney.R
+
 
 
 Chicago_OBJECTS = img/Chicago_data_pred_uncertainty.png img/Chicago_focused_CAs_time_series.png img/Chicago_focused_CAs_predictive_distributions.png results/Chicago_coverage_and_MAPE.csv

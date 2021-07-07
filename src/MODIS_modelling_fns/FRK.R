@@ -18,11 +18,8 @@ MODIS_FRK_fit <- function(df_train, nres = 4) {
                  K_type = "precision", response = "binomial", link = "logit")
   
   ## Fitting
-  ## Default optimiser is nlminb.Control list is optional.
-  M <- SRE.fit(M, method = "TMB", 
-                 control = list(eval.max = 100, iter.max = 50,
-                                abs.tol = 0.01, rel.tol = 0.0001, 
-                                x.tol = 0.0001)) 
+  M <- SRE.fit(M, method = "TMB") 
+  
   return(M)
 }
 

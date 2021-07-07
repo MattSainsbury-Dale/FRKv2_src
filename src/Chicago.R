@@ -99,72 +99,90 @@ ST_pred@data$number_of_crimes <- df_val$number_of_crimes
 
 # ---- Prediction and forecasting years ----
 
-subset_time <- c(10, 19) ## Years we wish to analyse
 
-{
-plots <- plot(M, pred$newdata,
-              map_layer = chicago_map, subset_time = subset_time, 
-              colour = "black", size = 0.3, alpha = 0.85)
 
-## plot() does plot the data, but since 2010 and 2019 are validation years, 
-## we don't have any data to plot! Construct the plot manually:
-plots$number_of_crimes <- plot_spatial_or_ST(
-  ST_pred, all.vars(M@f)[1],
-  map_layer = chicago_map, subset_time = subset_time, 
-  colour = "black", size = 0.3, alpha = 0.85
+## Wrap the plotting code in a rudimentary function for convenience
+## NB: subset_time are the years we wish to visualise
+plot_predictions <- function(subset_time) {
+  plots <- plot(M, pred$newdata,
+                map_layer = chicago_map, subset_time = subset_time, 
+                colour = "black", size = 0.3, alpha = 0.85)
+  
+  ## plot() does plot the data, but since 2010 and 2019 are validation years, 
+  ## we don't have any data to plot! Construct the plot manually:
+  plots$number_of_crimes <- plot_spatial_or_ST(
+    ST_pred, all.vars(M@f)[1],
+    map_layer = chicago_map, subset_time = subset_time, 
+    colour = "black", size = 0.3, alpha = 0.85
   )[[1]]
+  
+  ## Change layout of each quantity to a single column, and edit axis
+  plots <- lapply(plots, function(gg) gg + 
+                    facet_wrap(~t,  ncol = 1) + 
+                    xlab("lon (deg)") + ylab("lat (deg)"))
+  
+  ## Ensure predictions and observed are on same scale, for easy comparisons
+  count_lims <- ST_pred@data %>% 
+    subset(t %in% c(2010, 2019)) %>%
+    select(c("number_of_crimes", "p_Z")) %>%
+    c() %>% range()
+  
+  
+  ## Edit titles and legends
+  plots$number_of_crimes <- plots$number_of_crimes + 
+    scale_fill_distiller(palette = "Spectral",  breaks = c(1000, 3000, 5000), lim = count_lims) + 
+    labs(title = "True (withheld)\ncrime count", fill = "") + 
+    theme(axis.title.x = element_blank())
+  
+  plots$p_Z <- plots$p_Z + 
+    scale_fill_distiller(palette = "Spectral", breaks = c(1000, 3000, 5000), lim = count_lims) + 
+    labs(title = "Predicted \ncrime count", fill = "") + 
+    theme(axis.title.y = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.ticks.y = element_blank())
+  
+  plots$interval90_Z <- plots$interval90_Z + 
+    scale_fill_distiller(palette = "BrBG", n.breaks = 3) + 
+    labs(title = "90% prediction-\ninterval width", fill = "") + 
+    theme(axis.title.y = element_blank(), 
+          axis.text.y = element_blank(), 
+          axis.title.x = element_blank(), 
+          axis.ticks.y = element_blank())
+  
+  plots <- lapply(plots, function(gg) gg + 
+                    theme(axis.text = element_text(size = 12),
+                          axis.title = element_text(size = 14), 
+                          legend.text = element_text(size = 12), 
+                          plot.title = element_text(hjust = 0.5, size = 14), 
+                          legend.key.width = unit(0.9, "cm"), 
+                          strip.text = element_text(size = 12), 
+                          plot.margin = unit(c(0,0,0,0), "lines")) +
+                    scale_x_continuous(breaks = c(-87.6, -87.8), expand = c(0, 0)) + 
+                    scale_y_continuous(n.breaks = 3, expand = c(0, 0)))
+  
+  return(plots)
+}
 
-## Change layout of each quantity to a single column, and edit axis
-plots <- lapply(plots, function(gg) gg + 
-                  facet_wrap(~t,  ncol = 1) + 
-                  xlab("lon (deg)") + ylab("lat (deg)"))
-
-## Ensure predictions and observed are on same scale, for easy comparisons
-count_lims <- ST_pred@data %>% 
-  subset(t %in% c(2010, 2019)) %>%
-  select(c("number_of_crimes", "p_Z")) %>%
-  c() %>% range()
-
-
-## Edit titles and legends
-plots$number_of_crimes <- plots$number_of_crimes + 
-  scale_fill_distiller(palette = "Spectral",  breaks = c(1000, 3000, 5000), lim = count_lims) + 
-  labs(title = "True (withheld)\ncrime count", fill = "") + 
-  theme(axis.title.x = element_blank())
-
-plots$p_Z <- plots$p_Z + 
-  scale_fill_distiller(palette = "Spectral", breaks = c(1000, 3000, 5000), lim = count_lims) + 
-  labs(title = "Predicted \ncrime count", fill = "") + 
-  theme(axis.title.y = element_blank(), 
-        axis.text.y = element_blank(), 
-        axis.ticks.y = element_blank())
-
-plots$interval90_Z <- plots$interval90_Z + 
-  scale_fill_distiller(palette = "BrBG", n.breaks = 3) + 
-  labs(title = "90% prediction-\ninterval width", fill = "") + 
-  theme(axis.title.y = element_blank(), 
-        axis.text.y = element_blank(), 
-        axis.title.x = element_blank(), 
-        axis.ticks.y = element_blank())
-
-plots <- lapply(plots, function(gg) gg + 
-                  theme(axis.text = element_text(size = 12),
-                        axis.title = element_text(size = 14), 
-                        legend.text = element_text(size = 12), 
-                        plot.title = element_text(hjust = 0.5, size = 14), 
-                        legend.key.width = unit(0.9, "cm"), 
-                        strip.text = element_text(size = 12), 
-                        plot.margin = unit(c(0,0,0,0), "lines")) +
-                  scale_x_continuous(breaks = c(-87.6, -87.8), expand = c(0, 0)) + 
-                  scale_y_continuous(n.breaks = 3, expand = c(0, 0)))
-
+## First plot both the pred and forecast years
+subset_time <- c(10, 19)
+plots <- plot_predictions(subset_time = subset_time)
 ggsave( 
   ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
             align = "hv", nrow = 1, legend = "top"),
-  filename = "Chicago_data_pred_uncertainty.png", device = "png", width = 10, height = 8.5,
-  path = "./img/"
+  filename = "Chicago_data_pred_uncertainty.png", 
+  device = "png", width = 10, height = 8.5, path = "./img/"
 )
-}
+
+## Also save a version with only the forecast years (for presentations)
+subset_time <- 19
+plots <- plot_predictions(subset_time = subset_time) 
+ggsave( 
+  ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
+            align = "hv", nrow = 1, legend = "top"),
+  filename = "Chicago_data_pred_uncertainty_2019_only.png", 
+  device = "png", width = 10, height = 5.5, path = "./img/"
+)
+
 
 # ---- Time series plot ----
 

@@ -45,9 +45,6 @@ invisible(
 ## miscellaneous functions to make the comparison study script easier to read.
 source("./src/MODIS_diagnostic_and_misc_fns.R")
 
-## Some plotting functions
-source("./src/plotting_helpers.R")
-
 # ---- Load MODIS data  ----
 
 data("MODIS_cloud_df") # MODIS dataframe stored in FRK (FRKTMB branch)

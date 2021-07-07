@@ -6,6 +6,7 @@ library("sp")
 library("maptools") # readShapePoly()
 library("raster") # bind()
 library("ggpubr")
+library("ggmap") # Stamenmap
 
 defaultW <- getOption("warn") 
 options(warn = -1)
@@ -17,11 +18,25 @@ source("./src/Sydney_prep.R")
 # ---- Construct the training data ----
 
 ## Data for model fitting
-poly_fit <- construct_training_data(fitting = "mixed", SA1s = SA1s, SA2s = SA2s)
+if (!exists(fitting)) fitting <- "mixed"
+poly_fit <- construct_training_data(fitting = fitting, SA1s = SA1s, SA2s = SA2s)
 
 ## Remove SA regions that have no families of interest
 poly_fit <- subset(poly_fit, Total_families_of_interest > 0)
 
+# ---- Sydney Stamen map ----
+
+## map background to show Sydney
+## NB: get_stamenmap() does NOT require a google API.
+## NB: To revert to original format, just remove Sydney from map_layer (in all plots), 
+## and remove expand = c(0, 0) in change_font_size_and_axis(). 
+Sydney_bbox = c(left = 150.72, bottom = -34.2, right = 151.32, top = -33.65)
+Sydney_map <- get_stamenmap(bbox = Sydney_bbox, 
+                            maptype = "toner-background", color = "bw")
+save(Sydney_map, file = "./data/Sydney_map.RData") 
+
+## Create map layer to place under all plots
+Sydney_map <- ggmap(Sydney_map)
 
 # ---- Plotting training ----
 
@@ -30,15 +45,14 @@ lab1 <- xlab("lon (deg)")
 lab2 <- ylab("lat (deg)")
 
 ## gray background to show SA2s with no families of interest
-SA2_bg <- geom_polygon(data = SpatialPolygonsDataFrame_to_df(SA2_NSW_sub_withk0),
+SA2_bg <-  geom_polygon(data = SpatialPolygonsDataFrame_to_df(SA2_NSW_sub_withk0),
                        aes(lon, lat, group = SA2_MAIN11),
                        fill = "light gray")
 
 column_names <- c("Total_families_of_interest", "Proportion_poverty")
 
-
 training_data_plots <- plot_spatial_or_ST(poly_fit, column_names, 
-                                          map_layer = SA2_bg, colour = "black", 
+                                          map_layer = Sydney_map+ SA2_bg, colour = "black", 
                                           size = 0.1)
 
 fill_label = c(
@@ -48,11 +62,13 @@ fill_label = c(
 
 breaks <- list(c(2000, 6000), c(0.25, 0.75))
 
+if (fitting == "SA2") breaks <- list(c(2000, 6000), c(0.1, 0.2, 0.3)) 
 
 training_data_plots <- lapply(1:length(training_data_plots), 
                                 function(i) training_data_plots[[i]] + 
                                   labs(fill = fill_label[i]) + lab1 + lab2 + 
-                                  scale_fill_distiller(palette = "Spectral", breaks = breaks[[i]]))
+                                  scale_fill_distiller(palette = "Spectral", 
+                                                       breaks = breaks[[i]]))
 
 names(training_data_plots) <- column_names
 
@@ -61,16 +77,21 @@ change_font_size_and_axis <- function(gg) {
              axis.title = element_text(size = 14), 
              legend.text = element_text(size = 11),
              legend.title = element_text(size = 14)) + 
-    scale_x_continuous(breaks = c(150.8, 151.0, 151.2))
+    scale_x_continuous(breaks = c(150.8, 151.0, 151.2), expand = c(0, 0)) + 
+    scale_y_continuous(breaks = c(-33.7, -33.9, -34.1), expand = c(0, 0))
 }
 
 training_data_plots <- lapply(training_data_plots, change_font_size_and_axis)
 
-
+if (fitting == "SA2s") {
+  filename <- "Sydney_training_data_SA2_only.png"
+} else {
+  filename <- "Sydney_training_data.png"
+}
 
 ggsave( 
   ggarrange(plotlist = training_data_plots, align = "hv", nrow = 1, legend = "top"),
-  filename = "Sydney_training_data.png", device = "png", width = 9, height = 4.1,
+  filename = filename, device = "png", width = 9, height = 4.1,
   path = "./img/"
 )
 
@@ -93,12 +114,18 @@ BAUs$fs <- 1 # homoscedastic fine-scale variation
 ## of families of interest
 poly_fit$k_Z <- poly_fit$Total_families_of_interest
 
+if (fitting == "SA2s") {
+  known_sigma2fs <- 0.2127 # provide estimate of the fine-scale variance
+} else {
+  known_sigma2fs <- NULL
+}
+
 ## Construct and fit the SRE object
 S <- FRK(
   f = total_poverty_count ~ 1, data = list(poly_fit), BAUs = BAUs, 
   response = "binomial", link = "logit", 
-  normalise_wts = FALSE#,     # sum (not average) the mean-process over the SA1s
-  # known_sigma2fs = 0.2127   # provide estimate of the fine-scale variance
+  normalise_wts = FALSE,     # sum (not average) the mean-process over the SA1s
+  known_sigma2fs = known_sigma2fs   
 ) 
 
 # ---- Prediction over the SA1s ----
@@ -118,9 +145,16 @@ coverage   <- mean((lower <= true_value) & (true_value <= upper))
 # 0.901 ## using SA1s as training data  
 # 0.908 ## using mixture of SA1s and SA2s as training data
 
+if (fitting == "SA2s") {
+  filename <- "./results/Sydney_SA1_coverage_SA2_only.csv"
+} else {
+  filename <- "./results/Sydney_SA1_coverage.csv"
+}
+
 write.csv(data.frame(coverage = coverage), 
-          "./results/Sydney_SA1_coverage.csv", 
+          filename, 
           row.names = FALSE)
+
 
 # ---- Plotting SA1 predictions ----
 
@@ -133,9 +167,11 @@ write.csv(data.frame(coverage = coverage),
 ## See https://hashnode.com/post/understanding-rrggbbaa-color-notation-cisvdr52x088fwt53h1drf6m2
 ## for a useful blog post on the rgba notation.
 
+
+
 plots <- plot(
   S, pred$newdata, 
-  map_layer = SA2_bg,            # optional layer to put below the plotting geom
+  map_layer = Sydney_map + SA2_bg,            # optional layer to put below the plotting geom
   colour = "black", size = 0.025 # optional arguments to plotting geom via ...
   ) 
 
@@ -143,9 +179,15 @@ plots <- lapply(plots, function(gg) gg + lab1 + lab2)
 plots <- lapply(plots, change_font_size_and_axis)
 
 
+if (fitting == "SA2s") {
+  filename <- "Sydney_SA1_predictions_SA2_only.png"
+} else {
+  filename <- "Sydney_SA1_predictions.png"
+}
+
 ggsave( 
   ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top"),
-  filename = "Sydney_SA1_predictions.png", device = "png", width = 9.5, height = 4.4,
+  filename = filename, device = "png", width = 9.5, height = 4.4,
   path = "./img/"
 )
 
@@ -154,16 +196,22 @@ ggsave(
 
 RNGversion("3.6.0"); set.seed(1)
 pred <- predict(S, newdata = SA3_NSW_sub)
-plots <- plot(S, pred$newdata, colour = "black")
+plots <- plot(S, pred$newdata, colour = "black", map_layer = Sydney_map)
 plots <- lapply(plots, function(gg) gg + lab1 + lab2)
 plots <- lapply(plots, change_font_size_and_axis)
 plots$p_mu <-  plots$p_mu + scale_fill_distiller(palette="Spectral", breaks = c(2000, 6000, 10000))
 plots$interval90_mu <-  plots$interval90_mu + scale_fill_distiller(palette="BrBG", breaks = c(150, 225, 300))
 
 
+if (fitting == "SA2s") {
+  filename <- "Sydney_SA3_predictions_SA2_only.png"
+} else {
+  filename <- "Sydney_SA3_predictions.png"
+}
+
 ggsave( 
   ggarrange(plots$p_mu, plots$interval90_mu, nrow = 1, legend = "top"),
-  filename = "Sydney_SA3_predictions.png", device = "png", width = 9.5, height = 4.4,
+  filename = filename, device = "png", width = 9.5, height = 4.4,
   path = "./img/"
 )
 
