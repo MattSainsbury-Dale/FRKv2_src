@@ -1804,15 +1804,15 @@ As the CAs are of unequal area, we use population rather than population density
 %The required BAU-level covariates are constructed in an analogous fashion to 
 %the way in which the covariates are constructed in 
 %Section \ref{sec:block_prediction}. 
-%\begin{Code}
-%ST_BAUs$population <- rep(community_areas$population, times = nt)
+\begin{Code}
+ST_BAUs$population <- community_areas$population
+\end{Code}
 %year <- ST_BAUs@data$t + 2000
 %ST_BAUs$x1 <- as.numeric(year < 2014)
 %ST_BAUs$x2 <- year * ST_BAUs$x1
 %ST_BAUs$x3 <- as.numeric(year >= 2014)
 %ST_BAUs$x4 <- year * ST_BAUs$x3
-%\end{Code}
-%
+
 Next, we generate spatio-temporal basis functions automatically using \fct{auto\_basis}.  
 % Note that each observation in our data set corresponds to an occurrence of a crime, and these crimes are indexed by the coordinates (longitude, latitude) and date at which the crime occurred; that is, we have unstructured spatio-temporal data in which observations may be recorded at any point in time and location in space. 
 %Therefore, we store the full data set, which we label as \mbox{\code{chicago\_crimes}}, as an object of class \class{STIDF}. 

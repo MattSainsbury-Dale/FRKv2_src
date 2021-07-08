@@ -31,27 +31,36 @@ ST_BAUs$fs <- 1 # scalar fine-scale variance matrix
 ## Create population covariate
 ST_BAUs$population <- community_areas$population
 
-## Add covariates to BAUs that can be used to make a piecewise linear trend
-year <- ST_BAUs@data$t + 2000
-ST_BAUs$x1 <- as.numeric(year < 2014)
-ST_BAUs$x2 <- year * ST_BAUs$x1
-ST_BAUs$x3 <- as.numeric(year >= 2014)
-ST_BAUs$x4 <- year * ST_BAUs$x3
+# ## Add covariates to BAUs that can be used to make a piecewise linear trend
+# year <- ST_BAUs@data$t + 2000
+# ST_BAUs$x1 <- as.numeric(year < 2014)
+# ST_BAUs$x2 <- year * ST_BAUs$x1
+# ST_BAUs$x3 <- as.numeric(year >= 2014)
+# ST_BAUs$x4 <- year * ST_BAUs$x3
 
 
 
 # ---- Model fitting ----
- 
-basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
+
+basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years")
 
 M <- FRK(f = number_of_crimes ~ log(population),   
-         data = list(chicago_crimes_fit), basis = basis, BAUs = ST_BAUs,         
+         data = chicago_crimes_fit, basis = basis, BAUs = ST_BAUs,         
          response = "poisson", link = "log", 
          sum_variables = "number_of_crimes", fs_by_spatial_BAU = TRUE) 
 
 print(object.size(M), units = "Mb")
 Chicago_SRE_object <- M
 saveRDS(Chicago_SRE_object, file = "./intermediates/Chicago_SRE_object.rds")
+
+# ---- Simplified, high-level version that I show in presentations ---- 
+
+M <- FRK(f = number_of_crimes ~ 1,
+         response = "poisson",
+         link     = "log",
+         data     = chicago_crimes,
+         
+         sum_variables = "number_of_crimes")
 
 # ---- Prediction ----
 
@@ -222,10 +231,10 @@ time_series_plot <- ggplot() +
   scale_colour_discrete(labels = c("Observed count", "Predicted count"))+
   theme_bw() + 
   theme(axis.text = element_text(size = 11),
-      axis.title = element_text(size = 13), 
-      legend.text = element_text(size = 13), 
-      strip.text = element_text(size = 12), 
-      legend.position = "top") + 
+        axis.title = element_text(size = 13), 
+        legend.text = element_text(size = 13), 
+        strip.text = element_text(size = 12), 
+        legend.position = "top") + 
   scale_x_continuous(breaks = c(2001, 2005, 2010, 2015, 2019)) + 
   scale_y_continuous(n.breaks = 4)
 
@@ -260,10 +269,10 @@ predictive_distribution_plots <- ggplot() +
   scale_colour_discrete(labels = c("Observed count", "Predicted count")) + 
   theme_bw() + 
   theme(axis.text = element_text(size = 11),
-      axis.title = element_text(size = 13), 
-      legend.text = element_text(size = 13), 
-      strip.text = element_text(size = 12), 
-      legend.position = "top") 
+        axis.title = element_text(size = 13), 
+        legend.text = element_text(size = 13), 
+        strip.text = element_text(size = 12), 
+        legend.position = "top") 
 
 suppressMessages(ggsave( 
   predictive_distribution_plots,

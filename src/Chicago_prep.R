@@ -107,7 +107,7 @@ g_population <- plot_spatial_or_ST(community_areas, "population", map_layer =  c
 ST_df <- df %>% 
   subset(year != 2020) %>%
   group_by(year, longitude, latitude) %>%
-  summarise(number_of_crimes = n()) %>%
+  dplyr::summarise(number_of_crimes = n()) %>%
   as.data.frame()
 
 ## Visualization: Number of crimes in each year:
