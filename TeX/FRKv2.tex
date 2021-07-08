@@ -1668,7 +1668,7 @@ It is often the case that sampling once from a large area is relatively inexpens
 
 \begin{figure}[t!]
     \centering
-\includegraphics[width = \linewidth]{img/Sydney_training_data.png}
+\includegraphics[width = \linewidth]{img/Sydney_training_data_mixed.png}
     \vspace{-20pt}    
     \caption{
     Training data used for modelling the number (or proportion) of families `in poverty' (see Appendix \ref{Appendix:Sydney_data_description} for how we define `in poverty'). 
@@ -1713,7 +1713,7 @@ Since the SA1 regions are the BAUs, we can predict both the probability and mean
 The predictions and associated uncertainty over the SA1 regions are shown in Figure \ref{fig:SA1_predictions}, which was generated using \fct{plot}.
  \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{img/Sydney_SA1_predictions.png}
+    \includegraphics[width = \linewidth]{img/Sydney_SA1_predictions_mixed.png}
         \vspace{-15pt}
     \caption{SA1 level predictions. (Left panel) Prediction of the probability process, $\pi(\cdot)$, representing the proportion of families in poverty, over the SA1 regions. (Right panel) 90\% prediction-interval width of the probability process.
     Solid-grey regions correspond to SA2 regions in which the total number of families is zero, and hence are omitted from the study. 
@@ -1732,7 +1732,7 @@ Figure \ref{fig:SA3_predictions} shows the SA3-region predictions and associated
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{img/Sydney_SA3_predictions.png}
+    \includegraphics[width = \linewidth]{img/Sydney_SA3_predictions_mixed.png}
         \vspace{-15pt}
     \caption{SA3 level predictions. (Left panel) Prediction of the mean process, $\mu(\cdot)$, representing the expected number of families in poverty, over the SA3 regions. (Right panel) The 90\% prediction-interval width of the mean process. 
     For details on the underlying Stamen base map, refer to the caption of Figure \ref{fig:SA2_level_data}.
@@ -1819,7 +1819,8 @@ Next, we generate spatio-temporal basis functions automatically using \fct{auto\
 %In a pre-processing step, we aggregated the number of crimes occurring at every unique coordinate and date combination, and stored this number as a field called \mbox{\code{number\_of\_crimes}}; the majority of entries in this field are 1, but it is possible that multiple crimes are recorded at the same location and time (for example, if there are multiple offenders, or if an offender is charged with multiple crimes in the same incident).
 %A subset of the \mbox{\code{chicago\_crimes}} data, specifically, all of the data excluding the years 2010 and 2019, was used for training the model and automatically constructing the basis functions. %; this training subset is labelled \mbox{\code{chicago\_crimes\_fit}}.
 \begin{Code}
-R> basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years")
+R> basis <- auto_basis(manifold = STplane(), data = chicago_crimes_fit, 
++    tunit = "years")
 \end{Code}
 
 
