@@ -82,7 +82,7 @@ for (i in 1:max_nres) {
   })
 }
 
-{
+
 ## Predictions, uncertainty, and data
 plot_list <- plot(S_list[[max_nres]], pred_list[[max_nres]]$newdata, 
                   labels_from_coordnames = FALSE)
@@ -152,14 +152,31 @@ ggsave(
   path = "./img", device = "png", width = 10, height = 4
 )
 
-ggsave(
-  ggarrange(plot_list$p_Y, plot_list$interval90_Y, 
-            plot_list$p_mu, plot_list$interval90_mu, 
-            nrow = 1, legend = "top"),
-  filename = "Poisson_sim.png", 
-  path = "./img", device = "png", width = 14, height = 5.1
-)
+## Remove y-axis labels/ticks for all but the left-most panel
+interior_plot <- function(gg) {
+  gg + rremove("ylab") + rremove("xlab") + rremove("y.text") + rremove("y.ticks")
 }
+
+exterior_plot <- function(gg) {
+  gg + rremove("ylab") + rremove("xlab")
+}
+
+
+figure <- ggarrange(plot_list$p_Y %>% exterior_plot,
+                    plot_list$interval90_Y %>% interior_plot, 
+                    plot_list$p_mu %>% interior_plot, 
+                    plot_list$interval90_mu %>% interior_plot, 
+                    nrow = 1, legend = "top", align = "hv") %>% 
+  annotate_figure(left = text_grob(bquote(s[2]), rot = 90, vjust = 1, hjust = 2, size = 20),
+                  bottom = text_grob(bquote(s[1]), size = 20, vjust = -1, hjust = -0.5))
+  
+
+ggsave(
+  figure,
+  filename = "Poisson_sim.png", 
+  path = "./img", device = "png", width = 14, height = 5.2
+)
+
 
 ## Diagnostic functions
 .RMSPE <- function(pred, true) sqrt(mean((pred - true)^2))

@@ -102,8 +102,6 @@ blocks <- do.call("rbind", block_list) %>%
 write.csv(blocks,
           file = "./intermediates/MODIS_blocks.csv",
           row.names = FALSE)
-blocks <- read.csv("./intermediates/MODIS_blocks.csv")
-
 
 ## Combine data frames, and save as a .csv
 tmp1 <- do.call("rbind", MAR_df_train_list)
@@ -112,7 +110,6 @@ all_df_train <- rbind(tmp1, tmp2)
 write.csv(all_df_train,
           file = "./intermediates/MODIS_all_df_train.csv",
           row.names = FALSE)
-all_df_train <- read.csv("./intermediates/MODIS_all_df_train.csv")
 
 tmp1 <- do.call("rbind", MAR_df_test_list)
 tmp2 <- do.call("rbind", block_df_test_list)
@@ -120,19 +117,23 @@ all_df_test <- rbind(tmp1, tmp2)
 write.csv(all_df_test,
           file = "./intermediates/MODIS_all_df_test.csv",
           row.names = FALSE)
-all_df_test <- read.csv(file = "./intermediates/MODIS_all_df_test.csv")
-
-
 
 times <- rbind(MAR_times, block_times)
 times <- times %>% gather(Method, time, PACKAGES)
 times$Run <- as.integer(times$Run)
 times$time <- as.numeric(times$time)
 times$time <- times$time/60 # convert to minutes
-
 write.csv(times,
           file = "./intermediates/times.csv",
           row.names = FALSE)
+
+
+
+## ---- Read previously saved data ----
+
+blocks <- read.csv("./intermediates/MODIS_blocks.csv")
+all_df_train <- read.csv("./intermediates/MODIS_all_df_train.csv")
+all_df_test <- read.csv(file = "./intermediates/MODIS_all_df_test.csv")
 times <- read.csv(file = "./intermediates/times.csv")
 
 
@@ -141,7 +142,8 @@ times <- read.csv(file = "./intermediates/times.csv")
 
 common_layers <- ggplot() + theme_bw() + coord_fixed() +
   scale_x_continuous(expand = c(0, 0)) +
-  scale_y_continuous(expand = c(0, 0))
+  scale_y_continuous(expand = c(0, 0)) + 
+  labs(x = bquote(s[1]), y = bquote(s[2]))
 
 ## Plot the unthresholded version of the data
 g_original_data <- common_layers +
@@ -215,6 +217,7 @@ tmp <- rbind(tmp1, tmp2) %>%
                             levels = c("MAR training", "MAR test", "block training", "block test"),
                             labels = c("MR: training set", "MR: test set", "MB: training set", "MB: test set"))) %>%
   filter(Run == 1)
+
 ggsave(
   common_layers +
     geom_raster(data = tmp, aes(x = x, y = y, fill = z))  +
@@ -323,7 +326,7 @@ plot_predictions <- function(df_plot, scheme) {
     # facet_grid( ~ Method) +
     facet_wrap( ~ Method, nrow = 2) +
     scale_fill_gradient2(midpoint = 0.5, low = "black", mid = "gray", high = "white") +
-    labs(fill = "") +
+    labs(fill = "", x = bquote(s[1]), y = bquote(s[2])) +
     theme_bw() + coord_fixed() +
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(expand = c(0, 0)) +
@@ -355,7 +358,7 @@ ggsave(
     geom_raster(aes(x, y, fill = pred)) +
     facet_grid( ~ Method) +
     scale_fill_gradient2(midpoint = 0.5, low = "black", mid = "gray", high = "white") +
-    labs(fill = "") +
+    labs(fill = "", x = bquote(s[1]), y = bquote(s[2])) +
     scale_x_continuous(limits = c(blocks$xmin[1], blocks$xmax[1]), expand = c(0, 0)) +
     scale_y_continuous(limits = c(blocks$ymin[1], blocks$ymax[1]), expand = c(0, 0)) +
     theme_bw() + coord_fixed() + 

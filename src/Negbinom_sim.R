@@ -161,8 +161,30 @@ data_plots <- list(g_prob_BAU, g_mu_BAU, g_mu, g_Z_training)
 data_plots <- lapply(data_plots, change_font_size)
 data_plots <- lapply(data_plots, change_legend_width)
 
-ggsave(ggarrange(plotlist = data_plots, 
-                 nrow = 1, align = "hv", legend = "top"),
+## Remove y-axis labels/ticks for all but the left-most panel
+interior_plot <- function(gg) {
+  gg + rremove("ylab") + rremove("xlab") + rremove("y.text") + rremove("y.ticks")
+}
+exterior_plot <- function(gg) {
+  gg + rremove("ylab") + rremove("xlab")
+}
+
+create_figure_one_row_of_plots <- function(plot_list) {
+  plot_list[[1]] = plot_list[[1]] %>% exterior_plot
+  for (i in 2:length(plot_list)) {
+    plot_list[[i]] = plot_list[[i]] %>% interior_plot
+  }
+  
+  figure <- ggarrange(plotlist = plot_list, 
+                      nrow = 1, legend = "top", align = "hv") %>% 
+    annotate_figure(left   = text_grob(bquote(s[2]), size = 20, vjust = 1,  hjust = 2, rot = 90),
+                    bottom = text_grob(bquote(s[1]), size = 20, vjust = -1, hjust = -0.5))
+} 
+
+
+figure <- create_figure_one_row_of_plots(data_plots)
+
+ggsave(figure,
        filename = "Negbinom_sim_data.png", device = "png", 
        width = 14, height = 5.1,
        path = "./img"
@@ -204,15 +226,20 @@ plot_list <- lapply(plot_list, change_font_size)
 plot_list <- lapply(plot_list, change_legend_width)
 plot_list <- lapply(plot_list, set_title_from_fill_legend)
 
+plot_list$p_prob <- plot_list$p_prob + scale_fill_distiller(palette = "Spectral", breaks = breaks_prob, name = "") 
+plot_list$interval90_prob <- plot_list$interval90_prob + scale_fill_distiller(palette = "BrBG", breaks = c(0.1, 0.17, 0.24), name = "")
+plot_list$p_mu <- plot_list$p_mu + scale_fill_distiller(palette = "Spectral", breaks = breaks_mu_BAU, name = "")
+plot_list$interval90_mu <- plot_list$interval90_mu + scale_fill_distiller(palette = "BrBG", breaks = c(20, 70, 120), name = "")
+
+figure <- create_figure_one_row_of_plots(list(plot_list$p_prob, 
+                                              plot_list$interval90_prob, 
+                                              plot_list$p_mu, 
+                                              plot_list$interval90_mu))
 
 ggsave( 
-  ggarrange(plot_list$p_prob + scale_fill_distiller(palette = "Spectral", breaks = breaks_prob, name = ""), 
-            plot_list$interval90_prob + scale_fill_distiller(palette = "BrBG", breaks = c(0.1, 0.17, 0.24), name = ""), 
-            plot_list$p_mu + scale_fill_distiller(palette = "Spectral", breaks = breaks_mu_BAU, name = ""), 
-            plot_list$interval90_mu + scale_fill_distiller(palette = "BrBG", breaks = c(20, 70, 120), name = ""), 
-            nrow = 1, legend = "top"),
+  figure,
   filename = "Negbinom_sim_BAU_predictions.png", device = "png", 
-  width = 14, height = 5.1,
+  width = 14, height = 5.2,
   path = "./img"
 )
 

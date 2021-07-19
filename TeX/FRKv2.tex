@@ -1241,7 +1241,7 @@ Finally, we exclude some observations to form a training set.
     (Centre-left panel) True mean process evaluated over the BAUs. 
     (Centre-right panel) True mean process aggregated to the data-support level. 
     (Right panel) Simulated data at the data-support level, with some observations omitted; these are the data used for model fitting.  
-    \red{Need a better explanation of this figure. Noel is confused about missing data at the BAU level. Add something like: ``In this example, we have both large-scale and fine-scale observations: That is, some of the data are measured over large areal regions comprising many BAUs, while other data have supports equal to the BAUs.''}
+    \red{Need a better explanation of this figure. Noel is confused about missing data at the BAU level. Add something like: ``In this example, we have both large-scale and fine-scale observations: That is, some of the data are measured over large areal regions comprising many BAUs, while other data have supports equal to the BAUs.'' Might also change the axis labels like I did in Figure 3.}
 }   
   \label{fig:03-02-negative-binomial_data}
 \end{figure}
@@ -1304,7 +1304,7 @@ Figure \ref{fig:03-02-negative-binomial_polygons} shows the predictions and pred
     \centering
     \includegraphics[width = \linewidth]{img/Negbinom_sim_arbitrary_polygon_predictions.png}
 	\vspace{-20pt}    
-    \caption{Prediction (left panel) and prediction-interval widths (right) for the aggregated mean, $\vec{\mu}_P$, when predicting over arbitrary polygons in the example of Section \ref{sec:03-03:negative-binomial}. Note that these polygons have equal area. \red{Change labels to $\vec{\mu}_P$.}}   
+    \caption{Prediction (left panel) and prediction-interval widths (right) for the aggregated mean, $\vec{\mu}_P$, when predicting over arbitrary polygons in the example of Section \ref{sec:03-03:negative-binomial}. Note that these polygons have equal area.}   
   \label{fig:03-02-negative-binomial_polygons}
 \end{figure}
 
@@ -1417,7 +1417,7 @@ In Section \ref{sec:ST_example}, we provide a non-Gaussian spatio-temporal examp
 
 \subsection{Comparative study: MODIS cloud data}\label{sec:04-01:MODIS}
 
-\red{Need to change axis labels of plots to $s_1$ and $s_2$.}
+\red{Need to re-run the study so that the labels get changed to $s_1$ and $s_2$ (might actually have the data stored on the HPC already; if so, just use that).}
 
 In this section, we compare out-of-sample predictions from \pkg{FRK} version 2.0.0 to those from the \proglang{R} packages \pkg{INLA} version 20.03.17 \citep{Lindgren_2015_R-INLA},  \pkg{spNNGP} version 0.1.4 \citep{Finley_2020_spNNGP}, \pkg{spBayes} version 0.4.3 \citep{Finley_2015_spBayes}, and \pkg{mgcv} version 1.8.33 \citep{Wood_2017_GAM:R} using a binary data set. 
 The data form an image of a cloud taken by the Moderate Resolution Imaging Spectroradiometer (MODIS) instrument aboard the Aqua satellite \citep{MODIS_satelitte}. 
