@@ -84,12 +84,16 @@ for (i in 1:max_nres) {
 
 {
 ## Predictions, uncertainty, and data
-plot_list <- plot(S_list[[max_nres]], pred_list[[max_nres]]$newdata)
-plot_list <- c(plot_spatial_or_ST(Poisson_simulated, "Z"), plot_list)
+plot_list <- plot(S_list[[max_nres]], pred_list[[max_nres]]$newdata, 
+                  labels_from_coordnames = FALSE)
+plot_list <- c(plot_spatial_or_ST(Poisson_simulated, "Z", 
+                                  labels_from_coordnames = FALSE), 
+               plot_list)
 
 ## True mean process
 plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +
-  labs(fill = bquote("\U03BC(\U00B7)")) +
+  labs(fill = bquote(bold("\U03BC"))) + 
+  labs(x = expression(s[1]), y = expression(s[2])) + 
   theme_bw() + coord_fixed()
 
 ## Set the title of each plot using the legend labels, 
@@ -100,8 +104,8 @@ plot_list <- lapply(
   function(gg) {
     gg + labs(title = gg$labels$fill) + 
       labs(fill = "", colour = "") + 
-      scale_x_continuous(breaks=c(0, 0.5, 1)) + 
-      scale_y_continuous(breaks=c(0, 0.5, 1)) + 
+      scale_x_continuous(breaks=c(0.25, 0.75), expand = c(0, 0)) + 
+      scale_y_continuous(breaks=c(0.25, 0.75), expand = c(0, 0)) + 
       theme(axis.text = element_text(size = 16),
             axis.title = element_text(size = 19), 
             legend.text = element_text(size = 16), 
@@ -142,7 +146,7 @@ plot_list$interval90_mu <- plot_list$interval90_mu +
   scale_fill_distiller(palette = "BrBG", name = "", breaks = c(100, 250, 400)) 
 
 ggsave(
-  ggarrange(plot_list$mu_true, plot_list$Z, 
+  ggarrange(plot_list$mu_true, plot_list$Z + labs(title = bquote(bold("Z"))), 
             nrow = 1, common.legend = TRUE, legend = "right", align = "hv"),
   filename = "Poisson_sim_true_process_and_data.png", 
   path = "./img", device = "png", width = 10, height = 4

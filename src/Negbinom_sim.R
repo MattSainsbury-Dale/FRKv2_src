@@ -68,8 +68,8 @@ BAUs@data <- as.data.frame(coordinates(BAUs))
 BAUs$Y <- smooth_Y_process(BAUs$x, BAUs$y) + rnorm(length(BAUs), sd = sqrt(sigma2fs))
 
 ## Common axis breaks
-xbreaks <- scale_x_continuous(breaks=c(0, 0.5, 1)) 
-ybreaks <- scale_y_continuous(breaks=c(0, 0.5, 1))
+xbreaks <- scale_x_continuous(breaks=c(0.25, 0.75), expand = c(0, 0))
+ybreaks <- scale_y_continuous(breaks=c(0.25, 0.75), expand = c(0, 0)) 
 
 ## Legend breaks
 breaks_prob = c(0.25, 0.5, 0.75)
@@ -91,9 +91,9 @@ general_logistic <- function(x, L = 1, k = 1, x0 = 0, a = 0){
 
 BAUs$prob <- general_logistic(BAUs$prob, L = 0.95, a = 0.05, x0 = 0.5, k = 4)
 
-g_prob_BAU <-  plot_spatial_or_ST(BAUs, "prob")[[1]] + 
+g_prob_BAU <-  plot_spatial_or_ST(BAUs, "prob", labels_from_coordnames = F)[[1]] + 
   scale_fill_distiller(palette = "Spectral", breaks = breaks_prob) + 
-  labs(title = "\U03C0(\U00B7)", fill = "") + 
+  labs(title = bquote(bold("\U03C0")), fill = "") + 
   xbreaks + ybreaks 
 
 ## We need the size parameter at the BAU level
@@ -102,9 +102,9 @@ BAUs$k_BAU <- rep(50, length(BAUs))
 ## Mean over the BAUs
 BAUs$mu <- BAUs$k_BAU * (1 / BAUs$prob - 1)
 
-g_mu_BAU <- plot_spatial_or_ST(BAUs, "mu")[[1]] + 
+g_mu_BAU <- plot_spatial_or_ST(BAUs, "mu", labels_from_coordnames = F)[[1]] + 
   scale_fill_distiller(palette = "Spectral", breaks = breaks_mu_BAU) + 
-  labs(title = "\U03BC(\U00B7)", fill = "") + 
+  labs(title = bquote(bold("\U03BC")), fill = "") + 
   xbreaks + ybreaks 
 
 ## Now aggregate the mean process over the data supports
@@ -114,25 +114,30 @@ BAUs_as_points <- SpatialPointsDataFrame(coordinates(BAUs),
 obs <- SpatialPolygonsDataFrame(obs, 
                                 over(obs, BAUs_as_points, fn = sum))
 
+## Use a subsample of the data supports for model fitting. 
+obsidx <- sample(1:length(obs), round(length(obs) * 0.8), replace = FALSE)
+obs <- obs[obsidx, ]
+
 ## Plot the aggregated mean process
-g_mu <- plot_spatial_or_ST(obs, "mu", colour = "black", size = 0.1)[[1]] + 
+g_mu <- plot_spatial_or_ST(obs, "mu", colour = "black", size = 0.1, 
+                           labels_from_coordnames = F)[[1]] + 
   scale_fill_distiller(palette = "Spectral", breaks = breaks_data) + 
-  labs(title = "\U03BC(\U00B7)", fill = "") + 
+  labs(title = bquote(bold("\U03BC")[Z]), fill = "") + 
   xbreaks + ybreaks
   
 
 ## Now simulate data over the data supports. 
 obs$Z <- rnbinom(n = length(obs), size = obs$k_BAU, mu = obs$mu)
 
-## Use a subsample of the data for model fitting
-obsidx <- sample(1:length(obs), round(length(obs) * 0.8), replace = FALSE)
-zdf <- obs[obsidx, ]
+
+zdf <- obs
 
 ## Training data
-g_Z_training <- plot_spatial_or_ST(zdf, "Z", colour = "black", size = 0.1)[[1]] + 
+g_Z_training <- plot_spatial_or_ST(zdf, "Z", colour = "black", size = 0.1, 
+                                   labels_from_coordnames = F)[[1]] + 
   xbreaks + ybreaks + 
   scale_fill_distiller(palette = "Spectral", breaks = breaks_data) + 
-  labs(title = "Z", fill = "")
+  labs(title = bquote(bold("Z")), fill = "")
 
 
 set_title_from_fill_legend <- function(gg) {
@@ -150,9 +155,6 @@ change_legend_width <- function(gg, width = 1.1) {
   gg + theme(legend.key.width = unit(width, 'cm'))
 }
 
-set_title_from_fill_legend <- function(gg) {
-  gg + labs(title = gg$labels$fill) + labs(fill = "")
-}
 
 
 data_plots <- list(g_prob_BAU, g_mu_BAU, g_mu, g_Z_training)
@@ -195,7 +197,7 @@ pred <- predict(S)
 
 # ---- Plotting results ----
 
-plot_list <- plot(S, pred$newdata)
+plot_list <- plot(S, pred$newdata, labels_from_coordnames = F)
 
 plot_list <- lapply(plot_list, function(gg) gg + xbreaks + ybreaks)
 plot_list <- lapply(plot_list, change_font_size)
@@ -252,7 +254,7 @@ write.csv(diagnostics, file = "./results/Negbinom_sim.csv", row.names = FALSE)
 ## NB: Cannot make predictions of pi(.) over arbitrary polygons, only the mean process
 pred_over_polygons <- predict(S, newdata = newdata)
 
-plot_list <- plot(S, pred_over_polygons$newdata, colour = "black")
+plot_list <- plot(S, pred_over_polygons$newdata, colour = "black", labels_from_coordnames = F)
 
 ## Hack to make the correct x-axis and y-axis breaks appear
 invisible_point <- geom_point(data = data.frame(x = c(0, 1), y = c(1, 1)), alpha = 0)
@@ -271,6 +273,6 @@ plot_list$p_mu <- plot_list$p_mu +
 ggsave( 
   ggarrange(plot_list$p_mu, plot_list$interval90_mu, nrow = 1, align = "hv"),
   filename = "Negbinom_sim_arbitrary_polygon_predictions.png", device = "png", 
-  width = 11, height = 4.7,
+  width = 11, height = 4.8,
   path = "./img"
 )

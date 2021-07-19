@@ -20,18 +20,7 @@ chicago_map <- chicago_map +
 
 # ---- Chicago crime dataset ----
 
-## Full list of crimes in Chicago between 2000 and 2019
-load("./data/chicago_crime_df.Rda")
-
-## There are some invalid locations. Just remove these observations:
-df <- subset(df, location != "")
-
-## After plotting, I found some locations which are way outside the city.
-## We could remove anything south of latitude 41 and west of longitude -89: 
-## df <- subset(df, latitude > 41 & longitude > -89)
-## However, it's not necessary because FRK will just exclude observations that 
-## did not fall in the community areas. Removal would be necessary if we were 
-## using auto_BAUs() for the spatial BAUs. 
+df <- read.csv("./data/chicago_crime.csv")
 
 ## We focus on violent, non-sexual crimes. These crimes include "ASSAULT", 
 ## "BATTERY" and "HOMICIDE". The frequency of Assult or Battery is much higher
@@ -41,7 +30,6 @@ df <- subset(df, location != "")
 # sum(df$primary_type == "HOMICIDE")
 df <- subset(df, primary_type %in% c("ASSAULT", "BATTERY"))
 df <- droplevels(df) # Drop unused levels
-
 
 
 # ---- Chicago community areas ----

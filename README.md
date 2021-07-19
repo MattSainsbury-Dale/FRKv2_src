@@ -22,7 +22,7 @@ The file DEPENDS.txt contains the `R` package dependencies for this repo. To aut
 
 ### Data
 
-Some data files were too large to be stored on Github; these include the Chicago crime data, and the shapefiles using in the Sydney spatial change-of-support example. To download this data, navigate to the top directory of this repo, and run `make DATA` to download these files and place them in the appropriate place. 
+Some data sets used in this analysis are too large to be stored on Github: These include the Chicago crime data set and the shapefiles used in the Sydney spatial change-of-support example. These are instead stored on the NIASRA HPC: To download and place them into the data/ sub-directory, please run `make DATA` within terminal (from the top level of the directory). 
 
 ### Long run times
 

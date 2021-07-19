@@ -24,6 +24,7 @@ p_data <- p_basic +
   geom_point(aes(colour = Am), size = 1)  +
   geom_point(data = GZ_df, shape = 4, size = 5) +
   scale_colour_gradientn(colours = nasa_palette,
+                         name = "Americium", 
                          labels = scales::scientific, 
                          breaks = c(250000, 750000))
 
@@ -37,7 +38,9 @@ p_data_log_scale <- p_basic +
 
 ## Blocking scheme
 p_Scheme_1_2 <- p_basic +
-  geom_point(size = 0.3) +
+  # include the points with complete-transparancy so that the domain remains 
+  # the same as the other two plots
+  geom_point(size = 0.3, alpha = 0) + 
   geom_point(data = GZ_df, shape = 4, size = 5) +
   geom_polygon(data = FRK::SpatialPolygonsDataFrame_to_df(blocks), 
                aes(group = id, colour = Scheme), alpha = 0) +
