@@ -73,7 +73,7 @@ ybreaks <- scale_y_continuous(breaks=c(0.25, 0.75), expand = c(0, 0))
 
 ## Legend breaks
 breaks_prob = c(0.25, 0.5, 0.75)
-breaks_mu_BAU = c(50, 100, 150)
+breaks_mu_BAU = c(50, 125, 200)
 breaks_data = c(2500, 6000, 9500)
 
 ## Now create the mean process over the BAUs. 
@@ -227,9 +227,9 @@ plot_list <- lapply(plot_list, change_legend_width)
 plot_list <- lapply(plot_list, set_title_from_fill_legend)
 
 plot_list$p_prob <- plot_list$p_prob + scale_fill_distiller(palette = "Spectral", breaks = breaks_prob, name = "") 
-plot_list$interval90_prob <- plot_list$interval90_prob + scale_fill_distiller(palette = "BrBG", breaks = c(0.1, 0.17, 0.24), name = "")
+plot_list$interval90_prob <- plot_list$interval90_prob + scale_fill_distiller(palette = "BrBG", breaks = c(0.1, 0.15, 0.2), name = "")
 plot_list$p_mu <- plot_list$p_mu + scale_fill_distiller(palette = "Spectral", breaks = breaks_mu_BAU, name = "")
-plot_list$interval90_mu <- plot_list$interval90_mu + scale_fill_distiller(palette = "BrBG", breaks = c(20, 70, 120), name = "")
+plot_list$interval90_mu <- plot_list$interval90_mu + scale_fill_distiller(palette = "BrBG", breaks = c(50, 100, 150), name = "")
 
 figure <- create_figure_one_row_of_plots(list(plot_list$p_prob, 
                                               plot_list$interval90_prob, 
