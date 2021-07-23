@@ -5,6 +5,7 @@ test.R
 
 # Files that are too large to store on Github
 data/chicago_crime_df.Rda
+data/chicagocrimedf.rda
 data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp
 data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp
 data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp

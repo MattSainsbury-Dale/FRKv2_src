@@ -44,9 +44,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   ## Remove SA regions that have no families of interest
   poly_fit <- subset(poly_fit, Total_families_of_interest > 0)
-  
-  
-  
+
   # ---- Plotting training ----
   
   ## ggplot annotations
@@ -66,7 +64,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   )
   
   fill_label = c(
-    Total_families_of_interest = "Number of families (k)",
+    Total_families_of_interest = expression(paste("Number of families, ", bold(k)[Z])),
     Proportion_poverty  = "Observed proportion\nof families in poverty"
   )
   
@@ -154,7 +152,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   coverage   <- mean((lower <= true_value) & (true_value <= upper))
   
   write.csv(data.frame(coverage = coverage), 
-            paste0("./results/Sydney_SA1_coverage_", fitting, ".png"), 
+            paste0("./results/Sydney_SA1_coverage_", fitting, ".csv"), 
             row.names = FALSE)
   
   

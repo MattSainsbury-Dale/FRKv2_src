@@ -20,7 +20,7 @@ chicago_map <- chicago_map +
 
 # ---- Chicago crime dataset ----
 
-df <- read.csv("./data/chicago_crime.csv")
+load("./data/chicago_crime_df.Rda")
 
 ## We focus on violent, non-sexual crimes. These crimes include "ASSAULT", 
 ## "BATTERY" and "HOMICIDE". The frequency of Assult or Battery is much higher

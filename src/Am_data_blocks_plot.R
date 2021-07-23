@@ -42,8 +42,10 @@ p_Scheme_1_2 <- p_basic +
   # the same as the other two plots
   geom_point(size = 0.3, alpha = 0) + 
   geom_point(data = GZ_df, shape = 4, size = 5) +
+  # geom_polygon(data = FRK::SpatialPolygonsDataFrame_to_df(blocks), 
+  #              aes(group = id, colour = Scheme), alpha = 0) +
   geom_polygon(data = FRK::SpatialPolygonsDataFrame_to_df(blocks), 
-               aes(group = id, colour = Scheme), alpha = 0) +
+               aes(group = id, lty = Scheme), colour = "black", alpha = 0) +
   labs(colour = "Blocking Scheme")
 
 ggsave( 

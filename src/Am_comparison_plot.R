@@ -26,20 +26,21 @@ combined_df$Scheme <- as.character(combined_df$Scheme)
 
 combined_df$Framework[combined_df$Framework == "georob: optimal block prediction"] <- "georob"
 
+figure <- ggplot(data = combined_df %>% 
+                   subset(!grepl("georob: permanence", Framework)) #%>%
+                 # subset(!grepl("Paul", Framework))
+                 ,
+                 aes(x = area_sqrt, colour = Framework, lty = Scheme, group = fwk_sch)) +
+  geom_line(aes(y = value), size = 1) +
+  facet_wrap(~variable, scales = "free", labeller = label_parsed) + 
+  labs(x = "Block size (m)", y = "", lty = "Blocking Scheme") +
+  theme_bw() + 
+  scale_y_continuous(labels = scales::scientific) + 
+  theme(text = element_text(size = 20), 
+        strip.text = element_text(size = 20))
 
 ggsave( 
-  ggplot(data = combined_df %>% 
-           subset(!grepl("georob: permanence", Framework)) #%>%
-           # subset(!grepl("Paul", Framework))
-         ,
-         aes(x = area_sqrt, lty = Framework, colour = Scheme, group = fwk_sch)) +
-    geom_line(aes(y = value)) +
-    facet_wrap(~variable, scales = "free", labeller = label_parsed) + 
-    labs(x = "Block size (m)", y = "", 
-         colour = "Blocking Scheme") +
-    theme_bw() + scale_y_continuous(labels = scales::scientific) + 
-    theme(text = element_text(size = 20), 
-          strip.text = element_text(size = 20)),
+  figure,
   filename = "Am_comparison.png", device = "png", width = 13.6, height = 4.5,
   path = "./img/"
 )

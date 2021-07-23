@@ -267,14 +267,14 @@ suppressMessages(
 ## Compute average diagnostics, split by method and sampling scheme, but averaged over all runs
 suppressMessages(
   diagnostics <- diagnostics %>%  
-  group_by(Sampling_scheme, Method) %>%
-  summarise(
-    Brier_mean = mean(Brier),
-    # Brier_sd = sd(Brier),
-    AUC_mean = mean(AUC), 
-    # AUC_sd = sd(AUC), 
-    time_mean = mean(time),
-    # time_sd = sd(time)
+    group_by(Sampling_scheme, Method) %>%
+    summarise(
+      Brier_mean = mean(Brier),
+      # Brier_sd = sd(Brier),
+      AUC_mean = mean(AUC), 
+      # AUC_sd = sd(AUC), 
+      time_mean = mean(time),
+      # time_sd = sd(time)
     ) %>% 
     as.data.frame()
 )
@@ -326,7 +326,7 @@ plot_predictions <- function(df_plot, scheme) {
     # facet_grid( ~ Method) +
     facet_wrap( ~ Method, nrow = 2) +
     scale_fill_gradient2(midpoint = 0.5, low = "black", mid = "gray", high = "white") +
-    labs(fill = "", x = bquote(s[1]), y = bquote(s[2])) +
+    labs(fill = "") +
     theme_bw() + coord_fixed() +
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(expand = c(0, 0)) +
@@ -336,8 +336,11 @@ plot_predictions <- function(df_plot, scheme) {
           strip.text = element_text(size = 12))  
 }
 
+
+
 ggsave(
-  plot_predictions(all_df_test, "MAR") + training_data_background,
+  plot_predictions(all_df_test, "MAR") + training_data_background + 
+    labs(x = bquote(s[1]), y = bquote(s[2])),
   filename = "MODIS_MAR_predictions.png", device = "png", 
   # width = 12, height = 2.35,
   width = 10, height = 5.1,
@@ -358,14 +361,15 @@ ggsave(
     geom_raster(aes(x, y, fill = pred)) +
     facet_grid( ~ Method) +
     scale_fill_gradient2(midpoint = 0.5, low = "black", mid = "gray", high = "white") +
-    labs(fill = "", x = bquote(s[1]), y = bquote(s[2])) +
+    labs(fill = "") +
     scale_x_continuous(limits = c(blocks$xmin[1], blocks$xmax[1]), expand = c(0, 0)) +
     scale_y_continuous(limits = c(blocks$ymin[1], blocks$ymax[1]), expand = c(0, 0)) +
     theme_bw() + coord_fixed() + 
     theme(axis.text = element_text(size = 10),
           axis.title = element_text(size = 13), 
           legend.text = element_text(size = 10), 
-          strip.text = element_text(size = 12)),
+          strip.text = element_text(size = 12)) + 
+    labs(x = bquote(s[1]), y = bquote(s[2])),
   filename = "MODIS_block_predictions.png", device = "png", width = 12, height = 2.5,
   path = "./img/"
 )   
