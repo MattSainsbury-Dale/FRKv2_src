@@ -10,36 +10,35 @@ else
   mv chicago_crime_df.Rda data/chicago_crime_df.Rda # move to /data
 fi 
 
-if [ -e  data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp ] 
+if [ -e  data/Sydney_shapefiles/SA1 ] 
 then 
   echo "The Sydney SA1 shapefiles have already been downloaded."
 else 
   #curl -o data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp https://dl.dropboxusercontent.com/s/v75fpk0r6pig8o4/SA1_2011_AUST.shp
-  wget -np -nH --cut-dirs 5 https://hpc.niasra.uow.edu.au/ckan/dataset/9559f1ba-bd8b-41a7-8229-726e7bf88db8/resource/e021e308-f3e3-4f3b-b4c0-32809ffd72c5/download/sa12011aust.zip
-  unzip sa12011aust.zip 
-  rm sa12011aust.zip 
-  mv SA1_2011_AUST.shp data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp 
+  wget -np -nH --cut-dirs 5 https://hpc.niasra.uow.edu.au/ckan/dataset/9559f1ba-bd8b-41a7-8229-726e7bf88db8/resource/8300cace-6885-47fd-a021-37595ac8dc84/download/sa1.zip
+  unzip sa1.zip
+  rm sa1.zip
+  mv SA1 data/Sydney_shapefiles
 fi 
 
-if [ -e  data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp ] 
+if [ -e  data/Sydney_shapefiles/SA2 ] 
 then 
   echo "The Sydney SA2 shapefiles have already been downloaded."
 else 
   #curl -o data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp https://dl.dropboxusercontent.com/s/m5ocngvauxosz50/SA2_2011_AUST.shp
-  wget -np -nH --cut-dirs 5 https://hpc.niasra.uow.edu.au/ckan/dataset/9559f1ba-bd8b-41a7-8229-726e7bf88db8/resource/af61a4e6-8ced-4364-9f43-937cd15fceea/download/sa22011aust.zip
-  unzip sa22011aust.zip 
-  rm sa22011aust.zip 
-  mv SA2_2011_AUST.shp data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp 
+  wget -np -nH --cut-dirs 5 https://hpc.niasra.uow.edu.au/ckan/dataset/9559f1ba-bd8b-41a7-8229-726e7bf88db8/resource/5390f101-8636-472c-b1dc-f7066e9f9898/download/sa2.zip
+  unzip sa2.zip
+  rm sa2.zip
+  mv SA2 data/Sydney_shapefiles
 fi 
 
-if [ -e  data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp ] 
+if [ -e  data/Sydney_shapefiles/SA3 ] 
 then 
   echo "The Sydney SA3 shapefiles have already been downloaded."
 else 
   # curl -o data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp https://dl.dropboxusercontent.com/s/m4qigm9s4ijn4bj/SA3_2011_AUST.shp
-  
-  wget -np -nH --cut-dirs 5 https://hpc.niasra.uow.edu.au/ckan/dataset/9559f1ba-bd8b-41a7-8229-726e7bf88db8/resource/13795155-ee32-428c-ba04-2417ee210ab7/download/sa32011aust.zip
-  unzip sa32011aust.zip 
-  rm sa32011aust.zip 
-  mv SA3_2011_AUST.shp data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp 
+  wget -np -nH --cut-dirs 5 https://hpc.niasra.uow.edu.au/ckan/dataset/9559f1ba-bd8b-41a7-8229-726e7bf88db8/resource/59607912-e088-4429-a096-90638c1159b0/download/sa3.zip
+  unzip sa3.zip
+  rm sa3.zip
+  mv SA3 data/Sydney_shapefiles
 fi 
