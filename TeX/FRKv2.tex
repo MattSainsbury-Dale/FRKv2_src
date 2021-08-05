@@ -10,6 +10,14 @@
 \usepackage{marginnote}
 \newcommand{\revmarginnote}[1]{{\reversemarginpar\marginnote{#1}}}
 
+% prevent "widows" and "orphans" in regular text paragraphs:
+\widowpenalty10000
+\clubpenalty10000
+% prevent orphans for section headings:
+%\usepackage[nobottomtitles]{titlesec} % doesn't work: breaks the code
+%\usepackage[all]{nowidow}
+% Couldn't find a solution... Just using \clearpage at problematic headings, for now. The sections that I have put a \clearpage are:
+% - 2.1: process layer
 
 % Same indentation over multiple lines in algorithm environment: use tabularx to figure out the width of a box that would fit until the end of the line:
 \usepackage{tabularx}
@@ -44,8 +52,8 @@
 \usepackage{amsmath}	% align environment.
 \usepackage{amsfonts}	% \mathbb{} (used for Real number symbol, etc.)
 \usepackage{amsthm}		% mathy stuff (Theorems, Lemmas, etc.)
-\usepackage{amssymb}     % re-define \emptyset to look nice
-\let\emptyset\varnothing % re-define \emptyset to look nice
+%\usepackage{amssymb}     % re-define \emptyset to look nice
+%\let\emptyset\varnothing % re-define \emptyset to look nice
 \usepackage{commath}
 \usepackage{bbm} % \mathbb{} doesn't support digits (1, 2, 3, etc.), so use \mathbbm{} in these instances
 \usepackage{mathtools} % \vdotswithin command to have vertical dots between equals signs
@@ -96,7 +104,7 @@
 \newcommand{\Gau}{{\text{Gau}}}
 \def\inddist{\:\stackrel{\text{ind}}{\sim}\:}
 \newcommand{\simiid}{\overset{\text{iid}}{\sim}}
-\renewcommand{\E}[1]{\mathbb{E}\left(#1\right)} % Expectation operator
+\renewcommand{\E}[1]{\mathbb{E}(#1)} % Expectation operator
 \newcommand{\ENoLR}[1]{\mathbb{E}(#1)} % Expectation operator
 \newcommand{\ECurly}[1]{\mathbb{E}\left\{#1\right\}} % Expec operator, curly brackets
 \newcommand{\ESquare}[1]{\mathbb{E}\left[#1\right]} % Expec operator, square brackets
@@ -244,9 +252,9 @@
 
 
 \Abstract{
- Non-Gaussian spatial and spatial-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of studies, such as those involving small-area demographics or global remote sensing instruments. 
+ Non-Gaussian spatial and spatial-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of disciplines, such as those involving small-area demographics or global remote sensing instruments. 
   \pkg{FRK} is an \proglang{R} package for spatial/spatio-temporal modelling and prediction with very large data sets that, to date, only supports linear process models and Gaussian data models. 
- In this paper, we describe a major extension to \pkg{FRK} so that non-Gaussian data can be analysed in a generalised linear mixed model framework. 
+ In this paper, we describe a major upgrade to \pkg{FRK} that allows for non-Gaussian data to be analysed in a generalised linear mixed model framework. 
  The existing functionality of \pkg{FRK} is retained with this advance into non-linear, non-Gaussian models; in particular, it allows for automatic basis-function construction, it can handle both point-referenced and areal data simultaneously, and it can predict process values at any spatial support from these data. 
  These vastly more general spatial and spatio-temporal models are fitted using the Laplace approximation via the software \pkg{TMB}. 
 We demonstrate innovative features in this new version of \pkg{FRK}, highlight its ease of use, and compare it to alternative packages, using both simulated and real data sets. 
@@ -255,8 +263,8 @@ We demonstrate innovative features in this new version of \pkg{FRK}, highlight i
 %% - \Keywords{} with LaTeX markup, at least one required
 %% - \Plainkeywords{} without LaTeX markup (if necessary)
 %% - Should be comma-separated and in sentence case.
-\Keywords{areal data, basis functions, big data, change-of-support, fixed rank kriging, spatial statistics, spatio-temporal statistics}
-\Plainkeywords{areal data, basis functions, big data, change-of-support, fixed rank kriging, spatial statistics, spatio-temporal statistics}
+\Keywords{areal data, basis functions, big data, change-of-support, fixed rank kriging, non-Gaussian data, spatial statistics}
+\Plainkeywords{areal data, basis functions, big data, change-of-support, fixed rank kriging, non-Gaussian data, spatial statistics}
 
 %% - \Address{} of at least one author
 %% - May contain multiple affiliations for each author
@@ -282,11 +290,13 @@ We demonstrate innovative features in this new version of \pkg{FRK}, highlight i
 
 \section{Introduction}\label{sec:intro}
 
+\red{GpGp Joe Guinness}
+
  Non-Gaussian spatial and spatio-temporal data arise from a vast array of sources, including statistical studies in contaminated soil \citep[e.g.,][]{Paul_Cressie_2011_lognormal_kriging_block_prediction}, global remote sensing  \citep[e.g.,][]{Sengupta_2016_MODIS}, small-area demographics \citep[e.g.,][]{Bradley_2016_Bayesian_spatial_COS_lattice_data}, and earthquake magnitudes \citep[e.g.,][]{Hu_2018_log-gamma_earthquake_magnitudes}.  
  The statistical modelling of these data is pertinent, as accurate predictions, and uncertainty quantification of those predictions, assist individuals in giving informed answers to real-world problems. 
- There are, by now, several approaches to statistical modelling and spatial/spatio-temporal prediction with non-Gaussian data, which we review in the following paragraphs. 
-
-One widespread method to deal with non-Gaussian data is \textit{trans-Gaussian kriging} \citep[pg.~137--138]{Cressie_1993_stats_for_spatial_data}, in which standard kriging (i.e., spatial optimal linear prediction) is used after applying a non-linear transformation to the data, and approximately unbiased predictions are made back on the original scale using a delta-method approximation. 
+ 
+ There are, by now, several approaches to statistical modelling and spatial/spatio-temporal prediction with non-Gaussian data. 
+ One widespread method to deal with non-Gaussian data is \textit{trans-Gaussian kriging} \citep[pg.~137--138]{Cressie_1993_stats_for_spatial_data}, in which standard kriging (i.e., spatial optimal linear prediction) is used after applying a non-linear transformation to the data, and approximately unbiased predictions are made back on the original scale using a delta-method approximation. 
 Several other approaches hinge on the use of a spatial version of the generalised linear mixed model \citep[GLMM;][]{Diggle_1998_spatial_GLMM}, whereby the response distribution is assumed to be a member of the exponential family of distributions \citep{McCullagh_Nelder_1989_GLM}, and the mean is modelled using a transformation of some latent spatial process $Y(\cdot)$. 
 % In their seminal work, \cite{Diggle_1998_spatial_GLMM} employed a stationary model for $Y(\cdot)$ within the spatial GLMM framework and a Markov chain Monte Carlo (MCMC) algorithm to obtain predictive distributions. 
  Optimal prediction or estimation of unknown quantities from $m$ observations entails the inversion of an $m\times m$ covariance matrix for many statistical models. 
@@ -301,7 +311,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
 
 
 
- Reduced-rank variants of trans-Gaussian kriging are relatively under-developed (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~4.1, for discussion), however many modellers have used reduced-rank variants of the spatial GLMM. 
+ Reduced-rank variants of trans-Gaussian kriging are relatively under-developed (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~4.1, for a discussion), however many modellers have used reduced-rank variants of the spatial GLMM. 
  For instance, within the spatial GLMM framework, \cite{Lindgren_Rue_2011_GF_GMRF_SPDE} modelled $Y(\cdot)$ by linking Gaussian fields (GFs) with Gaussian Markov random fields (GMRFs) via stochastic partial differential equations (SPDEs), with dimension-reduction facilitated by the finite-element method. 
   A popular reduced-rank model for $Y(\cdot)$ is the so-called spatial random effects (SRE) model, where $Y(\cdot)$ is modelled as a linear combination of a fixed number of spatial basis functions with spatially correlated random coefficients \citep{Cressie_Johannesson_2008_FRK}: For example, \cite{Sengupta_Cressie_2013_spatial_GLMM_FRK} and \citet{Bradley_2016_Bayesian_spatial_COS_lattice_data} use it in the spatial GLMM context. 
 %  They obtained parameter estimates using a Laplace approximation in an expectation maximisation (EM) algorithm, and the empirical predictive distribution was generated using an MCMC algorithm.  
@@ -311,7 +321,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
 % Another approach that aids scalability is the partitioning of the spatial domain into disjoint regions, which can facilitate code parallelism. 
 % In the spatial GLMM context, 
  \cite{Lee_2020_partitioned_domain_basis_function_non_Gaussian} %used a clustering algorithm to partition 
- took the spatial partitioning route, where the spatial domain was partitioned into disjoint subregions and, for each subregion, 
+ partitioned the spatial domain into disjoint subregions and, for each subregion, 
  a spatial GLMM model 
  %with a thin-plate-splines representation for $Y(\cdot)$ 
  was used independently of the other subregions. 
@@ -321,22 +331,20 @@ Several other approaches hinge on the use of a spatial version of the generalise
 % and their model did not cater for so-called `fine-scale' process variation.
  The reduced-rank spatial GLMM naturally extends to the spatio-temporal setting; see, for example,  \cite{Lopes_2011_spatial_GLMM_reduced_rank_factor_analytic_model}, 
 \citet{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}, \citet{Bradley_2019_ST_models_for_big_multinomial_data_using_conditional_multivariate_logit_beta_distribution}, and \citet{Zhang_2020_spatio-temporal_Arctic_sea_ice}. 
- Despite the many modelling approaches available, software for spatial and spatio-temporal model fitting with non-Gaussian data is quite limited; we review these in the paragraph that follows. 
-
-
-
- Software packages that facilitate in a straightforward manner the modelling of non-Gaussian spatial and spatio-temporal data include \pkg{ngspatial} \citep{ngspatial_2014}, \pkg{spBayes} \citep{Finley_2015_spBayes}, \pkg{mgcv} \citep{Wood_2017_GAM:R}, \pkg{spNNGP} \citep{Finley_2020_spNNGP}, and \pkg{georob} \citep{georob}. 
- Each of these packages have a different set of limitations: \pkg{spBayes}, \pkg{mgcv}, and \pkg{spNNGP} are limited to point-referenced data; \pkg{spBayes} uses basis functions that depend on covariance-function parameters, so computationally it can only handle a small number of predictive-process knots, resulting in a high degree of smoothing; \pkg{georob} is not designed for large data sets; \pkg{ngspatial}, \pkg{spBayes}, \pkg{spNNGP}, and \pkg{georob} are restricted to the spatial setting, and they cater for only a small number of non-Gaussian distributions. Further, none of these software packages cater for spatial change-of-support. 
+ 
+ Despite the many modelling approaches available, software for spatial and spatio-temporal model fitting with non-Gaussian data is relatively limited. 
+ Software packages that facilitate in a straightforward manner the modelling of non-Gaussian spatial and spatio-temporal data include the \proglang{R} \citep{Rcoreteam_2021} packages \pkg{ngspatial} \citep{ngspatial_2014}, \pkg{spBayes} \citep{Finley_2015_spBayes}, \pkg{mgcv} \citep{Wood_2017_GAM:R}, \pkg{spNNGP} \citep{Finley_2020_spNNGP}, and \pkg{georob} \citep{georob}. 
+ Each of these packages have a different set of limitations: \pkg{spBayes}, \pkg{mgcv}, and \pkg{spNNGP} are limited to point-referenced data; \pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of predictive-process knots, which in turn yields a high degree of smoothing; \pkg{georob} is not designed for large data sets; and \pkg{ngspatial}, \pkg{spBayes}, \pkg{spNNGP}, and \pkg{georob} are restricted to the spatial setting, and they cater for only a small number of non-Gaussian distributions. Further, none of these software packages cater for spatial change-of-support. 
    Some general-purpose packages  \citep[e.g., \pkg{INLA};][]{Rue_2009_INLA, Lindgren_2015_R-INLA} can, in principle, handle the wide array of modelling challenges posed by non-Gaussian spatial and spatio-temporal data; however, they are not specifically designed for this purpose and can be difficult for an unfamiliar user to implement. 
- A project aimed at facilitating spatial statistical modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}; at the time of writing,  spatio-temporal modelling was not implemented in \pkg{inlabru}.
+ A project aimed at facilitating spatial statistical modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}; at the time of writing,  spatio-temporal modelling was not implemented in \pkg{inlabru} \red{(CHECK)}.
  
 
  The package \pkg{FRK} \citep{FRK_paper} is an \proglang{R} package for spatial/spatio-temporal statistical modelling and prediction. 
- The main purpose of this article is to present a major advance to \pkg{FRK} that allows it to cater for many distributions within the exponential family using the spatial GLMM framework; we henceforth refer to it as \pkg{FRK} v2 and the original version as \pkg{FRK} v1. 
- \pkg{FRK} v2 provides a unifying framework that handles very large, spatial and spatio-temporal non-Gaussian data and, critically, it seamlessly ingests point-referenced and area-referenced data to solve spatial change-of-support problems. %facilitates change-of-support over target supports that may be smaller or larger than the source supports (i.e., it caters for statistical down-scaling and up-scaling). 
+ The main purpose of this article is to present a major upgrade to \pkg{FRK} that allows one to cater for many distributions within the exponential family using the spatial GLMM framework; we henceforth refer to it as \pkg{FRK} v2 and the original version as \pkg{FRK} v1. 
+ \pkg{FRK} v2 provides a unifying framework that handles large, spatial and spatio-temporal non-Gaussian data, and it can seamlessly ingest point-referenced and area-referenced data to solve spatial change-of-support problems. %facilitates change-of-support over target supports that may be smaller or larger than the source supports (i.e., it caters for statistical down-scaling and up-scaling). 
   User-friendliness is a central focus of the package: Challenging statistical problems may be tackled with only a few lines of intuitive, readable code. Optimal spatial prediction proceeds through the use of an \textit{empirical} hierarchical statistical model (where likelihood-based estimates are substituted in place of unknown parameters) and a Monte Carlo (MC) algorithm, where a minimal number of user-level decisions is required.
  \pkg{FRK} v2 also accommodates the modelling of non-Gaussian spatial and spatio-temporal data on the surface of a sphere, a feature not offered by many other packages. 
- Finally, although the primary motivation for this major upgrade is the modelling of non-Gaussian data, \pkg{FRK} v2 also allows for the use of substantially more basis functions than for \pkg{FRK} v1 when modelling the spatial process.  Therefore, in a Gaussian setting, it often achieves more accurate predictions than \pkg{FRK} v1. 
+ Finally, although the primary motivation for this major upgrade is the modelling of non-Gaussian data, \pkg{FRK} v2 also allows for the use of substantially more basis functions than \pkg{FRK} v1 when modelling the spatial process.  Therefore, in a Gaussian setting, it is often able to achieve more accurate predictions than \pkg{FRK} v1. 
 
 
 The remainder of the paper is organised as follows. 
@@ -351,7 +359,7 @@ The statistical model used in \pkg{FRK} v2 is a spatial or spatio-temporal GLMM;
  In the \textit{process layer}, we model the conditional mean of the data as a transformation of a latent spatial process modelled as a low-rank SRE model; see Section  \ref{subsection:04-01:ProcessLayer}. 
  In the %first layer, which we refer to as the 
 \textit{data layer}, we use a conditionally independent exponential-family model for each element of the data vector; see Section \ref{subsection:04-02:DataLayer}. 
- \green{In Section \ref{sec:Distributions with size parameters}, we consider distributions that have an assumed-known `size' parameter, %associated with each datum, 
+ \green{In Section \ref{sec:Distributions with size parameters}, we consider allowed distributions that have an assumed-known `size' parameter, %associated with each datum, 
  namely the binomial distribution and the negative-binomial distribution.} 
 In Section \ref{subsection:02-03:Estimation}, we discuss parameter estimation and, in Section \ref{subsection:04-03:Prediction}, we discuss spatial prediction and uncertainty quantification of the predictions. 
 In Section \ref{sec:spatio-temporal}, we outline the approach of \pkg{FRK} v2 for spatio-temporal data. 
@@ -359,7 +367,7 @@ In Section \ref{sec:spatio-temporal}, we outline the approach of \pkg{FRK} v2 fo
 
 
 
-
+\clearpage
 
 \subsection{The process layer} \label{subsection:04-01:ProcessLayer}
 
@@ -374,7 +382,7 @@ The process layer, which governs the conditional mean of the data, retains many 
 where each term in (\ref{eqn:04-01:Y(s)}) is intended to capture a different type of spatial variability. 
 First, spatially referenced covariates $\vec{t}(\cdot)$ and their associated regression parameters $\vec{\alpha}$, capture spatial variation that is linked to known, usually large-scale, explanatory variables that are elements of $\vec{t}(\cdot)$; the model requires that the covariates are known at every location in $D$. 
 Second, the spatially correlated random effect $v(\cdot)$ captures medium-to-small-scale spatial variation.
-Accounting for only the scales of spatial variation with just $\vec{t}(\vec{s})^\tp \vec{\alpha}$ and $v(\vec{s})$ can result in overly optimistic predictions; this problem is alleviated by also including a fine-scale-variation random process, $\xi(\cdot)$. 
+Accounting for only the scales of spatial variation with just $\vec{t}(\cdot)^\tp \vec{\alpha}$ and $v(\cdot)$ can result in overly optimistic predictions; this problem is alleviated by also including a fine-scale-variation random process, $\xi(\cdot)$. 
  
 
 In \pkg{FRK} v1/v2, the medium-to-small-scale term $v(\cdot)$ is constructed as a linear combination of $r$ spatial basis functions with random coefficients, where $r$ is fixed and smaller than $m$, the number of observations. Specifically,
@@ -389,17 +397,17 @@ See \cite{FRK_paper} for details on how these basis functions are constructed.
 
 \pkg{FRK} v1/v2 discretises the domain of interest $D$ into $N$ small, non-overlapping basic areal units (BAUs) $\{A_i: i = 1, \dots, N\}$ such that $D = \cup_{i = 1}^N A_i$. 
 BAUs are a key element of \pkg{FRK} v1/v2, as they provide a framework that allows one to easily consider point-referenced and areal data simultaneously, and they facilitate solutions to spatial change-of-support problems. 
- Then let $Y(A_i)$ denote a representative value of $\{Y(\vec{s}) : \vec{s} \in A_i\}$, where commonly the spatial integral or the spatial average over $A_i$ is chosen.  
+ Let $Y(A_i)$ denote a representative value of $\{Y(\vec{s}) : \vec{s} \in A_i\}$, where commonly the spatial integral or the spatial average over $A_i$ is chosen.  
  Define the discretised latent spatial process $Y(\cdot)$ evaluated over the $N$ BAUs as $\vec{Y} \equiv (Y_1, \dots, Y_N)^\tp$, where $Y_i \equiv Y(A_i)$, $i = 1, \dots, N$. Then, a vectorised version of (\ref{eqn:04-01:Y(s)}) is
 \begin{equation}\label{Ch4:eqn:vecY}
     \vec{Y} = \vec{T}\vec{\alpha} + \vec{S}\vec{\eta} + \vec{\xi},
 \end{equation}
- where $\vec{T}$ and $\vec{S}$ are known design matrices constructed from $\vec{t}(\cdot)$ and $\vec{\phi}(\cdot)$ respectively, and $\vec{\xi}$ is a vector associated with the fine-scale process.
+ where $\vec{T}$ and $\vec{S}$ are known design matrices constructed from $\vec{t}(\cdot)$ and $\vec{\phi}(\cdot)$ respectively, and $\vec{\xi}$ is a vector associated with the fine-scale process which, like $\vec{\eta}$, is treated as a random effect.
 
-As in \pkg{FRK} v1, the elements of $\vec{\xi}$ are modelled as independent and identically distributed (i.i.d.) Gaussian random variables with variance $\sigma^2_\xi$, and $\vec{\eta}$ is modelled as a mean-zero multivariate-Gaussian random variable with covariance matrix $\cov{\vec{\eta}}{\vec{\eta}}$. 
+As in \pkg{FRK} v1, the elements of $\vec{\xi}$ are modelled as independent and identically distributed (i.i.d.) Gaussian random variables with mean zero and variance $\sigma^2_\xi$, and $\vec{\eta}$ is modelled as a mean-zero multivariate-Gaussian random variable with covariance matrix $\cov{\vec{\eta}}{\vec{\eta}}$. 
  In \pkg{FRK} v2, $\cov{\vec{\eta}}{\vec{\eta}}$ is modelled either as $\vec{K}$ or as $\vec{Q}^{-1}$, where $\vec{Q}$ is a precision matrix. 
  Both formulations use block-diagonal matrices, so that basis-function coefficients between basis-function resolutions are independent; see Appendix \ref{Appendix:CovarianceTapering} for how the intra-resolution dependencies with $\vec{K}$ and $\vec{Q}$ are modelled. 
-  In a non-Gaussian setting (when \pkg{TMB} is used for model fitting), use of $\vec{Q}$ instead of $\vec{K}$ is computationally advantageous.\footnote{\red{Andrew, can we discuss your suggested edit. The matrix $\vec{Q}$ is preferred because \pkg{TMB} is significantly more efficient when using a sparse precision matrix: Even when the blocks of $\vec{K}$ are sparse (e.g., through covariance tapering), its inverse is dense, which makes \pkg{TMB} slow down.}} 
+  Although both $\vec{K}$ and $\vec{Q}$ are generally sparse, use of $\vec{Q}$ instead of $\vec{K}$ is typically computationally advantageous.
 
  Following standard generalised-linear-model theory \citep{McCullagh_Nelder_1989_GLM}, \pkg{FRK} v2 uses a link function, $g(\cdot)$, to model $Y(\cdot)$ as a transformation of a mean process, $\mu(\cdot)$ (that we consider in more detail in Section \ref{subsection:04-02:DataLayer}):
 \begin{equation}\label{eqn:mu_linked_to_Y}
@@ -422,23 +430,22 @@ Therefore, the mean process evaluated over the BAUs is $\vec{\mu} \equiv (\mu_i:
 
 
 
- \green{
- We denote the vector of $m$ observations (the data vector) as $\vec{Z} \equiv \left(Z_1, \dots, Z_m\right)^\tp$. 
-%  Each datum is originally associated with a spatial support, $R_j$, $j = 1, \dots, m$, which we associate to one or more BAUs. 
-  Each datum is originally associated with a spatial support, $R_j$, $j = 1, \dots, m$, which we associate to one or more BAUs. 
+
+ We denote the vector of $m$ observations (the data vector) as $\vec{Z} \equiv \left(Z_1, \dots, Z_m\right)^\tp$.
+   \green{Each datum is originally associated with a spatial support, $R_j$, $j = 1, \dots, m$, which we associate to one or more BAUs. 
  In practice, these spatial supports may not coincide with entire BAUs and, when this is the case, in \pkg{FRK} v2 we assume that a spatial support contains a BAU if and only if there is a non-empty intersection between the BAU and the spatial support.
  That is, we write the indices of the BAUs associated with $R_j$ as $c_j \equiv \{i : A_i \cap R_j \neq \emptyset\}$, for $j = 1, \dots, m$. 
 %  Attributing point-referenced data to BAUs is straightforward.
-  We then define the set of observation supports as $D^O \equiv \{B_j : j = 1, \dots, m\} $, where $B_j \equiv \cup_{i\in c_j} A_i$ is a representation of $R_j$ in terms of BAUs. 
+  We then define the set of observation supports as $D^O \equiv \{B_j : j = 1, \dots, m\} $, where $B_j \equiv \cup_{i\in c_j} A_i$ is a representation of $R_j$ in terms of BAUs.}
 %  A consequence of this discretised representation of $R_j$ with $B_j$, $j = 1, \dots, m$, is that the BAUs need to be sufficiently fine when the data is point-referenced to ensure accurate inference.
 %  Of course, $B_j$ and $R_j$ are closely related, however the former is composed entirely of BAUs by definition, while the latter is not. 
 % Figure \ref{fig:BAU_intuition} shows a simple example illustrating $D$ is discretised into $N = 12$ BAUs, and how $B_1$, $B_2$, and $B_3$ are defined from $m = 3$ observations, resulting in $D^O \equiv \{B_1, B_2, B_3\}$.
- This approach to mapping data supports to BAUs is slightly different from \pkg{FRK} v1 , which assumed that a spatial support contains a BAU if and only if the BAU centroid lies within the spatial support. This modification allows \pkg{FRK} v2 to cater for non-convex BAUs, such as those used in Section \ref{sec:spatialCOS}, where the centroid of a given BAU may lie outside of the BAU boundary. 
+ This approach to mapping data supports to BAUs is slightly different from \pkg{FRK} v1, which assumed that a spatial support contains a BAU if and only if the BAU centroid lies within the spatial support. This modification allows \pkg{FRK} v2 to cater for non-convex BAUs, such as those used in Section \ref{sec:spatialCOS}, where the centroid of a given BAU may lie outside of the BAU boundary. 
  Figure \ref{fig:BAU_intuition} shows a pedagogical example illustrating the relationship between the continuous domain $D$, the BAUs, % $\{A_i : i = 1, \dots, N\}$, 
 the original spatial supports, %$\{R_j : j = 1, \dots, m\}$, 
 and the observation supports %, $\{B_j : j = 1, \dots, m\}$.
 in \pkg{FRK} v2.
- }
+ 
 
 
 
@@ -513,7 +520,7 @@ in \pkg{FRK} v2.
 (Right panel) The observation domain, $D^O$: The observation supports that comprise $D^O$ are $B_1 \equiv A_1 \cup A_4$,  $B_2 \equiv A_6$, and $B_3 \equiv A_{10} \cup A_{11}$.}\label{fig:BAU_intuition}
 \end{figure}
 
-Define the mean of the observations as $\vec{\mu}_Z \equiv (\E{Z_1}, \dots, \E{Z_m})^\tp$. 
+Define the \green{conditional mean of the data as $\vec{\mu}_Z \equiv \left(\E{Z_1 \mid \vec{\mu}}, \dots, \E{Z_m \mid \vec{\mu}}\right)^\tp$}. 
  Since each $B_j \in D^O$ is either a BAU or a union of BAUs, one can construct an $m\times N$ matrix 
 \begin{equation}\label{eqn:C_Z}
 \vec{C}_Z \equiv \Big(w_{ij}\mathbb{I}(i \in c_j) : i = 1, \dots, N; j = 1, \dots, m\Big),
@@ -527,21 +534,21 @@ In \pkg{FRK} v2, the weights $w_{ij}$ may be controlled through the \code{wts} f
  Specifically, the \code{wts} field allows one to attribute each BAU to a \textit{relative} weight $v_i$, $i = 1, \dots, N$, such that $w_{ij} \propto v_i$, where the constant of proportionality can vary with $j$.   
  For example, if the BAUs are of unequal area, then one may wish to set $v_i = |A_i|$. 
  By default (and implicit in \pkg{FRK} v1), each $v_i$ is set to 1. 
-  The argument \mbox{\code{normalise\_wts}} controls whether $\vec{C}_Z$ corresponds to a weighted sum or a weighted average. If set to \code{FALSE}, then $w_{ij} = v_i$ for all $j$ (weighted sum); if set to \mbox{\code{TRUE}} (implicit in \pkg{FRK} v1), then the $w_{ij}$ are normalised so that each row of $\vec{C}_Z$ sums to 1 (weighted average).  
+  The argument \mbox{\code{normalise\_wts}} controls whether $\vec{C}_Z$ corresponds to a weighted sum or a weighted average. If set to \code{FALSE}, then $w_{ij} = v_i$ for all $j$ (weighted sum); if set to \mbox{\code{TRUE}} (default and implicit in \pkg{FRK} v1), then the $\{w_{ij}\}$ are normalised so that each row of $\vec{C}_Z$ sums to 1 (weighted average).  
 %  Note that if $v_i = |A_i|$ and \mbox{\code{normalise\_wts = TRUE}}, the $j$th row sum of $\vec{C}_Z$ is $\sum_{i \in c_j} |A_i| = |B_j|$, so that the normalised weights are $w_{ij} = |A_i|/|B_j|$.  
   Note that if $v_i = |A_i|$ and \mbox{\code{normalise\_wts = TRUE}}, the normalised weights are $w_{ij} = |A_i|/|B_j|$, since \green{the BAUs are disjoint and} $\sum_{i \in c_j} |A_i| = |B_j|$. 
   
 
 
-Denoting the mean of $Z_j$, which is the $j$th element of $\vec{\mu}_Z$, by $\mu_{Zj}$, we assume that 
+Denoting the mean of $Z_j$, which is the $j$th element of $\vec{\mu}_Z$, by $\mu_{Z_j}$, we assume that 
 \begin{equation}\label{eqn:Z_j|mu(.)}
-[Z_j \mid \mu(\cdot), \psi] = \text{EF}(\mu_{Zj}, \psi),
+[Z_j \mid \vec{\mu}, \psi] = \text{EF}(\mu_{Z_j}, \psi), \quad j = 1, \dots, m,
 \end{equation}
 where EF corresponds to a probability distribution in the exponential family with dispersion parameter $\psi$ and, for generic random quantities $A$ and $B$, $[A \mid B]$ denotes the probability distribution of $A$ given $B$. 
- We assume that $\psi$ is spatially invariant and note that, with the parameterisations assumed by \pkg{FRK} v2, $\psi = 1$ for some distributions in the exponential family (e.g., binomial, negative-binomial, and Poisson distributions).
+ We assume that $\psi$ is spatially invariant; with the parameterisations assumed by \pkg{FRK} v2, $\psi = 1$ for some distributions in the exponential family (e.g., binomial, negative-binomial, and Poisson distributions).
 
-Equation (\ref{eqn:Z_j|mu(.)}) implies that a given observation depends only on the value of the mean process at the corresponding observation support, rather than on means elsewhere in the domain. 
-Further, we assume that all observations are conditionally independent given the latent spatial process: Specifically, 
+\green{Together, (\ref{eqn:04-01:mu_Z})} and (\ref{eqn:Z_j|mu(.)}) imply that a given observation depends only on the value of the mean process at the corresponding observation support, rather than on means elsewhere in the domain. 
+Further, we assume that all observations are conditionally independent given the latent spatial process, \green{and that they are all from the same exponential family member}: Specifically, 
 \[
 [\vec{Z} \mid \vec{\mu}_Z, \psi] = \prod_{j=1}^m \text{EF}(\mu_{Zj}, \psi).
 \]
@@ -550,14 +557,14 @@ As we only consider data models in the exponential family, $\ln{[\vec{Z}  \mid  
 \ln{[\vec{Z} \mid \vec{\mu}_Z, \psi]}
 =
 \sum_{j=1}^m\left\{
-\frac{Z_j\lambda(\mu_{Zj}) - b(\lambda(\mu_{Zj}))}{a(\psi)} + c(Z_j, \psi)\right\},
+\frac{Z_j\lambda(\mu_{Z_j}) - b(\lambda(\mu_{Z_j}))}{a(\psi)} + c(Z_j, \psi)\right\},
 \end{equation}
 where $a(\cdot)$, $b(\cdot)$, and $c(\cdot, \cdot)$ are deterministic functions specific to the chosen exponential family member, and $\lambda(\cdot)$ is the canonical parameter.
 
 
 The model employed by \pkg{FRK} v2 can be summarised as follows. 
 \begin{gather}
-    Z_j \mid \mu_{Zj}, \psi \inddist \text{EF}(\mu_{Zj}, \psi), \quad j = 1, \dots, m, \label{eqn:new_model_Z}\\
+    Z_j \mid \mu_{Z_j}, \psi \inddist \text{EF}(\mu_{Z_j}, \psi), \quad j = 1, \dots, m, \label{eqn:new_model_Z}\\
     \vec{\mu}_Z = \vec{C}_Z \vec{\mu}, \label{eqn:new_model_muZ}\\
     g(\vec{\mu}) = \vec{Y}, \label{eqn:new_model_g(mu)}\\
     \vec{Y} = \vec{T} \vec{\alpha} + \vec{S} \vec{\eta} + \vec{\xi}, \label{eqn:new_model_Y}\\
@@ -565,7 +572,7 @@ The model employed by \pkg{FRK} v2 can be summarised as follows.
     \vec{\xi} \mid \sigma^2_\xi \sim \Gau(\vec{0}, \sigma^2_\xi \vec{V}), \label{eqn:new_model_priors}
 \end{gather}
  where $\vec{V}$ is a known, positive-definite diagonal matrix, and $\sigma^2_\xi$ is either unknown and estimated or it is possible for the user to provide it. In a spatio-temporal setting, a more complex model for $\vec{\xi}$ is allowed; see Section \ref{sec:spatio-temporal}. 
- Note that \pkg{FRK} v2 is backwards compatible, since an identity link function and a Gaussian data model in (\ref{eqn:new_model_Z}), where $\psi$ plays the role of the measurement-error variance, yields the model used in \pkg{FRK} v1.)
+ Note that \pkg{FRK} v2 is backwards compatible, since an identity link function and a Gaussian data model in (\ref{eqn:new_model_Z}), where $\psi$ plays the role of the measurement-error variance, yields the model used in \pkg{FRK} v1.
 
 
  
@@ -616,30 +623,30 @@ The model employed by \pkg{FRK} v2 can be summarised as follows.
  \green{Two distributions considered in this framework, namely the binomial distribution and the negative-binomial distribution, have an assumed-known `size' parameter and a `probability of success'
 parameter. 
 Given %data, $\vec{Z} \equiv (Z_1, \dots, Z_m)$, and 
-the vector of size parameters associated with the data, $\vec{k}_Z \equiv (k_{Z1}, \dots, k_{Zm})^\tp$, the parametrisation used in \pkg{FRK} v2 assumes that: For binomial data models, $Z_j$ represents the number of `successes' from $k_{Zj}$ trials; for negative-binomial data models, $Z_j$ represents the number of failures before $k_{Zj}$ successes.}
+the vector of size parameters associated with the data, $\vec{k}_Z \equiv (k_{Z_1}, \dots, k_{Zm})^\tp$, the parametrisation used in \pkg{FRK} v2 assumes that: $Z_j$ represents the number of `successes' from $k_{Z_j}$ trials (binomial data model) or the number of failures before $k_{Z_j}$ successes (negative-binomial data model).}
 
 \green{
  For these distributions, we consider a probability process, $\pi(\vec{s})$, $\vec{s} \in D$, and the probability process evaluated over the BAUs, $\vec{\pi} \equiv (\pi_i : i = 1, \dots, N)^\tp$. 
  We use a user-specified link function to link the latent spatial process, $Y(\cdot)$, to the probability process, $\pi(\cdot)$, and then a distribution-specific link function to link the probability process to the mean process, $\mu(\cdot)$; see Appendix \ref{Appendix:Distributions with size parameters} for details. 
   }
 
- \green{
-% As discussed in Appendix \ref{Appendix:Distributions with size parameters}, the construction of $\vec{\mu}$ requires the specification of size parameters at the BAU level, $\vec{k} \equiv (k_i: i = 1, \dots, N)^\tp$. 
+ \green{ 
  In general, \pkg{FRK} v2 needs the size parameters for every observed BAU. 
- In the special case that each observation is associated with exactly one BAU (e.g., point-referenced data, or areal data where the BAUs and observation supports coincide), the user can provide the size parameters either through the observations or through the BAUs. 
- When some observations are associated with multiple BAUs, the user must provide the size parameters at the BAU level:  % (at least for all observed BAUs).
- In this case, if $\vec{k}_Z$ is not provided explicitly, it is obtained by summing the BAU-level size parameters. %Specifically, $$\vec{k_Z} = \vec{C}_Z \vec{k}.$$
+ In the special case that each observation is associated with exactly one BAU (e.g., point-referenced data), %, or areal data where the BAUs and observation supports coincide), 
+ the user can provide the size parameters either through the observations or through the BAUs. 
+ When one or more observations are associated with multiple BAUs, the user must provide the size parameters at the BAU level:  % (at least for all observed BAUs).
+ In this case, if the size parameter at the data level, $\vec{k}_Z$, is not provided explicitly, it is obtained by summing the BAU-level size parameters.\footnote{\red{Andrew: You said this is a contradiction, can we discuss.}} %Specifically, $$\vec{k_Z} = \vec{C}_Z \vec{k}.$$
  }
 
 \green{In most applications considering binomial or negative-binomial data models, 
-%  that is, when $Z_j \sim \text{Bin}(\mu_{Zj}; k_{Zj})$ or $Z_j \sim \text{NB}(\mu_{Zj}; k_{Zj})$, $j = 1, \dots, m$, 
- the mean of an observation is treated as a simple aggregate of the underlying mean process. Therefore, with these distributions, the matrix $\vec{C}_Z$ in (\ref{eqn:C_Z}) is constructed with the relative weights \mbox{$\{v_i = 1$ : $i = 1, \dots, N\}$} and with \mbox{\code{normalise\_wts = FALSE}}. Then, the mapping from the BAU-level mean, $\vec{\mu}$, to the data-level mean, $\vec{\mu}_Z$, in (\ref{eqn:04-01:mu_Z}) is a simple, un-weighted summation over the BAUs.}
+%  that is, when $Z_j \sim \text{Bin}(\mu_{Z_j}; k_{Z_j})$ or $Z_j \sim \text{NB}(\mu_{Z_j}; k_{Z_j})$, $j = 1, \dots, m$, 
+ the conditional mean of an observation is treated as a simple aggregate of the underlying mean process. Therefore, with these distributions, \pkg{FRK} v2 requires that the matrix $\vec{C}_Z$ in (\ref{eqn:C_Z}) is constructed with the relative weights \mbox{$\{v_i = 1$ : $i = 1, \dots, N\}$} and with \mbox{\code{normalise\_wts = FALSE}}. Then, the mapping from the BAU-level mean, $\vec{\mu}$, to the data-level mean, $\vec{\mu}_Z$, in (\ref{eqn:04-01:mu_Z}) is a simple, un-weighted summation over the BAUs.}
  
 
 
 % \green{When the response distribution is binomial or negative-binomial, (\ref{eqn:new_model_Z}) 
-%% is replaced with $Z_j \sim \text{Bin}(\mu_{Zj}; k_{Zj})$ or $Z_j \sim \text{NB}(\mu_{Zj}; k_{Zj})$, 
-% also includes a size parameter, $k_{Zj}$, $j = 1, \dots, m$, 
+%% is replaced with $Z_j \sim \text{Bin}(\mu_{Z_j}; k_{Z_j})$ or $Z_j \sim \text{NB}(\mu_{Z_j}; k_{Z_j})$, 
+% also includes a size parameter, $k_{Z_j}$, $j = 1, \dots, m$, 
 % and if a `link' function is chosen that is appropriate for modelling probabilities, (\ref{eqn:new_model_g(mu)}) is replaced with 
 %\begin{gather}
 % h(\vec{\mu}; \vec{k}) = \vec{\pi},\\
@@ -731,7 +738,7 @@ Let $\hat{\vec{u}}\equiv\hat{\vec{u}}(\vec{\theta}, \vec{Z})$ be a mode of $l(\v
  
  
  Note that $[\vec{u} \mid \vec{Z}, \vec{\theta}] \propto [\vec{u}, \vec{Z} \mid \vec{\theta}]$, which is equal to the complete-data likelihood function, $L(\vec{\theta}; \vec{Z}, \vec{u})$. 
- Since the Laplace approximation replaces $L(\vec{\theta}; \vec{Z}, \vec{u})$ with a term that has the form of an un-normalised Gaussian density in terms of $\vec{u}$, it follows that, approximately, $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$. 
+ Therefore, since the Laplace approximation replaces $L(\vec{\theta}; \vec{Z}, \vec{u})$ with a term that has the form of an un-normalised Gaussian density in terms of $\vec{u}$, it follows that, approximately, $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$. 
   In the software we use (\pkg{TMB}; see below), estimates of $\hat{\vec{u}}$ and $\vec{H}^{-1}$ are provided, which makes prediction of $\vec{u}$ and any function of it straightforward via MC simulation (see Section \ref{subsection:04-03:Prediction}). 
 
 
@@ -852,7 +859,7 @@ Let $\hat{\vec{u}}\equiv\hat{\vec{u}}(\vec{\theta}, \vec{Z})$ be a mode of $l(\v
 \pkg{TMB}'s implementation of automatic differentiation is a key reason why \pkg{FRK} v2 can easily cater for a large variety of response distributions and link functions, as each response-distribution/link-function combination does not need to be considered on a case-by-case basis.
 
 Note that all unknown quantities are treated as random in \pkg{TMB} (with a flat prior assumed if a prior is not provided).
- To retain \pkg{FRK} v1's mixed-model interpretation, we fix the parameters and fixed effects to their posterior-mode estimates, and then we treat them as non-random quantities.
+ To retain \pkg{FRK} v1's mixed-model interpretation, we fix the model parameters and fixed effects to their posterior-mode estimates, and then treat them as non-random quantities.
 %We fix the parameters to their posterior-mode estimates and then treat them as non-random quantities when doing prediction; however, we let the user decide if the fixed effects $\vec{\alpha}$ are treated as fixed or random. 
 %If they fixed, flagged by setting \code{kriging = "simple"} in the function \fct{predict}, they are treated in the same way as the parameters. 
 %If they are random, we jointly sample $\vec{\alpha}$ along with the random effects $\vec{u}$ in the prediction stage;  this choice accounts for the uncertainty in estimation of $\vec{\alpha}$, and so it is flagged by setting \code{kriging = "universal"} (see \red{Cressie (1993, Ch. 3) OR AN EARLIER REFERENCE THAT IS IN THAT CHAPTER} for the equivalence of using a flat prior on $\vec{\alpha}$ to performing universal kriging). 
@@ -894,22 +901,23 @@ There are three quantities that could be of interest to the user, namely the lat
 %For each quantity, we use the posterior expectation as our predictor. % ; a decision theoretic justification for this choice is provided by \citet*[ch.~3]{Cressie_1993_stats_for_spatial_data}.
 Recall that the Laplace approximation implies that, approximately, $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$; since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $Y(\cdot)$ can be done using well-known formulas. 
   However, the posterior distribution of a non-linear function of $Y(\cdot)$ (e.g., the mean $\vec{\mu}$) is typically not available in closed form, and some approximation is required.
-  In \pkg{FRK} v2, we use a Monte Carlo (MC) approach to inference of $\vec{u} = (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.
+  In \pkg{FRK} v2, we use a Monte Carlo (MC) approach to inference of $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.
 
  Recall that $\vec{Y} = \vec{T}\vec{\alpha} + \vec{S}\vec{\eta} + \vec{\xi}$, which can be rewritten as $\vec{Y} = \vec{T}\vec{\alpha} + [\vec{S} \; \vec{I}] \,\vec{u}$. 
- We thus define $\vec{Y}_{\!\text{MC}}$, an $N \times n_{\text{MC}}$ matrix whose columns are MC samples of $\vec{Y} \mid \vec{Z}, \vec{\theta}$, as 
+ We thus define $\vec{Y}_{\!\text{MC}}$, an $N \times n_{\text{MC}}$ matrix whose columns are $n_{\text{MC}}$ MC samples of $\vec{Y} \mid \vec{Z}, \vec{\theta}$, as 
 \begin{equation}\label{eqn:Y_MC_simple}
 \vec{Y}_{\!\text{MC}}
 \equiv \vec{T}\vec{A} + [\vec{S} \; \vec{I}] \,\vec{U},
 \end{equation}
 where every column of the matrix $\vec{A}$ is the estimated posterior mode of $\vec{\alpha}$, and each of the $n_{\text{MC}}$ columns of the matrix $\vec{U}$ are draws from  $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$.  
  We obtain MC samples of the $N$-dimensional vector $\vec{\mu}$ from $[\vec{\mu} \mid \vec{Z}, \vec{\theta}]$ via $\vec{M} \equiv g^{-1}(\vec{Y}_{\!\text{MC}})$, where $g^{-1}(\cdot)$ is applied element-wise. 
-  \green{\pkg{FRK} v2 also allows inference on data over all $N$ BAUs, $\vec{Z}^* \equiv (Z^*_1, \dots, Z^*_N)$. We assume that these data follow the same exponential family model as that used for the original data, $\vec{Z}$. %: That is, $Z^*_i \sim \text{EF}(\mu_i, \psi)$, $i = 1, \dots, N$.  
+  \green{\pkg{FRK} v2 also allows prediction of data over all $N$ BAUs, $\vec{Z}^* \equiv (Z^*_1, \dots, Z^*_N)^\tp$. 
+  We assume that these data are from the same exponential family model as that of the original data, $\vec{Z}$. %: That is, $Z^*_i \sim \text{EF}(\mu_i, \psi)$, $i = 1, \dots, N$.  
  MC samples of $\vec{Z}^*$ can then be constructed straightforwardly using $\vec{M}$. %, since the distribution of an exponential family member depends only on its conditional mean (and possibly a dispersion parameter, which we model as being constant throughout the spatial domain). 
- Note that \pkg{FRK} v2 provides the user with $\vec{M}$, which can facilitate simulation from a different distribution to that used for the original data.}
+ Note that \pkg{FRK} v2 provides the user with $\vec{M}$, which in turn can be used to predict data from a distribution that is different from that of the original data if needed.}
 
 
-For each quantity, we use the posterior expectation as the predictor, which can be estimated by simply taking row-wise averages over the MC simulated matrices defined above. 
+For each quantity, we use the posterior expectation as the predictor, which can be estimated by simply taking row-wise averages of the matrices of samples (defined above). 
 In a Gaussian setting, a commonly used metric for uncertainty quantification is the root-mean-squared prediction error (RMSPE). 
 In a non-Gaussian setting, it can be difficult to interpret the RMSPE, and it is often more intuitive to quantify uncertainty through the width of the prediction intervals. Hence, in \pkg{FRK} v2, we also use the MC sampling approach described above to compute user-specified percentiles of the predictive distribution.  
 
@@ -1037,7 +1045,7 @@ In a non-Gaussian setting, it can be difficult to interpret the RMSPE, and it is
 
 
 Prediction over $D^P$ requires some form of aggregation across the associated BAUs. 
- \green{We aggregate at the mean scale, that is, we aggregate the mean process over the associated BAUs. This does \textit{not} involve aggregation of data.}
+ \green{In \pkg{FRK} v2, we aggregate the mean process over the associated BAUs. We stress that this is different from aggregation of data (which would lead to a different model for dealing with change-of-support).}
  Let $\vec{\mu}_P \equiv \{\mu(\tilde{B}_k) : k = 1, \dots, N_P\}$ be the mean process evaluated over the prediction regions. Just as $\vec{\mu}_Z$ was constructed from the BAU-level mean process $\vec{\mu}$ via the matrix $\vec{C}_Z$ given by (\ref{eqn:C_Z}), since each $\tilde{B}_k$ is a BAU or a union of BAUs, one can construct an $N_P \times N$ matrix 
 \[
 \vec{C}_P \equiv \left(\tilde{w}_{ik}\mathbb{I}(i \in \tilde{c}_k) : i = 1, \dots, N; k = 1, \dots, N_P\right),
@@ -1052,14 +1060,14 @@ such that
 %   \sum_{i = 1}^N \tilde{w}_{ik} \mathbb{I}(A_i \subset \tilde{B}_k)\mu_i; \quad i = 1, \dots, N;\;  k = 1, \dots, N_P;\; \tilde{B}_k \in D^P.
 %\]
 As in Section \ref{subsection:04-02:DataLayer}, \green{the relative weights, $\{v_i: i = 1, \dots, N\}$, such that $\tilde{w}_{ik} \propto v_i$, are controlled by the \code{wts} field of the BAU object, and the argument \mbox{\code{normalise\_wts}} is used to control whether $\vec{C}_P$ represents a weighted sum or a weighted average. 
- For consistency between the model fitting and prediction stages, \pkg{FRK} v2 requires that the same relative weights, $\{v_i: i = 1, \dots, N\}$, and the same setting of \code{normalise\_wts} are used in construction of both $\vec{C}_Z$ and $\vec{C}_P$.}
+ For consistency between the model fitting and prediction stages, \pkg{FRK} v2 uses the same relative weights, $\{v_i: i = 1, \dots, N\}$, and the same setting of \code{normalise\_wts}, in construction of both $\vec{C}_Z$ and $\vec{C}_P$.}
 
 
- MC samples of $\vec{\mu}_P \mid \vec{Z}, \vec{\theta}$ can be constructed  via $\vec{M}_P \equiv \vec{C}_P \vec{M}$, where recall that $\vec{M}$ consists of MC samples from $[\vec{\mu} \mid \vec{Z}, \vec{\theta}]$. Predictions and uncertainty quantification of the predictions can then be computed straightforwardly from $\vec{M}_P$. 
-   \green{\pkg{FRK} v2 also allows inference on data over aggregations of BAUs, $\vec{Z}^*_P \equiv (Z^*_{P1}, \dots, Z^*_{PN_P})$. 
-   We assume that these data follow the same exponential family model as that used for the original data, $\vec{Z}$. %: That is, $Z^*_{Pk} \sim \text{EF}(\mu(\tilde{B}_k), \psi)$, $k = 1, \dots, N_P$.  
+ MC samples of $\vec{\mu}_P \mid \vec{Z}, \vec{\theta}$ are constructed  via $\vec{M}_P \equiv \vec{C}_P \vec{M}$, where recall that $\vec{M}$ consists of MC samples from $[\vec{\mu} \mid \vec{Z}, \vec{\theta}]$. Predictions and uncertainty quantification of the predictions can then be computed straightforwardly from $\vec{M}_P$. 
+   \green{\pkg{FRK} v2 also allows inference on data over aggregations of BAUs, $\vec{Z}^*_P \equiv (Z^*_{P, 1}, \dots, Z^*_{P, N_P})^\tp$. 
+   We assume that these are from the same exponential family model as that of the original data, $\vec{Z}$. %: That is, $Z^*_{Pk} \sim \text{EF}(\mu(\tilde{B}_k), \psi)$, $k = 1, \dots, N_P$.  
  MC samples of $\vec{Z}^*_P$ can then be constructed straightforwardly using $\vec{M}_P$. %, since the distribution of an exponential family member depends only on its conditional mean (and possibly a dispersion parameter, which we model as being constant throughout the spatial domain). 
- Note that \pkg{FRK} v2 provides the user with $\vec{M}_P$, which can facilitate simulation from a different distribution to that used for the original data.}
+ Note that \pkg{FRK} v2 provides the user with $\vec{M}_P$, which in turn can be used to predict data from a distribution that is different from that of the original data if needed.}
 
  
  
@@ -1110,7 +1118,7 @@ As in Section \ref{subsection:04-02:DataLayer}, \green{the relative weights, $\{
 
 \subsection{Spatio-temporal framework}\label{sec:spatio-temporal}
 
-As in \pkg{FRK} v1, we accommodate spatio-temporal data by using spatio-temporal basis functions constructed via a tensor product of spatial and temporal basis functions. 
+As with \pkg{FRK} v1, \pkg{FRK} v2 accommodates spatio-temporal data by using spatio-temporal basis functions constructed via a tensor product of spatial and temporal basis functions. 
  Since often one requires several thousand basis functions in a spatio-temporal setting, here we focus on the case where one models $\vec{\eta}$ using the sparse precision matrix $\vec{Q}$. 
  
  
@@ -1122,13 +1130,14 @@ We model the $r_tr_s \times r_tr_s$ precision matrix  of the $r_tr_s$ spatio-tem
 \]
 where $\otimes$ is the Kronecker product. 
 This form for $\vec{Q}$ leads to significant computational savings. 
- For the random coefficients associated with the temporal basis functions, \pkg{FRK} v2 uses an AR1 model.
+  For the random coefficients associated with the temporal basis functions, \pkg{FRK} v2 uses a \green{first-order autoregressive} model. 
 
 In a spatio-temporal setting, it is possible that each spatial BAU is observed multiple times. 
-It is also possible that the variance of the fine-scale component is not constant over the spatial domain $D$. 
-In these situations where the temporal aspect gives repeat spatial observations, a better fit to the data may be obtained by allowing each spatial BAU to be associated with its own fine-scale variance parameter. 
-Let $N_s$ and $N_t$ denote the number of spatial and temporal BAUs, respectively (so that $N = N_sN_t$).
-Then, instead of modelling $\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{I})$, \pkg{FRK} v2 also allows the model,
+%It is also possible that the variance of the fine-scale component is not constant over the spatial domain $D$. 
+\green{In these situations, \pkg{FRK} v2 allows each spatial BAU to be associated with its own fine-scale variance parameter. 
+ This model may be advantageous when the variance of the fine-scale component is spatially varying.} 
+Specifically, let $N_s$ and $N_t$ denote the number of spatial and temporal BAUs, respectively (so that $N = N_sN_t$).
+Then, instead of modelling \mbox{$\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{I})$}, \pkg{FRK} v2 also allows the model,
 $\vec{\xi} \sim \Gau(\vec{0}, \vec{\Sigma}_\xi)$, where   
 \begin{equation}
     \vec{\Sigma}_\xi \equiv
@@ -1148,31 +1157,32 @@ This model for $\vec{\Sigma}_\xi$ is flagged by setting \mbox{\code{fs\_by\_spat
 
 We now demonstrate the new features in \pkg{FRK} v2, an overview of which is presented in Table \ref{tab:new_arguments_in_functions}. 
  The primary new feature in \pkg{FRK} v2 is the package's ability to cater for non-Gaussian data models: A full list of available data models and link functions is shown in Table \ref{table:response_and_links}. 
- In Sections \ref{sec:03-01:Poisson} and \ref{sec:03-03:negative-binomial}, we illustrate use of \pkg{FRK} v2 with non-Gaussian spatial point-referenced and area-referenced data, respectively. 
- In Section \ref{sec:3:increased_resolution}, we show the potential improvement in predictive performance of \pkg{FRK} v2 over \pkg{FRK} v1 when the data are Gaussian, thanks to an increased maximum number of basis functions in \pkg{FRK} v2. 
-  Finally, in Section \ref{sec:03:Additonal_features}, we briefly discuss extensions available in \pkg{FRK} v2 to model data in a spatio-temporal setting. 
+ In Sections \ref{sec:03-01:Poisson} and \ref{sec:03-03:negative-binomial}, we illustrate the use of \pkg{FRK} v2 with non-Gaussian spatial point-referenced and area-referenced data, respectively. 
+ Finally, in Section \ref{sec:3:increased_resolution}, we show the potential improvement in predictive performance of \pkg{FRK} v2 over \pkg{FRK} v1 when the data are Gaussian, thanks to an increase in the maximum number of basis functions allowed in \pkg{FRK} v2. 
+%  Finally, in Section \ref{sec:03:Additonal_features}, we briefly discuss extensions available in \pkg{FRK} v2 to model data in a spatio-temporal setting. 
   All results presented in the remainder of this paper can be generated using the reproducible code at \url{https://github.com/MattSainsbury-Dale/FRKv2_src}. 
 
+%\pbox{4cm}{\fct{SRE} \\ and \\ \fct{FRK}}
 
 \begin{table}
     \centering
     \setlength{\tabcolsep}{4pt}
- \caption{Important extensions to function arguments in \pkg{FRK} v2.}\label{tab:new_arguments_in_functions} 
-    \begin{tabular}{ccp{9.5cm}}
+ \caption{Important new or modified function arguments in \pkg{FRK} v2.}\label{tab:new_arguments_in_functions} 
+    \begin{tabular}{ccp{9cm}}
     \hline
     Function & Argument & Use\\
     \hline
-    \fct{SRE} & \code{response}  & A string indicating the response distribution. \\
-        & \code{link}      & A string indicating the link function.\\
-        & \code{K\_type}   & A string indicating the parameterisation of $\cov{\vec{\eta}}{\vec{\eta}}$; the newly permissible value, \code{"precision"}, indicates that a sparse precision matrix should be used. 
+     \fct{SRE}/\fct{FRK}   & \code{response}  & String indicating the response distribution. \\
+        & \code{link}      & String indicating the link function.\\
+        & \code{K\_type}   & String indicating the parameterisation of $\cov{\vec{\eta}}{\vec{\eta}}$; the newly permissible value, \code{"precision"}, indicates that a sparse precision matrix should be used. 
         \\
-        & \code{normalise\_wts} & A flag controlling whether the weights in $\vec{C}_Z$ and $\vec{C}_P$ should be normalised or not.\\
-        & \code{fs\_by\_spatial\_BAU} & A flag controlling whether each spatial BAU is given its own fine-scale variance parameter; only applicable in a spatio-temporal setting.\\
+        & \code{normalise\_wts} & Flag controlling whether the weights in $\vec{C}_Z$ and $\vec{C}_P$ should be normalised or not.\\
+        & \code{fs\_by\_spatial\_BAU} & Flag controlling whether each spatial BAU is given its own fine-scale variance parameter; only applicable in a spatio-temporal setting.\\
         & & \\
-        \fct{SRE.fit} & \code{method} & A string indicating the method of model fitting: \code{"TMB"} is required whenever a non-Gaussian data model or non-identity link function is used.\\
+       \fct{SRE.fit}/\fct{FRK} & \code{method} & String indicating the method of model fitting: \code{"TMB"} is required whenever a non-Gaussian data model or non-identity link function is used.\\
 %        & \code{optimiser} & Optimising function if \code{method = "TMB"}; default \fct{nlminb}. \\
 %        & \code{taper}     & A positive scalar indicating the strength of the covariance tapering (see Appendix \ref{Appendix:CovarianceTapering}).\\
-        & \code{known\_sigma2fs} & A positive number at which to fix the fine-scale variance. 
+        & \code{known\_sigma2fs} & Positive number at which to fix the fine-scale variance. 
 %        If \code{fs\_by\_spatial\_BAU = TRUE}, the argument \code{known\_sigma2fs} should be a vector of length equal to the number of spatial BAUs.
 \\
 & & \\
@@ -1181,14 +1191,14 @@ We now demonstrate the new features in \pkg{FRK} v2, an overview of which is pre
         & 
 %        \code{type} & A vector of strings indicating the quantities of interest for which inference is made. 
 %        The inclusion of \code{"link"}, \code{"mean"}, and \code{"response"} in \code{type}, respectively, indicates that inference on the latent process ($\vec{Y}$), the mean process ($\vec{\mu}$ or $\vec{\mu}_P$) and, if applicable, the probability process ($\vec{\pi}$), or the data ($\vec{Z}^*$ or $\vec{Z}^*_P$), is made. 
-        \code{type} & A vector of strings indicating the quantities of interest for which inference is made. 
+        \code{type} & Vector of strings indicating the quantities of interest for which inference is made. 
         \green{The inclusion of \code{"link"} indicates that inference on the latent process ($\vec{Y}$) is made; the inclusion of \code{"mean"} indicates that inference on the mean process ($\vec{\mu}$ or $\vec{\mu}_P$) and, if applicable, the probability process ($\vec{\pi}$) is made; and the inclusion of \code{"response"} indicates that inference on the data ($\vec{Z}^*$ or $\vec{Z}^*_P$) is made.}
         \\ 
         & \code{percentiles} & Numeric vector %(each element between 0 and 100) 
         indicating the percentiles of the predictive distribution(s) to be returned.\\
 %        & \code{kriging} & A character string indicating whether \code{"simple"} or \code{"universal"} kriging is to be performed. \\
 %        & \code{k} & Vector of size parameters at each prediction location (applicable only for binomial and negative-binomial data).\\
-        & \code{n\_MC} & Integer indicating the number of MC samples at each BAU.\\
+        & \code{n\_MC} & Integer indicating the number of MC samples to be simulated at each BAU.\\
         & & \\
         \fct{auto\_BAUs} & \code{spatial\_BAUs} & 
         The spatial BAUs in a spatio-temporal setting, where spatio-temporal BAUs are constructed by taking the Kronecker product of the spatial BAUs and temporal BAUs (box functions). If \code{NULL}, the spatial BAUs are constructed automatically from the data.\\
@@ -1242,10 +1252,10 @@ The true mean process evaluated over the BAUs, $\vec{\mu}$, is also shown in Fig
 
 The first step when using \pkg{FRK} v1/v2 is to create basis functions and BAUs, which can be done automatically using the helper functions, \fct{auto\_BAUs} and \fct{auto\_basis}; see \cite{FRK_paper} for details. 
 Next, an \class{SRE} object is constructed using \fct{SRE}, within which we specify the data model, the link function, and the parameterisation of $\cov{\vec{\eta}}{\vec{\eta}}$.  
- \green{In this example, we model counts using a Poisson data model, $Z_j \sim \text{Pois}(\mu_{Zj})$, $j = 1, \dots, m$, and we use the log link function, $g(\cdot) = \log(\cdot)$. These choices are made by setting \code{response = "poisson"} and \code{link = "log"}.} 
+ \green{In this example, we model counts using a Poisson data model, $Z_j \sim \text{Pois}(\mu_{Z_j})$, $j = 1, \dots, m$, and we use the log link function, $g(\cdot) = \log(\cdot)$. These choices are made by setting \code{response = "poisson"} and \code{link = "log"}.} 
  We then fit the model using \fct{SRE.fit}.
  These steps may also be performed in a single line of code with the convenient wrapper function \fct{FRK}. 
- Note that when the data are non-Gaussian or when a non-identity link function is chosen, \fct{FRK} automatically enforces \code{method = "TMB"} and selects \code{K\_type = "precision"}, which means that \pkg{TMB} is used for model fitting and that the basis-function coefficients are modelled via a sparse precision matrix, $\vec{Q}$.  
+ Note that when the data are non-Gaussian or when a non-identity link function is chosen, \fct{FRK} automatically enforces \code{method = "TMB"} and selects \code{K\_type = "precision"}, which means that \pkg{TMB} is used for model fitting and that the basis-function coefficients are modelled via a sparse precision matrix, $\vec{Q}$: 
 %\begin{Code}
 %R> S <- FRK(f = Z ~ 1, data = list(Poisson_simulated),
 %+    response = "poisson", link = "log")
@@ -1256,7 +1266,7 @@ R> S <- FRK(f = Z ~ 1, data = Poisson_df, response = "poisson", link = "log")
 Prediction is done using \fct{predict}. 
 The argument \code{type} specifies the quantities of interest for which predictions and uncertainty quantification of the predictions are desired. 
 In this example, we set \code{type = c("link", "mean")} to obtain predictions for the \green{latent spatial process, $\vec{Y}$, and the mean process, $\vec{\mu}$}. 
-The \code{percentiles} argument allows the computation of percentiles of the predictive distributions and hence of prediction intervals; by default, the 5th and 95th percentiles are computed: 
+The \code{percentiles} argument allows the computation of percentiles of the predictive distributions and hence of prediction intervals; if left unspecified, the 5th and 95th percentiles are returned: 
 \begin{Code}
 R> pred <- predict(S, type = c("link", "mean"))
 \end{Code}
@@ -1268,7 +1278,7 @@ R> plots <- plot(S, pred$newdata)
 \end{Code}
 %$
 The \class{ggplot} objects can be arranged easily on a grid using various dedicated packages; we used \pkg{ggpubr} \citep{Kassambara_2020_ggpubr}. Figure \ref{fig:Poisson_nres3} shows predictions and prediction-interval widths for the latent process \green{evaluated over the BAUs, $\vec{Y}$, and the mean process evaluated over the BAUs, $\vec{\mu}$}. 
-The predictions of \green{$\vec{\mu}$} are reasonable given the data and its true value shown in Figure \ref{fig:Poisson_true_and_Z}. 
+The predictions of \green{$\vec{\mu}$} are reasonable given the data and the true values shown in Figure \ref{fig:Poisson_true_and_Z}. 
 The prediction-interval widths for \green{$\vec{Y}$ overall, do not vary much, but they are larger in regions of data paucity and along the boundary of the spatial domain; on the other hand, the prediction-interval width for $\vec{\mu}$ is large when $\vec{\mu}$} is large, as can be expected when the response is Poisson distributed. 
 The  `bullseye' points of low uncertainty, visible for both processes, correspond to the data locations. 
 The point-like nature of this reduction in uncertainty arises from the fine-scale random \green{process, $\xi(\cdot)$,} being modelled as mutually independent at the BAU level: unobserved BAUs do not ``borrow strength'' from the inferred fine-scale random effect at neighbouring observed BAUs.
@@ -1278,7 +1288,7 @@ The point-like nature of this reduction in uncertainty arises from the fine-scal
     \centering
     \includegraphics[width = \linewidth]{img/Poisson_sim.png}
     \vspace{-20pt}  
-    \caption{Predictions and prediction-interval widths using the data shown in Figure \ref{fig:Poisson_true_and_Z}. (Left panel) Prediction of the latent process \green{over the BAUs, $\vec{Y}$.} (Centre-left panel) Width of the 90\% prediction interval for $\vec{Y}$. (Centre-right panel) Prediction of the mean process \green{over the BAUs, $\vec{\mu}$}. (Right panel) Width of the 90\% prediction interval for $\vec{\mu}$.}
+    \caption{Predictions and prediction-interval widths returned by \pkg{FRK} v2 when applied to the simulated Poisson data shown in the right panel of Figure \ref{fig:Poisson_true_and_Z}. (Left panel) Prediction of the latent process \green{over the BAUs, $\vec{Y}$.} (Centre-left panel) Width of the 90\% prediction interval for $\vec{Y}$. (Centre-right panel) Prediction of the mean process \green{over the BAUs, $\vec{\mu}$}. (Right panel) Width of the 90\% prediction interval for $\vec{\mu}$.}
   \label{fig:Poisson_nres3}
 \end{figure}
 
@@ -1305,15 +1315,15 @@ In this section, we illustrate \pkg{FRK} v2 on simulated negative-binomial, area
 
 
  \green{Figure \ref{fig:03-02-negative-binomial_data} illustrates the simulation procedure used for this example. 
- In the the first step of data simulation, we define a fine grid which will be used as the BAUs.
-We construct the true probability process evaluated over the BAUs, $\vec{\pi}$, by passing a sum of trigonometric functions through the logistic function; $\vec{\pi}$ is shown in the left panel of Figure \ref{fig:03-02-negative-binomial_data}. 
+ In the the first step, we define a fine grid over which to construct the BAUs.
+We generate the true probability process evaluated over the BAUs, $\vec{\pi}$, by passing a sum of trigonometric functions through the logistic function; $\vec{\pi}$ is shown in the left panel of Figure \ref{fig:03-02-negative-binomial_data}. 
 We then construct the mean process evaluated over the BAUs, $\vec{\mu}$, which is shown in the centre-left panel of Figure \ref{fig:03-02-negative-binomial_data}; as we are simulating negative-binomial data, this requires specification of assumed-known `size' parameters and, for simplicity, we set $k_i = 50$, $i = 1, \dots, N$. 
 % Next, we define the data supports, $R_j$, $j = 1, \dots, m$, which are constructed in terms of the BAUs, so that $R_j$ and $B_j$ are equivalent in this example.  
   Next, we define a set of data supports consisting of both large-scale and fine-scale observations: 
 % To get a handle on the fine-scale-variation parameter, we include both large-scale and fine-scale observations: 
 That is, some data supports are large areal regions comprising many BAUs, while others coincide with the BAUs.  
  We then aggregate the mean process over the data supports to construct $\vec{\mu}_Z$, shown in the centre-right panel of Figure \ref{fig:03-02-negative-binomial_data}. 
- Finally, we simulate negative-binomial data, $Z_j \sim \text{NB}(\mu_{Zj}, k_{Zj})$, $j = 1, \dots, m$,  shown in the right panel of Figure \ref{fig:03-02-negative-binomial_data}.}
+ Finally, we simulate negative-binomial data, $Z_j \sim \text{NB}(\mu_{Z_j}, k_{Z_j})$, $j = 1, \dots, m$,  shown in the right panel of Figure \ref{fig:03-02-negative-binomial_data}.}
 
 
 \begin{figure}[t!]
@@ -1343,14 +1353,8 @@ That is, some data supports are large areal regions comprising many BAUs, while 
 
 
 Now we construct and fit the \class{SRE} object using \fct{FRK}. 
-\green{In this example, the data model is negative-binomial, that is, $Z_j \sim \text{NB}(\mu_{Zj}, k_{Zj})$, $j = 1, \dots, m$, and we use the logit `link' function (see Appendix \ref{Appendix:Distributions with size parameters}).} 
-% For binomial and negative-binomial data, known size parameters must be provided: In general, \pkg{FRK} v2 needs the size parameters for every observed BAU. 
-% In the special case that each observation is associated with exactly one BAU (e.g., point-referenced data, or areal data where the BAUs and observation supports coincide), the user can provide the size parameters either through the observations or through the BAUs. 
-% When some observations are associated with multiple BAUs, as is the case here, the user must provide the size parameters at the BAU level (at least for all observed BAUs). 
-% \green{Then, the size parameters at the data-support level are obtained by simply summing the individual BAU-level size parameters, which is reasonable since \pkg{FRK} v2 enforces $\vec{C}_Z$ and $\vec{C}_P$ to represent a simple, un-weighted summation of the mean process when the data model is binomial or negative-binomial (see Section \ref{sec:Distributions with size parameters}).} 
+\green{In this example, the data model is negative-binomial, that is, $Z_j \sim \text{NB}(\mu_{Z_j}, k_{Z_j})$, $j = 1, \dots, m$, and we use the logit `link' function (see Appendix \ref{Appendix:Distributions with size parameters}).} 
  \green{Since some observations are associated with multiple BAUs, we must provide the BAU-level size parameters (see Section \ref{sec:Distributions with size parameters}).} 
-%The size parameter at the BAU level is specified using the field \code{k\_BAU} within the BAU object.
-% Here, we also use a scalar fine-scale variance matrix by setting the field \code{fs} of the BAUs object to 1 (implicit in the previous example).
 \begin{Code}
 R> BAUs$k_BAU <- 50 
 R> S <- FRK(f = Z ~ 1, data = list(zdf), BAUs = BAUs, 
@@ -1367,7 +1371,7 @@ R> pred <- predict(S)
     \centering
     \includegraphics[width = \linewidth]{img/Negbinom_sim_BAU_predictions.png}
     \vspace{-20pt}
-    \caption{Prediction and prediction-interval width for the simulated negative-binomial areal data set shown in the right panel of Figure \ref{fig:03-02-negative-binomial_data}. (Left panel) Prediction of the probability process over the BAUs, $\vec{\pi}$. (Centre-left panel) Width of the 90\% prediction interval for $\vec{\pi}$. (Centre-right panel) Prediction of the mean process over the BAUs, $\vec{\mu}$. (Right panel) Width of the 90\% prediction interval for $\vec{\mu}$.
+    \caption{Prediction and prediction-interval widths returned by \pkg{FRK} v2 when applied to the simulated negative-binomial areal data set shown in the right panel of Figure \ref{fig:03-02-negative-binomial_data}. (Left panel) Prediction of the probability process over the BAUs, $\vec{\pi}$. (Centre-left panel) Width of the 90\% prediction interval for $\vec{\pi}$. (Centre-right panel) Prediction of the mean process over the BAUs, $\vec{\mu}$. (Right panel) Width of the 90\% prediction interval for $\vec{\mu}$.
 }   
   \label{fig:03-02-negative-binomial}
 \end{figure}
@@ -1376,14 +1380,14 @@ Figure \ref{fig:03-02-negative-binomial} shows the predictions and prediction-in
 We observe agreement between the fields shown in Figure \ref{fig:03-02-negative-binomial_data} and the corresponding predictions.  
 The prediction-interval width for $\vec{\mu}$ is roughly proportional to its prediction. 
 In contrast, the prediction-interval width for $\vec{\pi}$ is low when the prediction is near 0 or 1, and it increases when the prediction is near 0.5: This is expected from properties of the negative-binomial distribution. 
- Uncertainty in both quantities is lower over areas in which we have fine-scale data. 
- The mean empirical coverage from the 90\% prediction intervals was 90.9\%, which is almost nominal and very reasonable given the inherent difficulty with spatial change-of-support.
+ Uncertainty for both quantities is lower over areas in which we have fine-scale data. 
+ The mean empirical coverage from the 90\% prediction intervals was 90.9\%, which is almost nominal.
 
-\green{To emphasise that the prediction regions, $\tilde{R}_k$, $k = 1, \dots, N_P$, are arbitrary, we demonstrate prediction over a handful of irregularly-shaped areas (defined as a \class{SpatialPolygons} object).}
+\green{To illustrate that user-specifedprediction regions, $\tilde{R}_k$, $k = 1, \dots, N_P$, are arbitrary, we demonstrate prediction over a handful of irregularly-shaped areas (defined as a \class{SpatialPolygons} object).}
 \begin{Code}
 R> pred <- predict(S, newdata = arbitrary_polygons)
 \end{Code}
-Figure \ref{fig:03-02-negative-binomial_polygons} shows the predictions and prediction-interval widths for the mean process \green{evaluated over the irregularly-shaped areas, $\vec{\mu}_P$}. 
+Figure \ref{fig:03-02-negative-binomial_polygons} shows the predictions and prediction-interval widths, respectively, for the mean process \green{evaluated over the irregularly-shaped areas, $\vec{\mu}_P$}. 
 
 \begin{figure}[t!]
     \centering
@@ -1400,15 +1404,15 @@ Figure \ref{fig:03-02-negative-binomial_polygons} shows the predictions and pred
 
 \subsection{Increased numbers of basis functions in v2}\label{sec:3:increased_resolution}
 
-The efficiency of \pkg{TMB} and our use of sparse precision matrices means that \pkg{FRK} v2 is now better equipped than \pkg{FRK} v1 to use a large number of basis functions. 
-The predictive performance of the framework can often be determined by the number of basis functions, as shown in the following examples. 
+The efficiency of \pkg{TMB} and our use of $\vec{Q}$ instead of $\vec{K}$, means that \pkg{FRK} v2 is now better equipped than \pkg{FRK} v1 to use a large number of basis functions. 
+This is important, as the predictive performance of \pkg{FRK} is often determined by the number of basis functions, as can be seen from the results of the following experiments. 
 
 
 
 
-First, we repeated the analysis in Section \ref{sec:03-01:Poisson} using one, two, and three resolutions of basis functions; Table \ref{tab:03-02:PoissonScoringRules} shows the results for each run. 
- Clearly, predictive performance improves as the number of basis functions increases. However, the coverage remains accurate in all runs, implying that the model is able to accurately quantify uncertainty irrespective of the number of basis functions. 
- This important property is in large part due to the presence of the fine-scale random variation term, $\xi(\cdot)$, in (\ref{eqn:04-01:Y(s)}). 
+In our first experiment, we repeated the analysis in Section \ref{sec:03-01:Poisson} using one, two, and three resolutions of basis functions; Table \ref{tab:03-02:PoissonScoringRules} shows the results for each run. 
+ Clearly, predictive performance improves as the number of resolutions, and hence the number of basis functions, increases. However, the coverage remains accurate in all runs, implying that the model is able to accurately quantify uncertainty irrespective of the number of basis functions employed. 
+ This result is in large part due to the presence of the fine-scale random variation term, $\xi(\cdot)$, in (\ref{eqn:04-01:Y(s)}). 
 \begin{table}[t!]
     \centering
     \caption{Diagnostics comparing the predictive performance when using a range of basis-function resolutions with point-referenced count data. The diagnostics are the root-mean-squared prediction error (RMPSE), the continuous ranked probability score (CRPS), and the empirical coverage (Cvg90) and interval score (IS90) resulting from a prediction interval with a nominal coverage of 90\% (see Appendix \ref{app:ScoringRules} for further details). The diagnostics are with regard to prediction of the BAU-level mean, $\vec{\mu}$, at all unobserved locations and they are averaged.
@@ -1466,12 +1470,12 @@ First, we repeated the analysis in Section \ref{sec:03-01:Poisson} using one, tw
     \begin{tabnote}
 $^{a}$\pkg{FRK} v2 was implemented in a different computing environment than the other models, and so its run time is not directly comparable. \pkg{FRK} v2 was implemented using a machine with 16 GB of RAM and an Intel i7-9700 3.00GHz CPU with 8 cores. The other models were implemented using the Becker computing environment (256 GB of RAM and 2 Intel Xeon E5-2680 v4 2.40GHz CPUs with 14 cores each and 2 threads per core - totaling 56 possible threads for use in parallel computing) located at Brigham Young University \citep{Heaton_2019_comparative_study}.
 
-$^{b}$\pkg{TMB} supports the use of multiple cores, but this is not yet implemented in \pkg{FRK} v2. 
+$^{b}$\pkg{TMB} supports the use of multiple cores, but this is not yet supported in \pkg{FRK} v2. 
 \end{tabnote}
 \end{table}
 
 
-Second, we re-ran the analysis for the comparative study published in \cite{Heaton_2019_comparative_study}.
+In our second experiment, we re-ran the analysis for the comparative study published in \cite{Heaton_2019_comparative_study}.
 %The data in this study consists of daytime land surface temperatures as measured by the Terra instrument onboard the MODIS satellite \citep{MODIS_satelitte}, with observations on a $500 \times 300$ grid. 
 %The training set consists of 105,569 observations, while the test set consists of 42,740 observations.
 The data used in that study was made up of a training data set and a test data set consisting of 105,569 observations and 42,740 observations, respectively. 
@@ -1483,10 +1487,10 @@ To achieve these improvements over \pkg{FRK} v1, we only had to specify \code{nr
 
 
 
-\subsection{Spatio-temporal extensions}\label{sec:03:Additonal_features}
-
-\pkg{FRK} v2 also caters for non-Gaussian, point-referenced and areally-referenced, \textit{spatio-temporal} data. 
- For the sake of brevity, we will not use a simple example to show this, and instead we refer readers to the application given in Section \ref{sec:ST_example}. 
+%\subsection{Spatio-temporal extensions}\label{sec:03:Additonal_features}
+%
+%\pkg{FRK} v2 also caters for non-Gaussian, point-referenced and areally-referenced, \textit{spatio-temporal} data. 
+% For the sake of brevity, we will not use a simple example to show this, and instead we refer readers to the application given in Section \ref{sec:ST_example}. 
 
 
 \section{Application and comparison studies}\label{SEC:ApplicationStudy}
@@ -1507,7 +1511,7 @@ The data form an image of a cloud taken by the Moderate Resolution Imaging Spect
 Data collected from the MODIS instrument have been used in several related works; see, for instance, \cite{Sengupta_2016_MODIS} and  \cite{ZammitMangion_2021_Deep_compositional_spatial_model}.
 For this comparative study, data pre-processing involved first coarsening the image from over 10 million pixels to a more manageable 33,750 pixels, by creating a 150 $\times$ 225 grid and computing the average value of the response within each grid cell. 
 \green{Then, as the data provided by the MODIS instrument is continuous (measuring spectral radiances in units of $\text{W/m}^2/\si{\um}/\text{st}$), we applied a reasonable threshold to obtain a binary version of the data: Specifically, pixels with spectral radiance greater than 7,000 were labelled `Cloud', and the remaining pixels were labelled `No-cloud'. 
- In this example, the data model is $Z_j \sim \text{Bin}(\mu_{Zj}, 1)$, $j = 1, \dots, m$, where $\mu_{Zj}$ represents the probability of `Cloud' over the pixel $R_j$. 
+ In this example, the data model is $Z_j \sim \text{Bin}(\mu_{Z_j}, 1)$, $j = 1, \dots, m$, where $\mu_{Z_j}$ represents the probability of `Cloud' over the pixel $R_j$. 
 }  
 
 
@@ -1690,7 +1694,7 @@ R> BAUs$x4 <- d_BAU * BAUs$x3
 \end{Code}
 Modelling for this problem is done by setting \code{response = "Gaussian"} and \code{link = "log"}. 
  In order to mimic lognormal block kriging, here we fix the measurement-error standard deviation to a small value prior to model fitting. 
- \green{In summary, the model is $Z_j \sim \text{Gau}(\mu_{Zj}, 1)$, $j = 1, \dots, m$, with a log link function, $g(\cdot) = \log(\cdot)$.}
+ \green{In summary, the model is $Z_j \sim \text{Gau}(\mu_{Z_j}, 1)$, $j = 1, \dots, m$, with a log link function, $g(\cdot) = \log(\cdot)$.}
  In the formula below, we suppress the global intercept since we model the region-specific intercepts separately through \code{BAUs$x1} and \code{BAUs$x3}. 
 \begin{Code}
 R> Am_data$std <- 1 
@@ -1808,7 +1812,7 @@ It is often the case that sampling once from a large area is relatively inexpens
     \caption{
     Training data on SA1/SA2 regions used for modelling the number (or proportion) of families `in poverty' (see Appendix \ref{Appendix:Sydney_data_description} for how we define `in poverty'). 
     (Left panel) The total number of families, $\vec{k}_Z$. % at the SA2 level. 
-    (Right panel) The observed proportion of families in poverty computed by dividing the number of families in poverty by the total number of families, \green{that is, $Z_j / k_{Zj}$, $j = 1, \dots, m$.} % at the SA2 level, 
+    (Right panel) The observed proportion of families in poverty computed by dividing the number of families in poverty by the total number of families, \green{that is, $Z_j / k_{Z_j}$, $j = 1, \dots, m$.} % at the SA2 level, 
     Solid-grey regions correspond to SA1/SA2 regions in which the total number of families is zero. The data are overlayed on a Stamen base map, where the textured grey areas correspond to bushland, large black areas correspond to ocean, and lines correspond to major arterial roads. Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.
 }   
   \label{fig:SA2_level_data}
@@ -1818,7 +1822,7 @@ It is often the case that sampling once from a large area is relatively inexpens
 
 %The first step of an analysis with \pkg{FRK} is to construct and fit the \class{SRE} object using the functions \fct{SRE} and \fct{SRE.fit}, or alternatively with the high-level and user-friendly wrapper \fct{FRK}. 
 In this example, we use the SA2-region (and some SA1-region) data for training the model, and we use the SA1 regions (no data included) as the BAUs; these are passed as \class{SpatialPolygonsDataFrame} objects to \fct{FRK}. 
- \green{Our data model is $Z_j \sim \text{Bin}(\mu_{Zj}, k_{Zj})$, $j = 1, \dots, m$, and we use the logit `link' function (see Appendix \ref{Appendix:Distributions with size parameters}).}
+ \green{Our data model is $Z_j \sim \text{Bin}(\mu_{Z_j}, k_{Z_j})$, $j = 1, \dots, m$, and we use the logit `link' function (see Appendix \ref{Appendix:Distributions with size parameters}).}
 %We also set \code{normalise\_wts = FALSE}, which indicates that we wish to model the mean process in a given data polygon as the sum (rather than the average) of the mean process over the SA1 regions.
 \begin{Code}
 R> S <- FRK(f = total_poverty_count ~ 1, 
@@ -1961,11 +1965,7 @@ R> basis <- auto_basis(manifold = STplane(), data = chicago_crimes_fit,
 
 
 
-Then, we initialise and fit the \class{SRE} object using \fct{FRK}, setting \code{response = "poisson"} and \code{link = "log"} \green{in order to use a Poisson data model, $Z_j \sim \text{Pois}(\mu_{Zj})$, $j = 1, \dots, m$, and a log link function, $g(\cdot) = \log(\cdot)$.} 
-% \red{Each entry in our data set provides the location and time at which a given crime occurred. It also contains a column of ones called \code{"number\_of\_crimes"}; this will be used for counting the number of crimes when binning. 
-% By default, \fct{SRE}, which is called internally within \fct{FRK}, bins and then averages data falling into the same BAU. 
-% We wish to model the total number of crimes in a given BAU; hence, we wish to sum the binned data instead of taking an average. 
-% To do so, we pass the name of the response variable (\code{"number\_of\_crimes"}) via the argument \code{sum\_variables}.}\footnote{\red{This passage is too long, and we have already commented on aggregation during the introduction to this section.}}
+Then, we initialise and fit the \class{SRE} object using \fct{FRK}, setting \code{response = "poisson"} and \code{link = "log"} \green{in order to use a Poisson data model, $Z_j \sim \text{Pois}(\mu_{Z_j})$, $j = 1, \dots, m$, and a log link function, $g(\cdot) = \log(\cdot)$.} 
  \green{Setting \code{sum\_variables = "number\_of\_crimes"} indicates that we wish to sum (rather than average) the individual crimes into aggregated-level data representing the total count in each CA and each year (as discussed in the introduction to this subsection).}
  As the number of spatial BAUs (the CAs) is relatively low, and we have observed each spatial BAU multiple times, we may attribute to each spatial BAU its own fine-scale variance parameter by setting \code{fs\_by\_spatial\_BAU = TRUE} (see Section \ref{sec:spatio-temporal}). To validate predictions, we excluded the years 2010 and 2019 from the training data, and used them to evaluate crime predictions and forecasts, respectively.  
 %R> S <- FRK(f = number_of_crimes ~ log(population) + x1 + x2 + x3,   
@@ -2503,7 +2503,7 @@ where $\kappa_k$, $\rho_k$, and $\kappa_k$ are parameters that are estimated, an
 %    \ECurly{\mu_i \mid \vec{Z}, \vec{\theta}}.
 %\end{equation}
 %% Again using the general result (\ref{eqn:04-03:GeneralMSPE}), the MSPE of (\ref{eqn:04-03:muOptimalPredictor}) when predicting the conditional mean $\mu(\cdot)$ at $A_i$ is 
-%% \begin{equation}\label{eqn:04-03:MSPEmuGivenZ1}
+%% \begin{equation}\label{eqn:04-03:MSPEmuGivenZ_1}
 %%     \MSPEtwoarg{\pmugivenZ{A_i}}{\mu(A_i)}
 %%     =
 %%     \ECurly{\var{\mu(A_i) \mid \vec{Z}}},
@@ -2623,7 +2623,7 @@ where $\kappa_k$, $\rho_k$, and $\kappa_k$ are parameters that are estimated, an
 
  \green{Two distributions considered in this framework, namely, the binomial distribution and the negative-binomial distribution, have an assumed-known `size' parameter and a `probability of success'
 parameter. 
-%Given data, $\vec{Z} \equiv (Z_1, \dots, Z_m)$, and assumed-known `size' parameters, $\vec{k}_Z \equiv (k_{Z1}, \dots, k_{Zm})^\tp$, the parametrisation used in \pkg{FRK} v2 assumes that: For binomial data models, $Z_j$ represents the number of `successes' from $k_{Zj}$ trials; for negative-binomial data models, $Z_j$ represents the number of failures before $k_{Zj}$ successes. 
+%Given data, $\vec{Z} \equiv (Z_1, \dots, Z_m)$, and assumed-known `size' parameters, $\vec{k}_Z \equiv (k_{Z_1}, \dots, k_{Zm})^\tp$, the parametrisation used in \pkg{FRK} v2 assumes that: For binomial data models, $Z_j$ represents the number of `successes' from $k_{Z_j}$ trials; for negative-binomial data models, $Z_j$ represents the number of failures before $k_{Z_j}$ successes. 
  Software that cater for these distributions typically allow `link' functions such as the logit, probit, and complementary log-log functions.  
  These functions are clearly inappropriate for direct use in (\ref{eqn:mu_linked_to_Y}), as their inverse functions have a range of $(0, 1)$, which would unacceptably restrict the range of the mean process. 
 Instead, we use these functions to define a probability process, 
@@ -2637,7 +2637,6 @@ where $f(\cdot)$ is one of the aforementioned functions whose inverse has a rang
  h(\mu_i; k_i) = \pi_i, \quad i = 1, \dots, N, 
  \end{equation}
  where $h(\cdot; \cdot)$ is a function determined solely by the response distribution, and $\vec{k} \equiv (k_1, \dots, k_N)^\tp$ is the vector of assumed-known `size' parameters at the BAU level. 
-%  Note that $\vec{k}$ is not always required when using \pkg{FRK} v2: When each observation is associated with exactly one BAU (e.g., point-referenced data or areal data where the spatial supports, $R_j$, coincide with BAUs), \pkg{FRK} v2 can infer $\vec{k}$ from the vector of size parameters at the data level, $\vec{k}_Z$ (see below).
  }
  
 \green{The function $h(\cdot; \cdot)$ is derived from the formula for the expectation of the response distribution. 
@@ -2899,7 +2898,7 @@ These assumptions lead us to define poverty lines (in Australian dollars) for ea
 %% The $\vec{A}$ matrix will always have $N$ columns, but the number of rows can vary; at one extreme, with point-referenced data, the matrix will have $m$ rows, and at the other extreme, with areal data in which all BAUs are observed, the matrix will have $N$ rows. 
 %The model we use for estimation is
 %\begin{gather}
-%    Z_j \mid \mu_{Zj} \inddist \text{EF}(\mu_{Zj}), \quad j = 1, \dots, m,  \label{eqn:new_model2_Z}\\
+%    Z_j \mid \mu_{Z_j} \inddist \text{EF}(\mu_{Z_j}), \quad j = 1, \dots, m,  \label{eqn:new_model2_Z}\\
 %    \vec{\mu}_Z = \vec{C}_O \vec{\mu}_O,\\
 %    g(\vec{\mu}_O) = \vec{Y}_O, \\
 %    \vec{Y}_O = \vec{T}_O \vec{\alpha} + \vec{S}_O \vec{\eta} + \vec{\xi}_O \equiv 
