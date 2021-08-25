@@ -198,8 +198,14 @@ Sydney_analysis <- function(fitting = "mixed") {
   RNGversion("3.6.0"); set.seed(1)
   pred <- predict(S, newdata = SA3_NSW_sub)
   plots <- plot(S, pred$newdata, colour = "black", map_layer = Sydney_map)
+  
+
+
+  
   plots <- lapply(plots, function(gg) gg + lab1 + lab2)
   plots <- lapply(plots, change_font_size_and_axis)
+  plots$p_prob <- plots$p_prob + scale_fill_distiller(palette="Spectral", breaks = c(0.1, 0.16, 0.22))
+  plots$interval90_prob <- plots$interval90_prob + scale_fill_distiller(palette="BrBG", breaks = c(0.006, 0.009, 0.012)) 
   plots$p_mu <-  plots$p_mu + scale_fill_distiller(palette="Spectral", breaks = c(2000, 6000, 10000))
   plots$interval90_mu <-  plots$interval90_mu + scale_fill_distiller(palette="BrBG", breaks = c(150, 225, 300)) 
   
@@ -216,6 +222,12 @@ Sydney_analysis <- function(fitting = "mixed") {
   ggsave( 
     ggarrange(plots$p_mu, plots$interval90_mu, nrow = 1, legend = "top"),
     filename = paste0("Sydney_SA3_predictions_", fitting, ".png"), 
+    device = "png", width = 9.5, height = 4.4, path = "./img/"
+  )
+  
+  ggsave( 
+    ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top"),
+    filename = paste0("Sydney_SA3_predictions_probability_", fitting, ".png"), 
     device = "png", width = 9.5, height = 4.4, path = "./img/"
   )
 }

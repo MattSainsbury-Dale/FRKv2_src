@@ -114,6 +114,10 @@ g_temporal_trend <- ggplot(data = ST_df %>%
 ST_df$time <- as.Date(paste(ST_df$year, 06,01,sep="-"))
 
 ## Construct an STIDF object
+ST_df %>% nrow
+## Remove NAs (there are only 19 incomplete cases)
+sum(!complete.cases(ST_df))
+ST_df <- ST_df[complete.cases(ST_df), ]
 chicago_crimes <- stConstruct(x = ST_df,                               
                               space = c("longitude", "latitude"), 
                               time = "time",                      

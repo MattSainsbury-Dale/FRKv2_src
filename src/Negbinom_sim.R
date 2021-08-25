@@ -285,9 +285,7 @@ plot_list <- plot(S, pred_over_polygons$newdata, colour = "black", labels_from_c
 
 ## Hack to make the correct x-axis and y-axis breaks appear
 invisible_point <- geom_point(data = data.frame(x = c(0, 1), y = c(1, 1)), alpha = 0)
-plot_list$p_mu <- plot_list$p_mu + invisible_point
-plot_list$interval90_mu <- plot_list$interval90_mu + invisible_point
-  
+plot_list <- lapply(plot_list, function(gg) gg + invisible_point)
 
 plot_list <- lapply(plot_list, function(gg) gg + xbreaks + ybreaks)
 plot_list <- lapply(plot_list, change_font_size)
@@ -297,9 +295,14 @@ plot_list <- lapply(plot_list, function(gg) gg + theme(legend.key.height = unit(
 plot_list$p_mu <- plot_list$p_mu + 
   scale_fill_distiller(palette = "Spectral", breaks = c(8000, 12000, 16000))
 
+ggarrange(plot_list$p_mu, plot_list$interval90_mu, nrow = 1, align = "hv")
+ggarrange(plot_list$p_prob, plot_list$interval90_prob, nrow = 1, align = "hv")
+
 ggsave( 
   ggarrange(plot_list$p_mu, plot_list$interval90_mu, nrow = 1, align = "hv"),
   filename = "Negbinom_sim_arbitrary_polygon_predictions.png", device = "png", 
   width = 11, height = 4.8,
   path = "./img"
 )
+
+

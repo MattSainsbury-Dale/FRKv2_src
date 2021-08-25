@@ -1,4 +1,4 @@
-\begin{thebibliography}{47}
+\begin{thebibliography}{48}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -15,7 +15,6 @@ Bachl FE, Lindgren F, Borchers DL, Illian JB (2019).
 \newblock \enquote{{inlabru: an \texttt{R} package for Bayesian spatial
   modelling from ecological survey data}.}
 \newblock \emph{{Methods in Ecology and Evolution}}, \textbf{10}, 760--766.
-\newblock \doi{10.1111/2041-210X.13168}.
 
 \bibitem[{Bates \emph{et~al.}(2019)Bates, Maechler, and Davis}]{Matrix_Package}
 Bates D, Maechler M, Davis TA (2019).
@@ -27,7 +26,7 @@ Bates D, Maechler M, Davis TA (2019).
 Bell BM (2005).
 \newblock \enquote{{CppAD: a package for C++ algorithmic differentiation.}}
 \newblock \url{http://www.coin-or.org/CppAD}.
-\newblock Accessed: 2019-06-15.
+\newblock Accessed: 2021-08-10.
 
 \bibitem[{Bradley \emph{et~al.}(2018)Bradley, Holan, and
   Wikle}]{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}
@@ -57,12 +56,13 @@ Bradley JR, Wikle CK, Holan SH (2019).
 \newblock \enquote{{Chicago community data snapshots}.}
 \newblock
   \url{https://www.cmap.illinois.gov/documents/10180/126764/_Combined_AllCCAs.pdf/}.
-\newblock Accessed: 2020-09-18.
+\newblock Accessed: 2021-08-10.
 
 \bibitem[{Cressie(1993)}]{Cressie_1993_stats_for_spatial_data}
 Cressie N (1993).
-\newblock \emph{{Statistics for Spatial Data, revised edition}}.
-\newblock John Wiley \& Sons, New York, NY.
+\newblock \emph{{Statistics for Spatial Data}}.
+\newblock Revised edition. Wiley, Hoboken, NJ.
+\newblock ISBN 0387310738.
 
 \bibitem[{Cressie(2006)}]{Cressie_2006_block_kriging_lognormal_spatial_processes}
 Cressie N (2006).
@@ -103,7 +103,6 @@ Finley AO, Banerjee S, Gelfand AE (2015).
 \newblock \enquote{{\texttt{spBayes}} for large univariate and multivariate
   point-referenced spatio-temporal data models.}
 \newblock \emph{Journal of Statistical Software}, \textbf{63}(13), 1--28.
-\newblock \urlprefix\url{http://www.jstatsoft.org/v63/i13/}.
 
 \bibitem[{Finley \emph{et~al.}(2020)Finley, Datta, and
   Banerjee}]{Finley_2020_spNNGP}
@@ -119,7 +118,6 @@ Furrer R, Nychka D, Genton MG (2006).
   datasets.}
 \newblock \emph{Journal of Computational and Graphical Statistics},
   \textbf{15}, 502--523.
-\newblock \doi{10.1198/106186006X132178}.
 
 \bibitem[{Gneiting \emph{et~al.}(2007)Gneiting, Balabdaoui, and
   Raftery}]{Gneiting_2007_scoring_rules}
@@ -133,7 +131,7 @@ Gneiting T, Balabdaoui F, Raftery AE (2007).
 Guennebaud G, Jacob B, \emph{et~al.} (2010).
 \newblock \enquote{{\texttt{Eigen} v3}.}
 \newblock \url{http://eigen.tuxfamily.org}.
-\newblock Accessed: 11-05-2019.
+\newblock Accessed: 2021-08-10.
 
 \bibitem[{Heaton \emph{et~al.}(2019)Heaton, Datta, Finley, Furrer, Guinness,
   Guhaniyogi, Gerber, Gramacy, Hammerling, Katzfuss, Lindgren, Nychka, Sun, and
@@ -169,9 +167,7 @@ Hughes J (2014).
 \newblock \enquote{{\pkg{ngspatial}: A Package for Fitting the Centered
   Autologistic and Sparse Spatial Generalized Linear Mixed Models for Areal
   Data}.}
-\newblock \emph{{The R Journal}}, \textbf{6}(2), 81--95.
-\newblock \doi{10.32614/RJ-2014-026}.
-\newblock \urlprefix\url{https://doi.org/10.32614/RJ-2014-026}.
+\newblock \emph{{The R Journal}}, \textbf{6}, 81--95.
 
 \bibitem[{Kassambara(2020)}]{Kassambara_2020_ggpubr}
 Kassambara A (2020).
@@ -192,6 +188,15 @@ Lee BS, Park J (2020).
 \newblock \enquote{{A scalable partitioned approach to model massive
   nonstationary non-Gaussian spatial datasets}.}
 \newblock \textit{arXiv:2001.09111}.
+
+\bibitem[{Leroux \emph{et~al.}(2000)Leroux, Lei, and
+  Breslow}]{Leroux_2000_two_parameter_autoregressive_model}
+Leroux B, Lei X, Breslow N (2000).
+\newblock \enquote{Estimation of disease rates in small areas: a new mixed
+  model for spatial dependence.}
+\newblock In M~Halloran, D~Berry (eds.), \emph{{Statistical Models in
+  Epidemiology, the Environment and Clinical Trials}}, pp. 179--191.
+  Springer-Verlag, New York.
 
 \bibitem[{Lindgren and Rue(2015)}]{Lindgren_2015_R-INLA}
 Lindgren F, Rue H (2015).
@@ -219,19 +224,19 @@ McCullagh P, Nelder JA (1989).
 \newblock \emph{{Generalized Linear Models}}.
 \newblock Chapman \& Hall, London, UK.
 
+\bibitem[{{Melbourne Institute of Applied Economic and Social
+  Research}(2011)}]{MIAESR_poverty_guidelines_2011}
+{Melbourne Institute of Applied Economic and Social Research} (2011).
+\newblock \enquote{{Poverty Lines: Australia, March Quarter 2011}.}
+\newblock URL
+  \url{https://melbourneinstitute.unimelb.edu.au/assets/documents/poverty-lines/2017/Poverty-Lines-Australia-March-Quarter-2011.pdf}.
+\newblock Accessed: 2021-08-10.
+
 \bibitem[{{MODIS Characterization Support Team}(2015)}]{MODIS_satelitte}
 {MODIS Characterization Support Team} (2015).
 \newblock \enquote{{MODIS 500m Calibrated Radiance Product. NASA MODIS Adaptive
   Processing System, Goddard Space Flight Center, USA.}}
 \newblock \url{https://mcst.gsfc.nasa.gov/}.
-
-\bibitem[{Nychka \emph{et~al.}(2016)Nychka, Hammerling, Sain, and
-  Lenssen}]{Nychka_2016_LatticeKrig}
-Nychka D, Hammerling D, Sain S, Lenssen N (2016).
-\newblock \emph{LatticeKrig: Multiresolution Kriging Based on Markov Random
-  Fields}.
-\newblock \texttt{R} package version 6.2,
-  \urlprefix\url{www.image.ucar.edu/LatticeKrig}.
 
 \bibitem[{Papritz(2020)}]{georob}
 Papritz A (2020).
@@ -248,17 +253,14 @@ Paul R, Cressie N (2011).
 
 \bibitem[{Pebesma(2018)}]{Pebesma_2018_sf_package}
 Pebesma E (2018).
-\newblock \enquote{{Simple Features for R: Standardized Support for Spatial
-  Vector Data}.}
+\newblock \enquote{{Simple features for R: Standardized support for spatial
+  vector data}.}
 \newblock \emph{{The R Journal}}, \textbf{10}, 439--446.
-\newblock \doi{10.32614/RJ-2018-009}.
-\newblock \urlprefix\url{https://doi.org/10.32614/RJ-2018-009}.
 
 \bibitem[{Pebesma and Bivand(2005)}]{Pebesma_2005_sp_package}
 Pebesma EJ, Bivand RS (2005).
 \newblock \enquote{Classes and methods for spatial data in {R}.}
 \newblock \emph{R News}, \textbf{5}, 9--13.
-\newblock \urlprefix\url{https://CRAN.R-project.org/doc/Rnews/}.
 
 \bibitem[{{\texttt{R} Core Team}(2021)}]{Rcoreteam_2021}
 {\texttt{R} Core Team} (2021).
@@ -270,7 +272,7 @@ Rue H, Martino S, Chopin N (2009).
 \newblock \enquote{{Approximate Bayesian inference for latent Gaussian models
   by using integrated nested Laplace approximations}.}
 \newblock \emph{Journal of the Royal Statistical Society: Series B},
-  \textbf{71}, 3319--392.
+  \textbf{71}, 319--392.
 
 \bibitem[{Sengupta and Cressie(2013)}]{Sengupta_Cressie_2013_spatial_GLMM_FRK}
 Sengupta A, Cressie N (2013).
@@ -278,8 +280,9 @@ Sengupta A, Cressie N (2013).
   using the exponential family of distributions}.}
 \newblock \emph{Spatial Statistics}, \textbf{4}, 14--44.
 
-\bibitem[{Sengupta and Cressie(2016)}]{Sengupta_2016_MODIS}
-Sengupta A, Cressie N (2016).
+\bibitem[{Sengupta \emph{et~al.}(2016)Sengupta, Cressie, Kahn, and
+  Frey}]{Sengupta_2016_MODIS}
+Sengupta A, Cressie N, Kahn BH, Frey R (2016).
 \newblock \enquote{{Predictive inference for big, spatial, non-Gaussian data:
   MODIS cloud data and its change-of-support}.}
 \newblock \emph{Australian \& New Zealand Journal of Statistics}, \textbf{58},
@@ -290,28 +293,27 @@ Sengupta A, Cressie N (2016).
 {The University of Chicago Library} (2020).
 \newblock \enquote{{Spatially Referenced Census Data for the City of Chicago:
   Sources Available at or through the University of Chicago Library}.}
-\newblock
+\newblock URL
   \url{https://www.lib.uchicago.edu/e/collections/maps/censusinfo.html}.
-\newblock Accessed: 2020-09-15.
+\newblock Accessed: 2021-08-10.
 
 \bibitem[{{Urban Center for Computation and Data of the University of
   Chicago}(2020)}]{Plenario_open_source_website}
 {Urban Center for Computation and Data of the University of Chicago} (2020).
 \newblock \enquote{{Plenario}.}
-\newblock http://plenar.io/explore/discover.
-\newblock Accessed: 11-09-2020.
+\newblock URL \url{http://plenar.io/explore/discover}.
+\newblock Accessed: 2020-09-11.
 
 \bibitem[{Wickham(2016)}]{Wickham_2016_ggplot2}
 Wickham H (2016).
 \newblock \emph{ggplot2: Elegant Graphics for Data Analysis}.
 \newblock Springer-Verlag, New York, NY.
-\newblock ISBN 978-3-319-24277-4.
 \newblock \urlprefix\url{https://ggplot2.tidyverse.org}.
 
 \bibitem[{Wood(2017)}]{Wood_2017_GAM:R}
 Wood S (2017).
 \newblock \emph{Generalized Additive Models: An Introduction with \texttt{R}}.
-\newblock 2nd edition. Chapman and Hall/CRC, Boca Raton, FL.
+\newblock Second edition. Chapman and Hall/CRC, Boca Raton, FL.
 
 \bibitem[{Zammit-Mangion and Cressie(2021)}]{FRK_paper}
 Zammit-Mangion A, Cressie N (2021).

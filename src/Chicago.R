@@ -38,8 +38,6 @@ ST_BAUs$population <- community_areas$population
 # ST_BAUs$x3 <- as.numeric(year >= 2014)
 # ST_BAUs$x4 <- year * ST_BAUs$x3
 
-
-
 # ---- Model fitting ----
 
 basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years")
@@ -55,12 +53,11 @@ saveRDS(Chicago_SRE_object, file = "./intermediates/Chicago_SRE_object.rds")
 
 # ---- Simplified, high-level version that I show in presentations ---- 
 
-M <- FRK(f = number_of_crimes ~ 1,
-         response = "poisson",
-         link     = "log",
-         data     = chicago_crimes,
-         
-         sum_variables = "number_of_crimes")
+# M <- FRK(f = number_of_crimes ~ 1,
+#          response = "poisson",
+#          link     = "log",
+#          data     = chicago_crimes,
+#          sum_variables = "number_of_crimes")
 
 # ---- Prediction ----
 
@@ -140,7 +137,7 @@ plot_predictions <- function(subset_time) {
   ## Edit titles and legends
   plots$number_of_crimes <- plots$number_of_crimes + 
     scale_fill_distiller(palette = "Spectral",  breaks = c(1000, 3000, 5000), lim = count_lims) + 
-    labs(title = "True (withheld)\ncrime count", fill = "") + 
+    labs(title = "Observed (withheld)\ncrime count", fill = "") + 
     theme(axis.title.x = element_blank())
   
   plots$p_Z <- plots$p_Z + 

@@ -145,24 +145,34 @@ common_layers <- ggplot() + theme_bw() + coord_fixed() +
   scale_y_continuous(expand = c(0, 0)) + 
   labs(x = bquote(s[1]), y = bquote(s[2]))
 
+cloud_colour = "orange"  # "white"
+no_cloud_colour = "blue" # "white"
+missing_colour = "white" # "#BFD5E3"
+midpoint_colour = "gray" #"sandybrown" 
+
 ## Plot the unthresholded version of the data
 g_original_data <- common_layers +
   geom_raster(data = df, aes(x, y, fill = z_unthresholded)) +
-  scale_fill_gradient(low = "black", high = "white") +
+  scale_fill_gradient(low = no_cloud_colour, high = cloud_colour) +
   labs(fill = "Radiance")
 
 ## Plot the thresholded data (which we use for our analyses)
-discrete_cloud_scale <- scale_fill_gradient(low = "black", high = "white",
+discrete_cloud_scale <- scale_fill_gradient(low = no_cloud_colour, 
+                                            high = cloud_colour,
                                             breaks = c(0, 1),
                                             guide = "legend",
                                             labels = c("No Cloud", "Cloud"),
                                             name = "")
 
-discrete_cloud_theme <- theme(legend.key=element_rect(fill = "gray", colour = "gray", size = 2))
+discrete_cloud_theme <- theme(legend.key=element_rect(
+  # fill = "gray", colour = "gray", 
+  fill = "white", colour = "white", 
+  size = 2))
 
 
 training_data_background <- theme(
-  panel.background = element_rect(fill = "#BFD5E3", colour = "#6D9EC1"),
+  panel.background = element_rect(fill = "white", 
+                                  colour = "white"), # "#6D9EC1"),
   panel.grid.major = element_blank(),
   panel.grid.minor = element_blank()
 )
@@ -325,7 +335,9 @@ plot_predictions <- function(df_plot, scheme) {
     geom_raster(aes(x, y, fill = pred)) +
     # facet_grid( ~ Method) +
     facet_wrap( ~ Method, nrow = 2) +
-    scale_fill_gradient2(midpoint = 0.5, low = "black", mid = "gray", high = "white") +
+    scale_fill_gradient2(midpoint = 0.5, low = no_cloud_colour, 
+                         mid = midpoint_colour,
+                         high = cloud_colour) +
     labs(fill = "") +
     theme_bw() + coord_fixed() +
     scale_x_continuous(expand = c(0, 0)) +
@@ -360,7 +372,7 @@ ggsave(
     ggplot() +
     geom_raster(aes(x, y, fill = pred)) +
     facet_grid( ~ Method) +
-    scale_fill_gradient2(midpoint = 0.5, low = "black", mid = "gray", high = "white") +
+    scale_fill_gradient2(midpoint = 0.5, low = no_cloud_colour, mid = midpoint_colour, high = cloud_colour) +
     labs(fill = "") +
     scale_x_continuous(limits = c(blocks$xmin[1], blocks$xmax[1]), expand = c(0, 0)) +
     scale_y_continuous(limits = c(blocks$ymin[1], blocks$ymax[1]), expand = c(0, 0)) +
