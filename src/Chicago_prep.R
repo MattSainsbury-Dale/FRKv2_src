@@ -99,16 +99,18 @@ ST_df <- df %>%
   as.data.frame()
 
 ## Visualization: Number of crimes in each year:
-g_temporal_trend <- ggplot(data = ST_df %>%
-                             group_by(year) %>%
-                             summarise(total_crimes = sum(number_of_crimes)), 
-                           aes(x = year, y = total_crimes)) +
-  geom_point() +
-  geom_smooth(colour = "red", method = 'lm', se = F) + 
-  geom_smooth(aes(group = year < 2014), method = 'lm', se = F) + 
-  labs(y = "total crimes") + 
-  theme_bw()
-## A piecewise temporal trend seems appropriate
+## Supports the use of a piecewise temporal trend however, for simplicity, we do 
+## not do this in the manuscript.
+# g_temporal_trend <- ggplot(data = ST_df %>%
+#                              group_by(year) %>%
+#                              summarise(total_crimes = sum(number_of_crimes)), 
+#                            aes(x = year, y = total_crimes)) +
+#   geom_point() +
+#   geom_smooth(colour = "red", method = 'lm', se = F) + 
+#   geom_smooth(aes(group = year < 2014), method = 'lm', se = F) + 
+#   labs(y = "total crimes") + 
+#   theme_bw()
+
 
 ## Create a Date field
 ST_df$time <- as.Date(paste(ST_df$year, 06,01,sep="-"))

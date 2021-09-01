@@ -1,23 +1,11 @@
 ## NB: If I can get n.omp.threads > 1 working, I can optimise the number of cores 
 MODIS_spNNGP_fit <- function(df_train, n.neighbours = 15) {
   
-  ## FIXME: 
-  ## Strategy: the most important argument to optimise is n.neighbours. 
-  ## Choose this first, then we can optimise n.samples and thin. 
-  ## NB: thin is required at the prediction stage too... not sure how this will 
-  ## work...
-  ## Perhaps I can pass it through with the spNNGP object, if there is a slot 
-  ## which is ignored in the current conditions. 
-  ## can optimise this by optimising over n.samples
-  # We want to use 400 samples in the end (for consistency with other packages)
-  ## so solve: (n.samples - start)/thin = 400
-  ## => start = n.samples - 400 * thin
-  
   # ---- Fitting ----
 
   starting  <- list("phi" = 3/50, "sigma.sq" = 5)
-  tuning    <- list("phi" = 0.15) ## Need to tweak this so that acceptance rate is between 25% and 50%
-  priors    <- list("phi.Unif" = c(1/100, 10), "sigma.sq.IG" = c(2, 10)) # Changed this so prior for phi is more diffuse
+  tuning    <- list("phi" = 0.15) 
+  priors    <- list("phi.Unif" = c(1/100, 10), "sigma.sq.IG" = c(2, 10))
   cov.model <- "exponential"
   
   ## samples to use
@@ -35,7 +23,7 @@ MODIS_spNNGP_fit <- function(df_train, n.neighbours = 15) {
                           n.report = n.samples/2, 
                           sub.sample = sub.sample, 
                           fit.rep = TRUE, 
-                          n.omp.threads = 1) # multi-core processing available through openMP
+                          n.omp.threads = 1)
 
   return(M)
 }

@@ -10,9 +10,6 @@ library("stringr")
 library("htmltab")
 library("ggpubr")
 
-
-
-
 # ---- Preprocessing ----
 
 source("./src/Chicago_prep.R")
@@ -31,7 +28,10 @@ ST_BAUs$fs <- 1 # scalar fine-scale variance matrix
 ## Create population covariate
 ST_BAUs$population <- community_areas$population
 
-# ## Add covariates to BAUs that can be used to make a piecewise linear trend
+## Add covariates to BAUs that can be used to make a piecewise-linear temporal trend
+## As the inclusion of the trend did not significantly affect the results, it 
+## was omitted from the paper to simplify the exposition.
+
 # year <- ST_BAUs@data$t + 2000
 # ST_BAUs$x1 <- as.numeric(year < 2014)
 # ST_BAUs$x2 <- year * ST_BAUs$x1
@@ -63,11 +63,8 @@ saveRDS(Chicago_SRE_object, file = "./intermediates/Chicago_SRE_object.rds")
 
 RNGversion("3.6.0")
 set.seed(1)
-system.time(
-  pred <- predict(M, type = "response", 
-                  percentiles = c(5, 95, 10, 90, 15, 85, 20, 80, 25, 75))  
-)
-
+pred <- predict(M, type = "response",  
+                percentiles = c(5, 95, 10, 90, 15, 85, 20, 80, 25, 75))  
 
 ## Shift t by 2000, so we can refer to it by the year rather than temporal index
 ## (NB: it just so happens that the first year in this dataset is 2001)
@@ -80,10 +77,10 @@ ST_pred <- pred$newdata
 # ---- Compute binned validation data ----
 
 ## Recall that in the model fitting stage, we left out the data from the years 
-## 2010 and 2019. To perform model validation on our BAU level predictions in 2010
-## and 2019, we first need to obtained the binned data at the BAUs for these years.
-## The simplest approach is to simply map the entire dataset to the BAUs, 
-## and then subset the data corresponding to validation years.
+## 2010 and 2019. To perform model validation on our BAU level predictions in 
+## these years, we first need to obtained the binned data at the BAUs for 
+## these years. The simplest approach is to simply map the entire dataset to 
+## the BAUs, and then subset the data corresponding to validation years.
 
 ## Map the prediction and forecast crime data to BAUs. 
 binned_data <- FRK:::map_data_to_BAUs(chicago_crimes, sp_pols = ST_pred, 
@@ -92,30 +89,26 @@ binned_data <- FRK:::map_data_to_BAUs(chicago_crimes, sp_pols = ST_pred,
 ## Extract the data and arrange by the BAU id
 df_val <- binned_data@data %>% arrange(n)
 
-## Sanity checks: 
-## ensure the the observed counts are in the same order as the predictions.
-all(ST_pred$latitude == df_val$latitude)
-all(ST_pred$longitude == df_val$longitude)
-all(ST_pred$year == df_val$year)
-all(ST_pred$n == df_val$n)
-
 ## Assign the observed count to the prediction data frame for plotting
 ST_pred@data$number_of_crimes <- df_val$number_of_crimes
 
 
 # ---- Prediction and forecasting years ----
 
-
-
 ## Wrap the plotting code in a rudimentary function for convenience
 ## NB: subset_time are the years we wish to visualise
 plot_predictions <- function(subset_time) {
+  
+  ## Plot the predictions and uncertainty
   plots <- plot(M, pred$newdata,
                 map_layer = chicago_map, subset_time = subset_time, 
                 colour = "black", size = 0.3, alpha = 0.85)
   
-  ## plot() does plot the data, but since 2010 and 2019 are validation years, 
-  ## we don't have any data to plot! Construct the plot manually:
+  ## plot the validation data. 
+  ## NB: plot() does plot the data used in model fitting, but since 2010 and 
+  ## 2019 are validation years (i.e., those years were omitted during model 
+  ## fitting), we don't have any data to plot! 
+  ## Construct the plot manually:
   plots$number_of_crimes <- plot_spatial_or_ST(
     ST_pred, all.vars(M@f)[1],
     map_layer = chicago_map, subset_time = subset_time, 
@@ -132,7 +125,6 @@ plot_predictions <- function(subset_time) {
     subset(t %in% c(2010, 2019)) %>%
     select(c("number_of_crimes", "p_Z")) %>%
     c() %>% range()
-  
   
   ## Edit titles and legends
   plots$number_of_crimes <- plots$number_of_crimes + 
@@ -155,6 +147,7 @@ plot_predictions <- function(subset_time) {
           axis.title.x = element_blank(), 
           axis.ticks.y = element_blank())
   
+  ## Edit visual aspects of the plot, such a font size and legend details
   plots <- lapply(plots, function(gg) gg + 
                     theme(axis.text = element_text(size = 12),
                           axis.title = element_text(size = 14), 
@@ -172,22 +165,19 @@ plot_predictions <- function(subset_time) {
 ## First plot both the pred and forecast years
 subset_time <- c(10, 19)
 plots <- plot_predictions(subset_time = subset_time)
-ggsave( 
-  ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
-            align = "hv", nrow = 1, legend = "top"),
-  filename = "Chicago_data_pred_uncertainty.png", 
-  device = "png", width = 10, height = 8.5, path = "./img/"
-)
+figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
+                    align = "hv", nrow = 1, legend = "top")
+
+ggsave(figure, filename = "Chicago_data_pred_uncertainty.png", 
+       device = "png", width = 10, height = 8.5, path = "./img/")
 
 ## Also save a version with only the forecast years (for presentations)
 subset_time <- 19
 plots <- plot_predictions(subset_time = subset_time) 
-ggsave( 
-  ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
-            align = "hv", nrow = 1, legend = "top"),
-  filename = "Chicago_data_pred_uncertainty_2019_only.png", 
-  device = "png", width = 10, height = 5.5, path = "./img/"
-)
+figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
+                    align = "hv", nrow = 1, legend = "top")
+ggsave(figure, filename = "Chicago_data_pred_uncertainty_2019_only.png", 
+       device = "png", width = 10, height = 5.5, path = "./img/")
 
 
 # ---- Time series plot ----
@@ -235,12 +225,9 @@ time_series_plot <- ggplot() +
   scale_x_continuous(breaks = c(2001, 2005, 2010, 2015, 2019)) + 
   scale_y_continuous(n.breaks = 4)
 
-suppressMessages(ggsave( 
-  time_series_plot,
-  filename = "Chicago_focused_CAs_time_series.png", device = "png", 
-  width = 9, height = 6,
-  path = "./img/"
-))
+ggsave(time_series_plot,
+  path = "./img/", filename = "Chicago_focused_CAs_time_series.png", 
+  device = "png", width = 9, height = 6)
 
 ## Select the MC samples corresponding to our chosen BAUs
 n_MC <- ncol(pred$MC$Z_samples)
@@ -271,12 +258,9 @@ predictive_distribution_plots <- ggplot() +
         strip.text = element_text(size = 12), 
         legend.position = "top") 
 
-suppressMessages(ggsave( 
-  predictive_distribution_plots,
-  filename = "Chicago_focused_CAs_predictive_distributions.png", device = "png", 
-  width = 9, height = 6,
-  path = "./img/"
-))
+ggsave(predictive_distribution_plots,
+  path = "./img/", filename = "Chicago_focused_CAs_predictive_distributions.png", 
+  device = "png", width = 9, height = 6)
 
 # ---- Coverage ----
 

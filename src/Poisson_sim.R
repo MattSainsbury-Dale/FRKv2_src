@@ -193,7 +193,7 @@ ggsave(
 }
 
 ## Only consider out-of-sample locations
-unobsidx <- unobserved_BAUs(S_list[[1]]) # doesn't matter which object we use 
+unobsidx <- unobserved_BAUs(S_list[[1]]) # doesn't matter which SRE object we use 
 
 ## Compute the diagnostics
 diagnostics <- lapply(pred_list, function(pred) {
@@ -211,28 +211,3 @@ diagnostics <- cbind(diagnostics,
                      run_time = sapply(timings, function(x) x["elapsed"]))
 
 write.csv(diagnostics, file = "./results/Poisson_nres_comparison.csv")
-
-# ## Extract prediction and UQ from each resolution, and convert to single dataframe.
-# newdata_list <- lapply(pred_list, function(x) x$newdata)
-# newdata <- do.call("rbind", newdata_list)
-# newdata$nres <- rep(paste("nres =", 1:nrow(diagnostics)), 
-#                     each = length(newdata_list[[1]]))
-# 
-# newdata@data <- newdata@data %>% cbind(coordinates(newdata))
-# 
-# g_basic <- ggplot(newdata@data, aes(x, y)) + 
-#   theme_bw() + coord_fixed() + 
-#   scale_x_continuous(breaks=c(0, 0.5, 1)) + 
-#   scale_y_continuous(breaks=c(0, 0.5, 1))
-# 
-# g_mu_pred <- g_basic + geom_tile(aes(fill = p_mu)) +
-#   scale_fill_distiller(palette = "Spectral") +
-#   labs(fill = expression(widehat(p)[mu]["|"][bold(Z)])) + 
-#   facet_wrap(~nres, nrow = 1)
-# 
-# g_mu_UQ <- g_basic + geom_tile(aes(fill = mu_percentile_95 - mu_percentile_5)) +
-#   scale_fill_distiller(palette = "BrBG") + 
-#   labs(fill = "90% predictive\ninterval width\nof the mean process") + 
-#   facet_wrap(~nres, nrow = 1)
-# 
-# ggarrange(g_mu_pred, g_mu_UQ, nrow = 2, align = "hv") # Export: 13.1 x 7.9 in
