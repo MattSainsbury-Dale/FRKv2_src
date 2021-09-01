@@ -40,7 +40,8 @@ ST_BAUs$population <- community_areas$population
 
 # ---- Model fitting ----
 
-basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years")
+## NB: Set nres = 1 if you want a very low rank version of the model
+basis <- auto_basis(STplane(), chicago_crimes_fit, tunit = "years", nres = 3)
 
 M <- FRK(f = number_of_crimes ~ log(population),   
          data = chicago_crimes_fit, basis = basis, BAUs = ST_BAUs,         
