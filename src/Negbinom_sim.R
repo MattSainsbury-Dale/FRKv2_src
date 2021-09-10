@@ -137,13 +137,14 @@ breaks <- list(
 data_plots <- lapply(
   names(data_plots), function(i) {
     gg <- data_plots[[i]] 
-    gg <- gg %>% change_legend_breaks("fill", breaks[[i]]) 
+    gg <- gg %>% change_legend_breaks(breaks[[i]]) 
     gg <- gg + xbreaks + ybreaks
     gg <- gg %>% change_font_size
     gg <- gg %>% change_legend_width
     return(gg)
   }
 )
+
 
 figure <- create_figure_one_row_of_plots(data_plots)
 
@@ -180,6 +181,7 @@ pred <- predict(S)
 
 # ---- Plotting results ----
 
+
 plot_list <- plot(S, pred$newdata, labels_from_coordnames = F)
 
 plot_list <- lapply(plot_list, function(gg) {
@@ -201,6 +203,9 @@ figure <- create_figure_one_row_of_plots(list(plot_list$p_prob,
                                               plot_list$interval90_prob, 
                                               plot_list$p_mu, 
                                               plot_list$interval90_mu))
+
+
+
 
 ggsave( 
   figure,
@@ -275,3 +280,4 @@ ggsave(
   width = 14, height = 5.2,
   path = "./img"
 )
+

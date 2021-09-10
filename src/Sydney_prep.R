@@ -32,20 +32,20 @@ censusDataPreprocess <- function(df, SA) {
       
     ) %>% 
     mutate(
-      total_poverty_count = poverty_count_Couple_family_with_no_children + 
+      number_of_families_in_poverty = poverty_count_Couple_family_with_no_children + 
         poverty_count_Couple_family_with_children + 
         poverty_count_One_parent_family
     ) %>% 
     mutate(
-      Total_families_of_interest = 
+      number_of_families = 
         Total_Couple_family_with_no_children + 
         Total_Couple_family_with_children + 
         Total_One_parent_family
     )  %>% 
     mutate(
-      Proportion_poverty = total_poverty_count / Total_families_of_interest
+      Proportion_poverty = number_of_families_in_poverty / number_of_families
     ) %>% 
-    dplyr::select(region_id, total_poverty_count, Total_families_of_interest, Proportion_poverty)
+    dplyr::select(region_id, number_of_families_in_poverty, number_of_families, Proportion_poverty)
   
   return(df)
 }
@@ -91,10 +91,10 @@ SA2_NSW_sub <- subset(SA2, SA3_CODE11 %in% SA3_NSW_sub$SA3_CODE11)
 
 ## Remove any SA2s which had 0 total families of interest
 SA2_NSW_sub_withk0 <- SA2_NSW_sub  # keep a backup with all of the SA2s
-idx <- which(SA2_NSW_sub@data$Total_families_of_interest == 0)
+idx <- which(SA2_NSW_sub@data$number_of_families == 0)
 cat("SA2s with no families of interest: ", 
     paste(SA2_NSW_sub@data$SA2_NAME11[idx], collapse=", "), "\n")
-SA2_NSW_sub <- subset(SA2_NSW_sub, Total_families_of_interest > 0)
+SA2_NSW_sub <- subset(SA2_NSW_sub, number_of_families > 0)
 cat("Number of SA2s with at least 1 family of interest:", length(SA2_NSW_sub), "\n")
 
 ## Now deal with the SA1s
@@ -141,7 +141,7 @@ construct_training_data <- function(fitting = "mixed", SA1s, SA2s) {
     ## Do not add SA1 regions that have less than 0 families of interest (this would
     ## cause complications in model fitting)
     observed_BAU_idx <- intersect(observed_BAU_idx, 
-                                  which(SA1s$Total_families_of_interest > 0))
+                                  which(SA1s$number_of_families > 0))
     
     ## Combine the observed SA1s with the SA2s
     zdf <- bind(SA1s[observed_BAU_idx, ], zdf[-rmidx, ])

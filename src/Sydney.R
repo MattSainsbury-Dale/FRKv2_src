@@ -30,7 +30,7 @@ save(Sydney_map, file = "./data/Sydney_map.RData")
 Sydney_map <- ggmap(Sydney_map)
 
 
-# ---- Conducts the analysis ---- 
+# ---- Conduct the analysis ---- 
 
 ## The argument fitting controls whether the training data comprises SA2 regions 
 ## only (fitting = "SA2s"), SA1 regions only (fitting = "SA1s"; this is useful 
@@ -44,7 +44,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   poly_fit <- construct_training_data(fitting = fitting, SA1s = SA1s, SA2s = SA2s)
   
   ## Remove SA regions that have no families of interest
-  poly_fit <- subset(poly_fit, Total_families_of_interest > 0)
+  poly_fit <- subset(poly_fit, number_of_families > 0)
 
   # ---- Plotting training data ----
 
@@ -56,18 +56,18 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   training_data_plots <- plot_spatial_or_ST(
     poly_fit, 
-    c("Total_families_of_interest", "Proportion_poverty"),
+    c("number_of_families", "Proportion_poverty"),
     map_layer = Sydney_map + SA2_bg, colour = "black", size = 0.1
   )
   
   ## Adjust the legend breaks and legend labels:
   breaks <- list(
-    Total_families_of_interest = c(2000, 6000), 
+    number_of_families = c(2000, 6000), 
     Proportion_poverty = if (fitting == "SA2s") c(0.1, 0.2, 0.3) else c(0.25, 0.75)
   )
   
-  fill_name = list(
-    Total_families_of_interest = expression(paste("Number of families, ", bold(k)[Z])),
+  fill_label = list(
+    number_of_families = expression(paste("Number of families, ", bold(k)[Z])),
     Proportion_poverty  = "Observed proportion\nof families in poverty"
   )
   
@@ -96,17 +96,17 @@ Sydney_analysis <- function(fitting = "mixed") {
   BAUs <- SA1s
   
   ## Assign the size parameter of each BAU
-  BAUs$k_BAU <- BAUs$Total_families_of_interest
+  BAUs$k_BAU <- BAUs$number_of_families
   
   ## Remove overlapping columns from the BAUs and the data:
-  ## (i.e., total_poverty_count, Total_families_of_interest, etc.).
+  ## (i.e., number_of_families_in_poverty, number_of_families, etc.).
   BAUs@data[, which(names(BAUs) %in% names(poly_fit))] <- NULL
   BAUs$fs <- 1 # homoscedastic fine-scale variation
   
   ## For binomial or negative-binomial data, the known constant parameter k must
   ## be provided for each observation. In this case, it is simply the total number
   ## of families of interest
-  poly_fit$k_Z <- poly_fit$Total_families_of_interest
+  poly_fit$k_Z <- poly_fit$number_of_families
   
   if (fitting == "SA2s") {
     ## A reliable estimate of the fine-scale variance can be obtained by first 
@@ -118,7 +118,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   }
   
   ## Construct and fit the SRE object
-  S <- FRK(f = total_poverty_count ~ 1, 
+  S <- FRK(f = number_of_families_in_poverty ~ 1, 
            data = list(poly_fit), BAUs = BAUs, 
            response = "binomial", link = "logit", 
            known_sigma2fs = known_sigma2fs) 
@@ -131,8 +131,8 @@ Sydney_analysis <- function(fitting = "mixed") {
   # ---- Model validation using SA1 level data ----
   
   ## Coverage
-  val_id     <- which(SA1_NSW_sub$Total_families_of_interest > 10)
-  true_value <- SA1_NSW_sub[val_id, ]$total_poverty_count
+  val_id     <- which(SA1_NSW_sub$number_of_families > 10)
+  true_value <- SA1_NSW_sub[val_id, ]$number_of_families_in_poverty
   lower      <- pred$newdata@data[val_id, "Z_percentile_5"]
   upper      <- pred$newdata@data[val_id, "Z_percentile_95"]
   coverage   <- mean((lower <= true_value) & (true_value <= upper))
@@ -146,8 +146,8 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   plots <- plot(
     S, pred$newdata, 
-    map_layer = Sydney_map + SA2_bg,  # optional layer to put below the plotting geom
-    colour = "black", size = 0.025    # optional arguments to plotting geom via ...
+    map_layer = Sydney_map + SA2_bg,             # optional layer to put below the plotting geom
+    colour = "black", size = 0.025, alpha = 0.9  # optional arguments to plotting geom via ...
   ) 
   
   ## Change axis labels and font size
@@ -157,6 +157,9 @@ Sydney_analysis <- function(fitting = "mixed") {
   ## Simple legends (useful for presentations)
   if (fitting == "SA2s") plots <- simplify_legend_label(plots)
   
+  ## Shift the legend title so it doesn't run into the legend box
+  plots$interval90_prob <- plots$interval90_prob + theme(legend.title.align = 1.5)
+
   ggsave( 
     ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top"),
     filename = paste0("Sydney_SA1_predictions_", fitting, ".png"), 
@@ -167,7 +170,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   RNGversion("3.6.0"); set.seed(1)
   pred <- predict(S, newdata = SA3_NSW_sub)
-  plots <- plot(S, pred$newdata, colour = "black", map_layer = Sydney_map)
+  plots <- plot(S, pred$newdata, colour = "black", map_layer = Sydney_map, alpha = 0.9)
   
   ## Change the breaks, labels, and font size
   breaks <- list(
@@ -177,6 +180,7 @@ Sydney_analysis <- function(fitting = "mixed") {
     interval90_mu   = c(150, 225, 300)
   )
   
+  plotnames <- names(plots)
   plots <- lapply(
     names(plots), function(i) {
       gg <- plots[[i]] 
@@ -186,9 +190,14 @@ Sydney_analysis <- function(fitting = "mixed") {
       return(gg)
     }
   )
+  names(plots) <- plotnames
   
   ## Simple legends (useful for presentations)
   if (fitting == "SA2s") plots <- simplify_legend_label(plots)
+  
+  ## Shift the legend title so it doesn't run into the legend box
+  plots$interval90_prob <- plots$interval90_prob + theme(legend.title.align = 1.8)
+  plots$interval90_mu <- plots$interval90_mu + theme(legend.title.align = 1.5)
   
   ggsave( 
     ggarrange(plots$p_mu, plots$interval90_mu, nrow = 1, legend = "top"),
