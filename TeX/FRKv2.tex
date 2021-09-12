@@ -1278,7 +1278,7 @@ This model for $\vec{\Sigma}_\xi$ is flagged by setting \mbox{\code{fs\_by\_spat
 \subsection{Example: Non-Gaussian, point-referenced spatial data}\label{sec:03-01:Poisson}
 
  For illustration, and so that readers can familiarise themselves with the workflow of \pkg{FRK} v2, we now analyse a simulated Poisson data set containing 750 observations at spatial locations shown in Figure \ref{fig:Poisson_true_and_Z}. 
- The true mean process evaluated over the BAUs, $\vec{\mu}$, is also shown in Figure \ref{fig:Poisson_true_and_Z}\red{: It was constructed by first simulating $\vec{Y}$ from a Gaussian process with with an exponential covariance function with variance parameter $\sigma^2 = 0.1$ and length-scale parameter $\tau = 0.2$, and then passing $\vec{Y}$ through the exponential function.}
+ The true mean process evaluated over the BAUs, $\vec{\mu}$, is also shown in Figure \ref{fig:Poisson_true_and_Z}\red{: It was constructed by first simulating $\vec{Y}$ from a Gaussian process with an exponential covariance function (with variance parameter $\sigma^2 = 0.1$ and length-scale parameter $\tau = 0.2$), and then passing $\vec{Y}$ through the exponential function, $\exp(\cdot)$.}
  In what follows, $\text{Poi}(\mu)$ refers to a probability distribution on the non-negative integers with probability mass function (PMF) $\{p_z: z = 0, 1, \dots\}$, namely $p_z = e^{-\mu} \mu^z/z!$, for $\mu > 0$. 
 
  
@@ -1337,7 +1337,7 @@ In this section, we illustrate \pkg{FRK} v2 on simulated negative-binomial, area
   \red{Here, $z$ represents the number of ``failures'' before a target number of ``successes'', $k$}. 
 
  Figure \ref{fig:03-02-negative-binomial_data} illustrates the simulation procedure used for this example. 
- In the the first step, we define a fine grid over which to construct the BAUs.
+ In the first step, we define a fine grid over which to construct the BAUs.
 We generate the true probability process, $\vec{\pi}$, evaluated over the BAUs by passing a sum of trigonometric functions through the logistic function; $\vec{\pi}$ is shown in the left panel of Figure \ref{fig:03-02-negative-binomial_data}. 
 % \red{We simulate the latent process, $\vec{Y}$, over the BAUs from a mean-zero Gaussian process with an exponential covariance function with variance parameter $\sigma^2 = 0.6$ and length-scale parameter $\tau = 1$. 
 % We then generate the true probability process, $\vec{\pi}$, evaluated over the BAUs by passing $\vec{Y}$} through the logistic function; $\vec{\pi}$ is shown in the left panel of Figure \ref{fig:03-02-negative-binomial_data}.
