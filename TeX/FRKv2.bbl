@@ -1,4 +1,4 @@
-\begin{thebibliography}{48}
+\begin{thebibliography}{49}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -132,6 +132,12 @@ Guennebaud G, Jacob B, \emph{et~al.} (2010).
 \newblock \enquote{{\texttt{Eigen} v3}.}
 \newblock \url{http://eigen.tuxfamily.org}.
 \newblock Accessed: 2021-08-10.
+
+\bibitem[{Hastie \emph{et~al.}(2009)Hastie, Tibshirani, and
+  Friedman}]{Hastie_2009_Elements_Statistical_Learning}
+Hastie T, Tibshirani R, Friedman J (2009).
+\newblock \emph{The Elements of Statistical Learning}.
+\newblock Second edition. Springer-Verlag, New York.
 
 \bibitem[{Heaton \emph{et~al.}(2019)Heaton, Datta, Finley, Furrer, Guinness,
   Guhaniyogi, Gerber, Gramacy, Hammerling, Katzfuss, Lindgren, Nychka, Sun, and

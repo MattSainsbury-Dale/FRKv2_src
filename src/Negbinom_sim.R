@@ -5,16 +5,19 @@ library("ggplot2")
 library("ggpubr")
 library("dplyr")
 library("raster")
-
-## Set the seed once at the start of the script, for reproducible results.
-RNGversion("3.6.0")
-set.seed(1)
+library("RandomFields")
 
 ## Some helper functions to construct SpatialPolygons used as data supports, 
 ## BAUs and arbitrary prediction polygons, and plotting helper functions.
 source("./src/Negbinom_SpatialPolygon_fns.R")
 source("./src/Plotting_helpers/Plotting_helpers.R")
 source("./src/Plotting_helpers/Negbinom_plotting_fns.R")
+
+# Define how we wish to simulate the latent Y process
+simulation_method <- "trig_field"  # model
+
+
+RNGversion("3.6.0"); set.seed(1)
 
 
 # ---- Construct BAUs, data supports, and arbitrary regions to predict over ----
@@ -53,36 +56,60 @@ obs <- raster::bind(BAUs[observed_BAU_idx], obs[-rmidx])
 ## A list of data plots which we will add to during the simulation procedure.
 data_plots <- list()
 
-## Define the smooth process (responsible for X*beta + S*eta)
-smooth_Y_process <- function(x, y) sin(11 * x) + cos( 10 * y)
 
-## Simulate true process Y
-sigma2fs <- 0.05
-BAUs <- SpatialPixels(SpatialPoints(BAUs))
-## We need to convert the BAUs to SpatialPixelsDataFrame: just do this by
-## setting fs = 1 (indicating the fine-scale variation is homoscedastic)
-BAUs$fs <- rep(1, length(BAUs)) 
-BAUs@data <- as.data.frame(coordinates(BAUs))
-BAUs$Y <- smooth_Y_process(BAUs$x, BAUs$y) + rnorm(length(BAUs), sd = sqrt(sigma2fs))
-
-## Now create the mean process over the BAUs. 
-## First construct the probability process
-BAUs$prob <- plogis(BAUs$Y)
-
-## For visually appealing data, we don't want the probability process 
-## to be extremely close to 0 or 1, so lets squash it to be between, say, 
-## 0.1 and 0.9. We'll do this using the general logistic function shifted 
-## by a constant. As the input, p_O, is already restricted to be in [0, 1],
-## we will set the curves centre to be 0.5.
-general_logistic <- function(x, L = 1, k = 1, x0 = 0, a = 0){
-  L / (1 + exp(-k * (x - x0))) + a
+if (simulation_method == "trig_field") {
+  ## Define the smooth process (responsible for X*beta + S*eta)
+  smooth_Y_process <- function(x, y) sin(11 * x) + cos( 10 * y)
+  
+  ## Simulate true process Y
+  sigma2fs <- 0.05
+  BAUs <- SpatialPixels(SpatialPoints(BAUs))
+  ## We need to convert the BAUs to SpatialPixelsDataFrame: just do this by
+  ## setting fs = 1 (indicating the fine-scale variation is homoscedastic)
+  BAUs$fs <- rep(1, length(BAUs)) 
+  BAUs@data <- as.data.frame(coordinates(BAUs))
+  BAUs$Y <- smooth_Y_process(BAUs$x, BAUs$y) + rnorm(length(BAUs), sd = sqrt(sigma2fs))
+  
+  ## Now create the mean process over the BAUs. 
+  ## First construct the probability process
+  BAUs$prob <- plogis(BAUs$Y)
+  
+  ## For visually appealing data, we don't want the probability process 
+  ## to be extremely close to 0 or 1, so lets squash it to be between, say, 
+  ## 0.1 and 0.9. We'll do this using the general logistic function shifted 
+  ## by a constant. As the input, p_O, is already restricted to be in [0, 1],
+  ## we will set the curves centre to be 0.5.
+  general_logistic <- function(x, L = 1, k = 1, x0 = 0, a = 0){
+    L / (1 + exp(-k * (x - x0))) + a
+  }
+  BAUs$prob <- general_logistic(BAUs$prob, L = 0.95, a = 0.05, x0 = 0.5, k = 4)
+  
+  
+} else if (simulation_method == "model") {
+  
+  RNGversion("3.6.0"); set.seed(1996)
+  model <- RMexp(var = 0.6, scale = 1) + # exponential covariance function
+    # RMnugget(var = 0.005) + # nugget
+    RMtrend(mean = 0) # and mean
+  
+  ## Simulate true process Y
+  BAUs <- SpatialPixels(SpatialPoints(BAUs))
+  ## We need to convert the BAUs to SpatialPixelsDataFrame: just do this by
+  ## setting fs = 1 (indicating the fine-scale variation is homoscedastic)
+  BAUs$fs <- rep(1, length(BAUs)) 
+  BAUs@data <- as.data.frame(coordinates(BAUs))
+  
+  simu <- RFsimulate(model, x = sort(unique(BAUs$x)), y = sort(unique(BAUs$y)))
+  BAUs$Y <- simu$variable1
+ 
+  ## Construct the probability process
+  BAUs$prob <- plogis(BAUs$Y)
 }
-BAUs$prob <- general_logistic(BAUs$prob, L = 0.95, a = 0.05, x0 = 0.5, k = 4)
 
 ## Plot the probability process
 data_plots$prob_BAU <-
   plot_spatial_or_ST(BAUs, "prob", labels_from_coordnames = F)[[1]] +  
-  labs(title = bquote(bold("\U03C0")), fill = "") 
+  labs(title = bquote(bold("\U03C0")), fill = "")
 
 ## Mean over the BAUs (requires size parameter at the BAU level)
 BAUs$k_BAU <- rep(50, length(BAUs))
@@ -90,7 +117,10 @@ BAUs$mu    <- BAUs$k_BAU * (1 / BAUs$prob - 1)
 
 data_plots$mu_BAU <- 
   plot_spatial_or_ST(BAUs, "mu", labels_from_coordnames = F)[[1]] +
-  labs(title = bquote(bold("\U03BC")), fill = "") 
+  labs(title = bquote(bold("\U03BC")), fill = "")
+
+
+
 
 ## Now aggregate the mean process over the data supports
 BAUs_as_points <- SpatialPointsDataFrame(coordinates(BAUs), 
@@ -123,30 +153,64 @@ data_plots$Z_training <-
 ## Create the data figure. First, define some common plot elements:
 xbreaks <- scale_x_continuous(breaks=c(0.25, 0.75), expand = c(0, 0))
 ybreaks <- scale_y_continuous(breaks=c(0.25, 0.75), expand = c(0, 0))
-breaks_prob   = c(0.25, 0.5, 0.75)
-breaks_mu_BAU = c(50, 125, 200)
-breaks_data   = c(2500, 6000, 9500)
 
-breaks <- list(
-  prob_BAU = breaks_prob, 
-  mu_BAU = breaks_mu_BAU, 
-  mu = breaks_data, 
-  Z_training = breaks_data
-)
-
-data_plots <- lapply(
-  names(data_plots), function(i) {
-    gg <- data_plots[[i]] 
-    gg <- gg %>% change_legend_breaks(breaks[[i]]) 
-    gg <- gg + xbreaks + ybreaks
-    gg <- gg %>% change_font_size
-    gg <- gg %>% change_legend_width
-    return(gg)
-  }
-)
+                                  
+# Adjust the breaks and other plot visuals
+if (simulation_method == "trig_field") {
+  
+  breaks_prob   = c(0.25, 0.5, 0.75)
+  breaks_mu_BAU = c(50, 125, 200)
+  breaks_data   = c(2500, 6000, 9500)
+  breaks <- list(
+    prob_BAU = breaks_prob,
+    mu_BAU = breaks_mu_BAU,
+    mu = breaks_data,
+    Z_training = breaks_data
+  )
+  
+  
+  data_plots <- lapply(
+    names(data_plots), function(i) {
+      gg <- data_plots[[i]] 
+      gg <- gg %>% change_legend_breaks(breaks[[i]]) 
+      gg <- gg + xbreaks + ybreaks
+      gg <- gg %>% change_font_size
+      gg <- gg %>% change_legend_width
+      return(gg)
+    }
+  )
+  
+  
+} else if (simulation_method == "model") {
+  
+  data_scale_lims <- range(c(obs$Z, BAUs$mu))
+  data_scale_breaks <- c(750, 2000, 3250)
+  data_plots$mu <- change_legend_limits(data_plots$mu,  data_scale_lims)
+  data_plots$Z_training <- change_legend_limits(data_plots$Z_training,  data_scale_lims)
+  data_plots$mu <- change_legend_breaks(data_plots$mu,  data_scale_breaks)
+  data_plots$Z_training <- change_legend_breaks(data_plots$Z_training,  data_scale_breaks)
+  
+  prob_scale_lims <- range(BAUs$prob)
+  prob_scale_breaks <- c(0.4, 0.6, 0.8)
+  data_plots$prob_BAU <- change_legend_limits(data_plots$prob_BAU,  prob_scale_lims)
+  data_plots$prob_BAU <- change_legend_breaks(data_plots$prob_BAU,  prob_scale_breaks)
+  
+  
+  data_plots <- lapply(
+    names(data_plots), function(i) {
+      gg <- data_plots[[i]] 
+      gg <- gg %>% change_legend_breaks(breaks[[i]]) 
+      gg <- gg + xbreaks + ybreaks
+      gg <- gg %>% change_font_size
+      gg <- gg %>% change_legend_width
+      return(gg)
+    }
+  )
+}
 
 
 figure <- create_figure_one_row_of_plots(data_plots)
+
 
 ggsave(figure,
        filename = "Negbinom_sim_data.png", device = "png", 
@@ -194,10 +258,22 @@ plot_list <- lapply(plot_list, function(gg) {
 )
 
 # Edit the legend breaks
-plot_list$p_prob  <- plot_list$p_prob %>% change_legend_breaks(breaks_prob) 
-plot_list$interval90_prob <- plot_list$interval90_prob %>% change_legend_breaks(c(0.1, 0.15, 0.2))
-plot_list$p_mu <- plot_list$p_mu %>% change_legend_breaks(breaks_mu_BAU)
-plot_list$interval90_mu <- plot_list$interval90_mu %>% change_legend_breaks(c(50, 100, 150))
+if (simulation_method == "trig_field") {
+
+  plot_list$p_prob  <- plot_list$p_prob %>% change_legend_breaks(breaks_prob)
+  plot_list$interval90_prob <- plot_list$interval90_prob %>% change_legend_breaks(c(0.1, 0.15, 0.2))
+  plot_list$p_mu <- plot_list$p_mu %>% change_legend_breaks(breaks_mu_BAU)
+  plot_list$interval90_mu <- plot_list$interval90_mu %>% change_legend_breaks(c(50, 100, 150))
+  
+  
+} else if (simulation_method == "model") {
+  
+  plot_list$interval90_prob <- plot_list$interval90_prob %>% change_legend_breaks(c(0.1, 0.175, 0.25))
+  plot_list$p_prob <- change_legend_limits(plot_list$p_prob,  prob_scale_lims)
+  plot_list$p_prob <- change_legend_breaks(plot_list$p_prob,  prob_scale_breaks)
+  
+}
+
 
 figure <- create_figure_one_row_of_plots(list(plot_list$p_prob, 
                                               plot_list$interval90_prob, 
@@ -218,21 +294,25 @@ ggsave(
 
 ## Compare BAUs$mu with the predictions (i.e., compute RMSPE), and the coverage
 ## via the percentiles.
-pred$newdata$true <- mu_true
+pred$newdata$mu_true <- mu_true
+
+# Only consider out-of-sample locations
+unobsidx <- FRK:::unobserved_BAUs(S) 
+pred$newdata <- pred$newdata[unobsidx, ] 
 
 RMSPE <- function(z,pred) sqrt(mean((z - pred)^2))
-RMSPE(mu_true, pred$newdata$p_mu)  
+RMSPE(pred$newdata$mu_true, pred$newdata$p_mu)  
 
 ## Coverage and MAPE
 diagnostics <- pred$newdata@data %>% 
   mutate(
-    true_in_pred_interval90 = mu_percentile_5 <= true & true <= mu_percentile_95,
-    absolute_percentage_error = abs(p_mu - true)/true
+    true_in_pred_interval90 = mu_percentile_5 <= mu_true & mu_true <= mu_percentile_95,
+    absolute_percentage_error = abs(p_mu - mu_true)/mu_true
   ) %>%
   summarise(
     coverage_90 = mean(true_in_pred_interval90),
     MAPE = mean(absolute_percentage_error) * 100, 
-    RMSPE = RMSPE(true, p_mu)  
+    RMSPE = RMSPE(mu_true, p_mu)  
   ) 
 
 ## CRPS
@@ -260,13 +340,21 @@ plot_list <- lapply(plot_list, function(gg) {
 )
 
 # Edit the legend breaks
-plot_list$p_prob  <- plot_list$p_prob %>% change_legend_breaks(c(0.5, 0.58, 0.66)) 
-plot_list$interval90_prob <- plot_list$interval90_prob %>% change_legend_breaks(c(0.016, 0.019, 0.022))
-plot_list$p_mu <- plot_list$p_mu %>% change_legend_breaks(c(8000, 11000, 14000))
-plot_list$interval90_mu <- plot_list$interval90_mu %>% change_legend_breaks(c(700, 1000, 1300))
+if (simulation_method == "trig_field") {
+  
+  plot_list$p_prob  <- plot_list$p_prob %>% change_legend_breaks(c(0.5, 0.58, 0.66))
+  plot_list$interval90_prob <- plot_list$interval90_prob %>% change_legend_breaks(c(0.016, 0.019, 0.022))
+  plot_list$p_mu <- plot_list$p_mu %>% change_legend_breaks(c(8000, 11000, 14000))
+  plot_list$interval90_mu <- plot_list$interval90_mu %>% change_legend_breaks(c(700, 1000, 1300))
+  
+  
+} else if (simulation_method == "model") {
+  
+}
+
 
 ## Hack to make the correct x-axis and y-axis breaks appear
-invisible_point <- geom_point(data = data.frame(x = c(0, 1), y = c(1, 1)), alpha = 0)
+invisible_point <- geom_point(data = data.frame(x = c(0, 1), y = c(0, 1)), alpha = 0)
 plot_list <- lapply(plot_list, function(gg) gg + invisible_point)
 
 figure <- create_figure_one_row_of_plots(list(plot_list$p_prob, 

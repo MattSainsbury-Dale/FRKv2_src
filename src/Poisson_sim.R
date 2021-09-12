@@ -20,35 +20,59 @@ library("ggplot2")
 library("sp")
 library("dplyr")
 library("ggpubr")
+library("RandomFields")
 
-RNGversion("3.6.0"); set.seed(1)
-
-## Define some complicated smooth process 
-f <- function(x, y, a = 0, b = 0, l = 1) exp(-l * sqrt((x - a)^2 + (y - b)^2))
-logistic <- function(x, L = 1, k=1, x0 = 0) L / (1 + exp(-k * (x - x0)))
-smooth_Y_process <- function(x, y) {
-  a <- 4 + 2 * sin(5 * x) + 2 * cos(4 * y) + 2 * sin(3 * x * y)+
-    sin(7 * x) + cos(9 * y) +
-    sin(12 * x) + cos(17 * y) + sin(14 * x) * cos(16 * y)  +
-    sin(23 * x) + cos(22 * y) + sin(24 * x) * cos(26 * y) +
-    x + y + x^2 + y^2 + x * y + 
-    sin(10 * pi * x * y) + cos(20 * x * y - 3) + sin(40 * x * y)
-  
-  logistic(a, x0 = 2, L = 6, k = 0.35)
-}
+# Define how we wish to simulate the latent Y process
+simulation_method <- "model" # "trig_field"
 
 ## Define a grid of BAUs
-BAUs <- expand.grid(x = seq(0, 1, length.out = 100),
-                    y = seq(0, 1, length.out = 100))
+x.seq <- y.seq <- seq(0, 1, length.out = 100)
+BAUs <- expand.grid(x = x.seq, y = y.seq)
 coordinates(BAUs) = ~ x + y
 gridded(BAUs) <- TRUE
 
-## Generate the true process Y(.) (with fine-scale variation) over the BAUs,
-## and the true mean process, mu(.)
-BAUs_df <- coordinates(BAUs) %>%
-  as.data.frame() %>%
-  mutate(Y = smooth_Y_process(x, y) + rnorm(length(BAUs), mean = 0, sd = 0.2)) %>%
-  mutate(mu = exp(Y))
+BAUs_df <- coordinates(BAUs) %>% as.data.frame
+
+## Simulate the true process, Y, over the BAUs
+RNGversion("3.6.0"); set.seed(2020)
+if (simulation_method == "trig_field") {
+  ## Define some complicated smooth trigonometric field
+  f <- function(x, y, a = 0, b = 0, l = 1) exp(-l * sqrt((x - a)^2 + (y - b)^2))
+  logistic <- function(x, L = 1, k=1, x0 = 0) L / (1 + exp(-k * (x - x0)))
+  smooth_Y_process <- function(x, y) {
+    a <- 4 + 2 * sin(5 * x) + 2 * cos(4 * y) + 2 * sin(3 * x * y)+
+      sin(7 * x) + cos(9 * y) +
+      sin(12 * x) + cos(17 * y) + sin(14 * x) * cos(16 * y)  +
+      sin(23 * x) + cos(22 * y) + sin(24 * x) * cos(26 * y) +
+      x + y + x^2 + y^2 + x * y + 
+      sin(10 * pi * x * y) + cos(20 * x * y - 3) + sin(40 * x * y)
+    
+    logistic(a, x0 = 2, L = 6, k = 0.35)
+  }
+  
+  BAUs_df <- BAUs_df %>%
+    mutate(Y = smooth_Y_process(x, y) + rnorm(length(BAUs), mean = 0, sd = 0.2)) 
+  
+} else if (simulation_method == "model") {
+  
+  model <- RMexp(var = 0.1, scale = 0.2) + # exponential covariance function
+    # RMnugget(var = 0.01) + # nugget
+    RMtrend(mean = 4) # and mean
+  
+  simu <- RFsimulate(model, x = x.seq, y = y.seq)
+  BAUs_df$Y <- simu$variable1
+}
+
+## Compute the true mean process, mu, over the BAUs
+BAUs_df <- mutate(BAUs_df, mu = exp(Y))
+
+# ## True mean process
+# ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +
+#   labs(fill = bquote(bold("\U03BC"))) + 
+#   scale_fill_distiller(palette = "Spectral") + 
+#   labs(x = expression(s[1]), y = expression(s[2])) + 
+#   theme_bw() + coord_fixed()
+
 
 ## Subsample n of the BAUs to act as observation locations, and simulate data
 n <- 750
@@ -65,6 +89,8 @@ BAUs$fs <- rep(1, length(BAUs))
 coordinates(Poisson_simulated) <- ~ x + y
 
 
+plot_spatial_or_ST(Poisson_simulated, column_name = "Z")
+
 
 # ---- FRK ----
 
@@ -76,7 +102,8 @@ for (i in 1:max_nres) {
   timings[[i]] <- system.time({
     S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
                           nres = i, BAUs = BAUs, 
-                          response = "poisson", link = "log")
+                          response = "poisson", 
+                          link = "log")
     RNGversion("3.6.0"); set.seed(1)
     pred_list[[i]] <- predict(S_list[[i]], type = c("link", "mean"))
   })
@@ -92,8 +119,8 @@ plot_list <- c(plot_spatial_or_ST(Poisson_simulated, "Z",
 
 ## True mean process
 plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) +
-  labs(fill = bquote(bold("\U03BC"))) + 
-  labs(x = expression(s[1]), y = expression(s[2])) + 
+  labs(fill = bquote(bold("\U03BC"))) +
+  labs(x = expression(s[1]), y = expression(s[2])) +
   theme_bw() + coord_fixed()
 
 ## Set the title of each plot using the legend labels, 
@@ -130,11 +157,11 @@ for (i in c("Z", "mu_true")) {
 
 ## Adjust the scale of the mean prediction, so it is the same as the data scale
 data_scale  <- range(pred_list[[max_nres]]$newdata$p_mu, Poisson_simulated$Z, BAUs_df$mu)
-breaks_data <- c(100, 300, 500)
+# breaks_data <- c(100, 300, 500)
 for (i in c("p_mu", "mu_true")) {
   plot_list[[i]] <- plot_list[[i]] + scale_fill_distiller(palette = "Spectral", 
-                                                          limits = data_scale, 
-                                                          breaks = breaks_data)
+                                                          limits = data_scale) 
+                                                          # breaks = breaks_data)
 }
 
 plot_list$Z <- plot_list$Z  + 
@@ -142,8 +169,10 @@ plot_list$Z <- plot_list$Z  +
   scale_colour_distiller(palette = "Spectral", name = "", 
                          limits = data_scale, breaks = breaks_data) 
 
-plot_list$interval90_mu <- plot_list$interval90_mu + 
-  scale_fill_distiller(palette = "BrBG", name = "", breaks = c(100, 250, 400)) 
+if (simulation_method == "trig_field") {
+  plot_list$interval90_mu <- plot_list$interval90_mu +
+    scale_fill_distiller(palette = "BrBG", name = "", breaks = c(100, 250, 400))
+}
 
 ggsave(
   ggarrange(plot_list$mu_true, plot_list$Z + labs(title = bquote(bold("Z"))), 
