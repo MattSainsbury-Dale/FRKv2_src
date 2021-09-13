@@ -16,8 +16,8 @@
 % prevent orphans for section headings:
 %\usepackage[nobottomtitles]{titlesec} % doesn't work: breaks the code
 %\usepackage[all]{nowidow}
-% Couldn't find a solution... Just using \clearpage at problematic headings, for now. The sections that I have put a \clearpage are:
-% -
+% Couldn't find a solution... Just use \clearpage at problematic headings, for now. 
+
 
 % Same indentation over multiple lines in algorithm environment: use tabularx to figure out the width of a box that would fit until the end of the line:
 \usepackage{tabularx}
@@ -856,13 +856,17 @@ Note that all unknown quantities are treated as random in \pkg{TMB} (with a flat
 \subsection{Prediction and uncertainty quantification}\label{subsection:04-03:Prediction}
 
 
-\red{We now discuss spatial prediction and uncertainty quantification of the predictions. 
-There are three principal quantities that could be of interest to the user, namely the latent process $Y(\cdot)$ and mean process $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y}), and data at unobserved locations. 
+We now discuss spatial prediction and uncertainty quantification of the predictions. 
+There are three principal quantities that could be of interest to the user, namely the latent process 
+%$Y(\cdot)$ and mean process $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y}), and data at unobserved locations. 
+$\vec{Y}$ and mean process $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), and data at unobserved locations. 
 % To produce predictions and associated uncertainties, we need to determine the posterior distribution of these quantities.
 %For each quantity, we use the posterior expectation as our predictor. % ; a decision theoretic justification for this choice is provided by \citet*[ch.~3]{Cressie_1993_stats_for_spatial_data}.
-Recall that the Laplace approximation implies that, approximately, $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$; since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $Y(\cdot)$ can be carried out using well-known formulas. 
-  However, the posterior distribution of a non-linear function of $Y(\cdot)$ (e.g., the mean $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y})) is typically not available in closed form, and some approximation is required.
-  In \pkg{FRK} v2, we use a Monte Carlo (MC) approach to inference on $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.}
+Recall that the Laplace approximation implies that the conditional distribution of $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$ is, approximately, $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$; since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $\vec{Y}$ can be carried out using well-known formulas. 
+%  However, the posterior distribution of a non-linear function of $Y(\cdot)$ (e.g., the mean $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y})) is typically not available in closed form, and some approximation is required.
+  However, the posterior distribution of a non-linear function of $\vec{Y}$ (e.g., the mean $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)})) is typically not available in closed form, and some approximation is required.
+%  In \pkg{FRK} v2, we use a Monte Carlo (MC) approach to inference on $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.
+ In \pkg{FRK} v2, we therefore use a Monte Carlo (MC) approach to inference on non-linear functions of $\vec{Y}$, by first drawing a sample from the approximate conditional distribution of $\vec{u}$ and then transforming the sample accordingly. 
   
 
 
@@ -872,7 +876,7 @@ Recall that the Laplace approximation implies that, approximately, $\vec{u} \mid
 \vec{Y}_{\!\text{MC}}
 \equiv \vec{T}\hatt{\vec{A}}[A] + [\vec{S} \; \vec{I}] \,\vec{U},
 \end{equation}
-where each of the $n_{\text{MC}}$ columns of the matrix $\hatt{\vec{A}}[A]$ is the \red{corresponding} estimated posterior mode of $\vec{\alpha}$, and each of the $n_{\text{MC}}$ columns of the matrix $\vec{U}$ is a draw from $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$.  
+where each of the $n_{\text{MC}}$ columns of the matrix $\hatt{\vec{A}}[A]$ is the corresponding estimated posterior mode of $\vec{\alpha}$, and each of the $n_{\text{MC}}$ columns of the matrix $\vec{U}$ is a draw from $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$.  
  We obtain MC samples of the $N$-dimensional vector $\vec{\mu}$ from $[\vec{\mu} \mid \vec{Z}, \vec{\theta}]$ via the $N\times n_{MC}$ matrix $\vec{M} \equiv g^{-1}(\vec{Y}_{\!\text{MC}})$, where $g^{-1}(\cdot)$ is applied element-wise. 
   Not only does \pkg{FRK} v2 predict $\vec{\mu}$, it also allows prediction of data over all $N$ BAUs, which we write as $\vec{Z}^* \equiv (Z^*_1, \dots, Z^*_N)^\tp$. 
   We assume that these data are from the same exponential family model as that of the original data, $\vec{Z}$. 
@@ -1178,18 +1182,31 @@ This form for $\vec{Q}$ leads to significant computational savings.
  In these situations, \pkg{FRK} v2 allows each spatial BAU to be associated with its own fine-scale variance parameter. 
  This model may be advantageous when the variance of the fine-scale component is spatially varying. 
  Specifically, let $N_s$ and $N_t$ denote the number of spatial and temporal BAUs, respectively (so that $N = N_sN_t$).
- Then, instead of modelling \mbox{$\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{I})$}, \pkg{FRK} v2 also allows the model,
+% Then, instead of modelling \mbox{$\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{I})$}, \pkg{FRK} v2 also allows the model,
+%$\vec{\xi} \sim \Gau(\vec{0}, \vec{\Sigma}_\xi)$, where   
+%\begin{equation}
+%    \vec{\Sigma}_\xi \equiv
+%\begin{pmatrix}
+%\text{diag}(\vec{\sigma}^2_\xi) & 0 & \dots & 0 \\
+% 0 &  \ddots  & &  \vdots \\
+% \vdots &    & & \\
+%  0 & \dots   & & \text{diag}(\vec{\sigma}^2_\xi)\\
+%\end{pmatrix}
+%\end{equation}
+%is an $N \times N$ matrix, $\vec{\sigma}^2_\xi \equiv (\sigma^2_{\xi, 1}, \dots, \sigma^2_{\xi, N_s})^\tp$,
+ \red{Then, instead of modelling \mbox{$\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{V})$},
+ where $\vec{V}$ is a known, positive-definite diagonal matrix, \pkg{FRK} v2 also allows the model,
 $\vec{\xi} \sim \Gau(\vec{0}, \vec{\Sigma}_\xi)$, where   
 \begin{equation}
     \vec{\Sigma}_\xi \equiv
 \begin{pmatrix}
-\text{diag}(\vec{\sigma}^2_\xi) & 0 & \dots & 0 \\
+\text{diag}(\vec{\sigma}^2_\xi) \odot \vec{V}_1  & 0 & \dots & 0 \\
  0 &  \ddots  & &  \vdots \\
  \vdots &    & & \\
-  0 & \dots   & & \text{diag}(\vec{\sigma}^2_\xi)\\
+  0 & \dots   & & \text{diag}(\vec{\sigma}^2_\xi) \odot \vec{V}_{N_t}\\
 \end{pmatrix}
 \end{equation}
-is an $N \times N$ matrix, $\vec{\sigma}^2_\xi \equiv (\sigma^2_{\xi, 1}, \dots, \sigma^2_{\xi, N_s})^\tp$,
+is an $N \times N$ matrix, $\vec{\sigma}^2_\xi \equiv (\sigma^2_{\xi, 1}, \dots, \sigma^2_{\xi, N_s})^\tp$, $\odot$ denotes element-wise multiplication, $\vec{V}_{N_1}, \dots, \vec{V}_{N_t}$ are $N_s \times N_s$ matrices that form the block-diagonal of $\vec{V}$,}
 and the BAUs are assumed to be ordered such that space runs faster than time. 
 This model for $\vec{\Sigma}_\xi$ is flagged by setting \mbox{\code{fs\_by\_spatial\_BAU = TRUE}} in the \fct{SRE} function. It is particularly useful when the number of spatial BAUs (and hence the number of variance parameters to estimate) is relatively low, and when we have observations from each spatial BAU at many time-points; see, for instance, the example presented in Section \ref{sec:ST_example}. 
 
@@ -1521,7 +1538,9 @@ $^{b}$\pkg{TMB} supports the use of multiple cores, but this is not yet supporte
  The data used in that study was made up of a training data set and a test data set consisting of 105,569 observations and 42,740 observations, respectively. 
  Table \ref{tab:Heaton_comparison} replicates Table 3 of \cite{Heaton_2019_comparative_study}, with an additional entry corresponding to \pkg{FRK} v2, wherein many more basis functions were used than was practical with \pkg{FRK} v1.
  Specifically, \pkg{FRK} v1 used 485 basis functions, whilst \pkg{FRK} v2 used 12,114.
- The results show that the increased number of basis functions from \pkg{FRK} v2 significantly improved the diagnostic scores over \pkg{FRK} v1, so that the results for \pkg{FRK} v2 are now comparable to the \red{heretofore-preferred} spatial-prediction method MRA.  
+ The results show that the increased number of basis functions from \pkg{FRK} v2 significantly improved the diagnostic scores over \pkg{FRK} v1, so that the results for \pkg{FRK} v2 are now comparable to the 
+% heretofore-preferred 
+ spatial-prediction method MRA.  
  To achieve these improvements over \pkg{FRK} v1, we only had to specify \code{nres = 4}, \code{K\_type = "precision"} and \code{method = "TMB"} in \fct{auto\_basis}, \fct{SRE}, and \fct{SRE.fit}, respectively; the rest of the \pkg{FRK} v1 code that was used in the comparative study was left unchanged. 
 
 
