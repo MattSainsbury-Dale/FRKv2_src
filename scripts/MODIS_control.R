@@ -20,14 +20,19 @@ if (!exists("quick")) {
 }
 
 if (quick) {
-  cat("Running low-rank versions of the models: This should be relatively quick (~1hr)\n")
+  cat("Running low-rank versions of the models: This should be relatively quick\n")
 } else {
   cat("Not running low-rank versions of the models: This may take a while\n")
 }
 
 
 ## Packages used (use whichever subset you please)
-PACKAGES <- c("FRK", "INLA", "mgcv", "spNNGP", "spBayes")
+PACKAGES <- c("FRK", 
+              #"INLA" 
+              "mgcv"#, 
+              #"spNNGP", 
+              #"spBayes"
+              )
 
 # ---- Load packages and user-defined functions ----
 

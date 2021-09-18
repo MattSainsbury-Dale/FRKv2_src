@@ -4,7 +4,8 @@ for file in $filenames; do
   if [ $extension == "html" ]; 
     then cat $file >> all.html; 
   elif [ $extension == "png" ];
-    then echo "<img src=$file width=700 height=600> <br>" >> all.html
+    # then echo "<img src=$file width=700 height=600> <br>" >> all.html
+    then echo "<img src=$file> <br>" >> all.html
   fi; 
 done
 
