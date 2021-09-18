@@ -16,7 +16,7 @@ data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp
 
 # Files which are not of use currently, but I don't want to delete yet
 untracked
-src/MODIS_optimise_args.R
+scripts/MODIS_optimise_args.R
 
 
 # Auxilliary files that don't need to be tracked

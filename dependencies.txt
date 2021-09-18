@@ -19,5 +19,7 @@ pROC 1.16.2
 spBayes 0.4.3
 spNNGP 0.1.4
 tidyr 1.1.0
+RandomFields 3.3.8
 raster 3.1.5
 plyr 1.8.6
+htmlTable 1.13.3
