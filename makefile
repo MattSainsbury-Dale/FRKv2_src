@@ -89,8 +89,8 @@ scripts/Sydney.R: scripts/Sydney_prep.R
 	
 Heaton: results/Heaton_FRKv2.csv 
 results/Heaton_FRKv2.csv: scripts/Heaton.R
-	RScript scripts/Heaton.R $(LOWRANK)
-	ifeq ($(LOWRANK), TRUE)
+	RScript scripts/Heaton.R $(quick)
+	ifeq ($(quick), TRUE)
 		touch scripts/Heaton.R
 	endif
 
@@ -99,8 +99,8 @@ results/Heaton_FRKv2.csv: scripts/Heaton.R
 MODIS_OBJECTS = img/MODIS_data.png img/MODIS_MAR_predictions.png img/MODIS_block_predictions.png img/MODIS_ROC.png
 MODIS: $(MODIS_OBJECTS)
 $(MODIS_OBJECTS): scripts/MODIS_control.R 
-	Rscript scripts/MODIS_control.R $(LOWRANK)
-	ifeq ($(LOWRANK), TRUE)
+	Rscript scripts/MODIS_control.R $(quick)
+	ifeq ($(quick), TRUE)
 		touch scripts/MODIS_control.R 
 	endif
 scripts/MODIS_control.R: scripts/MODIS.R 
@@ -110,8 +110,8 @@ scripts/MODIS.R: scripts/MODIS_modelling_fns
 Chicago_OBJECTS = img/Chicago_data_pred_uncertainty.png img/Chicago_focused_CAs_time_series.png img/Chicago_focused_CAs_predictive_distributions.png results/Chicago_coverage_and_MAPE.csv
 Chicago: $(Chicago_OBJECTS)
 $(Chicago_OBJECTS): scripts/Chicago.R
-	Rscript scripts/Chicago.R $(LOWRANK)
-	ifeq ($(LOWRANK), TRUE)
+	Rscript scripts/Chicago.R $(quick)
+	ifeq ($(quick), TRUE)
 		touch scripts/Chicago.R 
 	endif
 scripts/Chicago.R: scripts/Chicago_prep.R

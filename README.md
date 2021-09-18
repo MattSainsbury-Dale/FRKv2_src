@@ -18,7 +18,7 @@ First download this repo and navigate to its *top-level directory* within termin
 --->
 
   
-To wipe the populated directories, run `make clean` (or manually delete the contents of `img/` and `results/`).
+To wipe the populated directories, run `make clean` or manually delete the contents of `results/`.
 
 ### Dependencies
 
