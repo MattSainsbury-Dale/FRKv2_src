@@ -83,9 +83,7 @@ scripts/Sydney.R: scripts/Sydney_prep.R
 Heaton: results/Heaton_FRKv2.csv 
 results/Heaton_FRKv2.csv: scripts/Heaton.R
 	Rscript scripts/Heaton.R $(quick)
-	if [ "$(quick)" == "TRUE" ]; 
-	then touch scripts/Heaton.R; 
-	fi
+	if [ "$(quick)" == "TRUE" ]; then touch scripts/Heaton.R; fi
 
 
 
