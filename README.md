@@ -8,27 +8,31 @@ First, download this repo and navigate to its top-level directory within the com
 
 #### Dependencies
 
-<!---
-The file `dependencies.txt` contains the `R` package dependencies with version numbers at the time that the manuscript was prepared. 
---->
 
-To automatically install the required packages that are not already present on the user's system, one may run `make INSTALL_DEPENDS` or run `scripts/Dependencies_install.R`. Note that this uses the CRAN mirror run by the CSIRO in Australia.
+The file `dependencies.txt` contains the package dependencies and version numbers. To automatically install the dependencies that are not already present on your system, enter `Rscript scripts/Dependencies_install.R`. Note that this uses the CRAN mirror hosted by the CSIRO in Australia. 
+
+<!---run `make INSTALL_DEPENDS` or --->
 
 #### Data
 
-Some data sets were too large to be stored on Github: These include the Chicago crime data set and the shapefiles used in the Sydney spatial change-of-support example. To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, please: 
-- download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/ar/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder
-- download the [Sydney shapefiles](https://hpc.niasra.uow.edu.au/ckan/ar/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`
+<!---These include the Chicago crime data set and the shapefiles used in the Sydney spatial change-of-support example.--->
+
+Some data sets were too large to be stored on Github: To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, please: 
+- Download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/ar/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder; and 
+- download the [Sydney shapefiles](https://hpc.niasra.uow.edu.au/ckan/ar/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`.
 
 #### Results
 
+To reproduce the results of the manuscript, simply run `Rscript all.R`. This populates the `results` folder with the figures and tables given in the manuscript; these can then be viewed by opening `all.html` in any web browser. To alleviate long run-time issues, we have provided an option to use low-rank versions of the models: This is done by manually setting `quick = TRUE` within `all.R`. Our envisioned workflow for a reviewer is to first run the code with `quick = TRUE` to quickly establish that it is in working order, and then re-run it with `quick = FALSE`. Only a subset of the scripts need to be re-run a second time; these are clearly indicated in `all.R`, and they can be commented out to save on some computation.
+
+<!---
 We provide two convenient options for reproducing the results of the manuscript: 
 
 - Run `all.R` 
 - Run `make all` 
 
-Both options populate the `results` folder with the figures and tables used in the manuscript; these can then be viewed by opening `all.html` in any web-browser. To alleviate long run-time issues, we have provided an option to use low-rank versions of the models: This is done by manually setting `quick=TRUE` within `all.R`, or by running `make all quick=TRUE`. Our envisioned workflow for a reviewer is to first run the code with `quick=TRUE` to establish that it is in working order and then re-run it with `quick=FALSE`. (If using `make`, only a subset of the scripts will be re-run a second time.) 
-
+Both options populate the `results` folder with the figures and tables used in the manuscript; these can then be viewed by opening `all.html` in any web browser. To alleviate long run-time issues, we have provided an option to use low-rank versions of the models: This is done by manually setting `quick=TRUE` within `all.R`, or by running `make all quick=TRUE`. Our envisioned workflow for a reviewer is to first run the code with `quick=TRUE` to quickly establish that it is in working order, and then re-run it with `quick=FALSE`. If using `make`, only a subset of the scripts will be re-run a second time; if you are manually running `all.R`, you can comment-out the scripts that do not depend on the `quick` variable (these are clearly indicated in the script).
+--->
 
 
 <!---
@@ -50,7 +54,7 @@ First download this repo and navigate to its *top-level directory* within termin
 
 #### A note on long run times
 
-The MODIS study takes a few hours if `quick=FALSE`. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the `quick=TRUE` option described above, one may reproduce the results from a subset of packages by editing the object `PACKAGES` in `scripts/MODIS_control.R`. 
+The MODIS study takes a few hours if `quick=FALSE`. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the `quick = TRUE` option described above, one may easily reproduce the results from only a subset of packages by editing the object `PACKAGES` in `scripts/MODIS_control.R`. 
 
 <!---
 ### Note to Windows users

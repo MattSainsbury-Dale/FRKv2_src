@@ -29,10 +29,10 @@ if (quick) {
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
   #"FRK", 
-  "INLA",
-  "mgcv", 
+  "INLA"#,
+  # "mgcv", 
   #"spNNGP", 
-  "spBayes"
+  # "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----
@@ -72,9 +72,7 @@ if (quick) {
 }
 
 ## Load the model fitting and prediction functions
-suppressMessages(
-  mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
-)
+mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
 
 ## Load user defined functions 
 ## These include functions to compute diagnostics, convert data frames from wide
@@ -329,8 +327,15 @@ MAR_ROC_list   <- compute_ROC_objects(all_df_test, scheme = "MAR")
 FRK_idx <- which(PACKAGES == "FRK")
 
 plot_ROC <- function(ROC_list) {
+  
+  # If present, plot FRK v2 at the end so that it is clearly visible
+  if ("FRK v2" %in% names(ROC_list)) ROC_list <- ROC_list[c(PACKAGES[-FRK_idx], "FRK v2")]  
+  
+  # Remove Data from ROC list (it's just the observed data, so it will have a perfect ROC)
+  ROC_list$Data <- NULL
+  
   pROC::ggroc(
-    ROC_list[c(PACKAGES[-FRK_idx], "FRK v2")], # display FRK v2 at the end
+    ROC_list, 
     legacy.axes = TRUE, size = 0.3) +
     scale_colour_manual(values = 1:5) +
     xlab("False positive rate") + ylab("True positive rate") +

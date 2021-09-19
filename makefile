@@ -87,14 +87,11 @@ results/Heaton_FRKv2.csv: scripts/Heaton.R
 	if [ "$(quick)" == "TRUE" ]; then touch scripts/Heaton.R; fi
 
 
-
 MODIS_OBJECTS = results/MODIS_data.png results/MODIS_MAR_predictions.png results/MODIS_block_predictions.png results/MODIS_ROC.png
 MODIS: $(MODIS_OBJECTS)
 $(MODIS_OBJECTS): scripts/MODIS_control.R 
 	Rscript scripts/MODIS_control.R $(quick)
-	if [ "$(quick)" == "TRUE" ]; 
-	then touch scripts/MODIS_control.R; 
-	fi
+	if [ $(quick) = TRUE ]; then touch scripts/MODIS_control.R; fi
 scripts/MODIS_control.R: scripts/MODIS.R 
 scripts/MODIS.R: scripts/MODIS_modelling_fns
 
@@ -103,7 +100,5 @@ Chicago_OBJECTS = results/Chicago_data_pred_uncertainty.png results/Chicago_focu
 Chicago: $(Chicago_OBJECTS)
 $(Chicago_OBJECTS): scripts/Chicago.R
 	Rscript scripts/Chicago.R $(quick)
-	if [ "$(quick)" == "TRUE" ]; 
-	then touch scripts/Chicago.R; 
-	fi
+	if [ "$(quick)" == "TRUE" ]; then touch scripts/Chicago.R; fi
 scripts/Chicago.R: scripts/Chicago_prep.R
