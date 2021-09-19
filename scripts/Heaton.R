@@ -8,9 +8,10 @@ source("./scripts/Utility_fns.R")
 
 ## Use extremely low-rank versions of the models to quickly establish that the 
 ## code works? 
-## Read in low-rank from the command line (i.e., from the makefile)
+library("R.utils")
 if (!exists("quick")) {
-  args <- commandArgs(trailingOnly=TRUE) 
+  ## Read in low-rank from the command line (i.e., from the makefile)
+  args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
   if (length(args) == 0) {
     cat("You have not specified whether or not you want to use quick, low-rank 
        versions of the models: Setting quick = TRUE\n")
@@ -19,9 +20,10 @@ if (!exists("quick")) {
     quick <- as.logical(args[1])
   } else {
     stop("Too many arguments to deal with!")
-  }
+  }  
 }
-nres <- if(quick) 2 else 4
+
+nres <- if(quick) 1 else 4
 
 cat(paste("Heaton study: Using", nres, "basis-function resolutions.\n"))
 

@@ -1,5 +1,6 @@
 # ---- Install dependencies ----
 
+CRANMIRROR <- "https://cran.csiro.au" 
 
 warning(
 "This script does not ensure that the correct package version is installed. 

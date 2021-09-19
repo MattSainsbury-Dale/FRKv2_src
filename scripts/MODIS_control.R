@@ -4,16 +4,18 @@ source("./scripts/Utility_fns.R")
 
 ## Use extremely low-rank versions of the models to quickly establish that the 
 ## code works? 
-
+library("R.utils")
 if (!exists("quick")) {
   ## Read in low-rank from the command line (i.e., from the makefile)
-  args <- commandArgs(trailingOnly=TRUE) 
+  args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
   if (length(args) == 0) {
     cat("You have not specified whether or not you want to use quick, low-rank 
        versions of the models: Setting quick = TRUE\n")
     quick <- TRUE
   } else if (length(args)==1) {
+
     quick <- as.logical(args[1])
+    
   } else {
     stop("Too many arguments to deal with!")
   }  

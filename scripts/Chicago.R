@@ -12,9 +12,12 @@ library("ggpubr")
 
 source("./scripts/Utility_fns.R")
 
-
+## Use extremely low-rank versions of the models to quickly establish that the 
+## code works? 
+library("R.utils")
 if (!exists("quick")) {
-  args <- commandArgs(trailingOnly=TRUE) 
+  ## Read in low-rank from the command line (i.e., from the makefile)
+  args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
   if (length(args) == 0) {
     cat("You have not specified whether or not you want to use quick, low-rank 
        versions of the models: Setting quick = TRUE\n")
@@ -23,11 +26,11 @@ if (!exists("quick")) {
     quick <- as.logical(args[1])
   } else {
     stop("Too many arguments to deal with!")
-  }
+  }  
 }
 
 if(quick) {
-  nres <- 2
+  nres <- 1
   fs_by_spatial_BAU <- FALSE
 } else {
   nres <- 3

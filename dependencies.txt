@@ -16,6 +16,7 @@ scoringRules 1.0.0
 INLA 20.3.17
 mgcv 1.8.31
 pROC 1.16.2
+R.utils 2.10.1
 spBayes 0.4.3
 spNNGP 0.1.4
 tidyr 1.1.0
