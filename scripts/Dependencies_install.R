@@ -15,9 +15,9 @@ depends <- as.character(depends_and_pkg_versions[, 1])
 ## Find the packages not yet installed
 new_packages <- depends[!(depends %in% rownames(installed.packages()))] 
 
-## If FRK is already present but not FRK v.2, 
+## If FRK is already present but not FRK version 2.0.1, 
 ## add it to the list of packages to be installed. 
-if (!("FRK" %in% new_packages) && packageVersion("FRK") < 2) # FIXME: Might need to be v 2.0.1?
+if (!("FRK" %in% new_packages) && packageVersion("FRK") < '2.0.1') 
   new_packages <- c(new_packages, "FRK")
 
 if(length(new_packages)) {

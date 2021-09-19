@@ -8,7 +8,10 @@ source("./scripts/Utility_fns.R")
 
 ## Use extremely low-rank versions of the models to quickly establish that the 
 ## code works? 
+suppressMessages(
+## Package used for reading command line argument
 library("R.utils")
+)
 if (!exists("quick")) {
   ## Read in low-rank from the command line (i.e., from the makefile)
   args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)

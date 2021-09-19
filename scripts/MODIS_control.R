@@ -4,7 +4,10 @@ source("./scripts/Utility_fns.R")
 
 ## Use extremely low-rank versions of the models to quickly establish that the 
 ## code works? 
+suppressMessages(
+## Package used for reading command line argument
 library("R.utils")
+)
 if (!exists("quick")) {
   ## Read in low-rank from the command line (i.e., from the makefile)
   args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
@@ -13,9 +16,7 @@ if (!exists("quick")) {
        versions of the models: Setting quick = TRUE\n")
     quick <- TRUE
   } else if (length(args)==1) {
-
     quick <- as.logical(args[1])
-    
   } else {
     stop("Too many arguments to deal with!")
   }  
@@ -30,17 +31,18 @@ if (quick) {
 
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
-  #"FRK", 
+  # "FRK"#,
   "INLA"#,
-  # "mgcv", 
+  # "mgcv"#,
   #"spNNGP", 
   # "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----
 
-## Packages used for scoring rules and plotting
+
 suppressMessages({
+## Packages used for scoring rules and plotting
 library("pROC")
 library("ggplot2")
 library("ggpubr")
@@ -69,8 +71,9 @@ library("spBayes")
 if (quick) {
   ARGS <- list(max.edge.interior = 50, nres = 1, k = 20, n.neighbours = 2, knots_squared = 9) 
 } else {
-  # ARGS <- list(max.edge.interior = 5, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 20^2)
-  ARGS <- list(max.edge.interior = 6.5, nres = 4, k = 1300, n.neighbours = 15, knots_squared = 10^2)
+  #ORIGINAL: ARGS <- list(max.edge.interior = 5, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 20^2)
+  #first round: ARGS <- list(max.edge.interior = 5, nres = 4, k = 2000, n.neighbours = 15, knots_squared = 10^2)
+  ARGS <- list(max.edge.interior = 4, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 10^2)
 }
 
 ## Load the model fitting and prediction functions
