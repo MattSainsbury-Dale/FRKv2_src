@@ -31,11 +31,11 @@ if (quick) {
 
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
-  # "FRK"#,
-  "INLA"#,
-  # "mgcv"#,
-  #"spNNGP", 
-  # "spBayes"
+  "FRK",
+  "INLA",
+  "mgcv",
+  "spNNGP",
+  "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----
@@ -71,8 +71,6 @@ library("spBayes")
 if (quick) {
   ARGS <- list(max.edge.interior = 50, nres = 1, k = 20, n.neighbours = 2, knots_squared = 9) 
 } else {
-  #ORIGINAL: ARGS <- list(max.edge.interior = 5, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 20^2)
-  #first round: ARGS <- list(max.edge.interior = 5, nres = 4, k = 2000, n.neighbours = 15, knots_squared = 10^2)
   ARGS <- list(max.edge.interior = 4, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 10^2)
 }
 

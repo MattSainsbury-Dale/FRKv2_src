@@ -23,7 +23,11 @@ Some data sets were too large to be stored on Github: To download them and place
 
 #### Results
 
-To reproduce the results of the manuscript, simply run `Rscript all.R`. This populates the `results` folder with the figures and tables given in the manuscript; these can then be viewed by opening `all.html` in any web browser. To alleviate long run-time issues, we have provided an option to use low-rank versions of the models: This is done by manually setting `quick = TRUE` within `all.R`. Our envisioned workflow for a reviewer is to first run the code with `quick = TRUE` to quickly establish that it is in working order, and then re-run it with `quick = FALSE`. Only a subset of the scripts need to be re-run a second time; these are clearly indicated in `all.R`, and they can be commented out to save on some computation.
+To reproduce the results of the manuscript, simply run `Rscript all.R`. This populates the `results` folder with the figures and tables given in the manuscript; these can then be viewed by opening `all.html` in any web browser. To alleviate the computational burden of reviewing this code, "quick", low-rank versions of the models are used by default: This is done to quickly establish that the code is in working order. To run the "non-quick" versions of the models and reporduce the exact results of the manuscript, set `quick = FALSE` within `all.R`. Only a subset of the scripts need to be re-run a second time; these are clearly indicated in `all.R`, and they can be commented out to save on some computation.
+
+<!---
+To alleviate long run-time issues, we have provided an option to use low-rank versions of the models: This is done by manually setting `quick = TRUE` within `all.R`. Our envisioned workflow for a reviewer is to first run the code with `quick = TRUE` to quickly establish that it is in working order, and then re-run it with `quick = FALSE`. Only a subset of the scripts need to be re-run a second time; these are clearly indicated in `all.R`, and they can be commented out to save on some computation.
+--->
 
 <!---
 We provide two convenient options for reproducing the results of the manuscript: 
@@ -54,7 +58,7 @@ First download this repo and navigate to its *top-level directory* within termin
 
 #### A note on long run times
 
-The MODIS study takes a few hours if `quick=FALSE`. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the `quick = TRUE` option described above, one may easily reproduce the results from only a subset of packages by editing the object `PACKAGES` in `scripts/MODIS_control.R`. 
+The MODIS study takes a few hours if `quick = FALSE`. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the `quick = TRUE` option described above, one may easily reproduce the results from only a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS_control.R`. 
 
 <!---
 ### Note to Windows users
