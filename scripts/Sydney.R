@@ -148,7 +148,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   save_html_table(
     diagnostics,
     file = paste0(save_path, ".html"), 
-    caption = "Section 4.3: Sydney change-of-support"
+    caption = "Sydney spatial change-of-support"
   )
   
   

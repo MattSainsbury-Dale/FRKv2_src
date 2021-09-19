@@ -247,5 +247,5 @@ write.csv(diagnostics, file = "./results/3_3_Poisson_nres_comparison.csv")
 save_html_table(
   diagnostics,
   file = "results/3_3_Poisson_nres_comparison.html", 
-  caption = "Section 3.3: Poisson comparison using multiple resolutions of basis functions"
+  caption = "Poisson comparison using multiple resolutions of basis functions"
 )

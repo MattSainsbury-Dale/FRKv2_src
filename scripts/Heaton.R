@@ -94,15 +94,18 @@ intervalScore <- function(Z, l, u, a = 0.05) {
   (u - l) + (2 / a) * (l - Z) * (Z < l) + (2 / a) * (Z - u) * (Z > u) 
 }
 
-## FIXME: Add run-time
 diagnostics <- pred_df[validx, ] %>%
   summarise(RMSE = sqrt(mean((p_Z - TrueTemp)^2)),
             MAE = mean(abs(p_Z - TrueTemp)),
             CRPS = mean(crps_sample(y = pred_df[validx, "TrueTemp"], 
                                     dat = pred$MC$Z_samples[validx, ])),
             Cov95 = mean(Z_percentile_2.5 < TrueTemp & TrueTemp < Z_percentile_97.5), 
-            intScore = mean(intervalScore(Z = TrueTemp, l = Z_percentile_2.5, u = Z_percentile_97.5))) %>% 
+            intScore = mean(intervalScore(Z = TrueTemp, l = Z_percentile_2.5, u = Z_percentile_97.5)), 
+            runtime = runtime["elapsed"] / 60 # elapsed runtime in minutes
+            ) %>% 
   as.data.frame()
+
+
 
 write.csv(diagnostics, 
           "./results/3_3_Heaton_FRKv2.csv", 
@@ -115,5 +118,5 @@ rownames(diagnostics) <- "FRK v2"
 save_html_table(
   diagnostics,
   file = "results/3_3_Heaton_FRKv2.html", 
-  caption = "Section 3.3: Heaton comparison study"
+  caption = "Heaton comparison study"
 )

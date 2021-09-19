@@ -333,6 +333,6 @@ write.csv(Chicago_coverage_and_MAPE,
 save_html_table(
   Chicago_coverage_and_MAPE,
   file = "results/4_4_Chicago_coverage_and_MAPE.html", 
-  caption = "Section 4.4: Chicago (average) coverage and MAPE"
+  caption = "Chicago coverage and MAPE"
 )
 

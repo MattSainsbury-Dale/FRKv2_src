@@ -327,7 +327,7 @@ write.csv(diagnostics, file = "./results/Negbinom_sim.csv", row.names = FALSE)
 save_html_table(
   diagnostics,
   file ="results/3_2_Negbinom_sim.html", 
-  caption = "Section 3.2: Negative binomial simulation study"
+  caption = "Negative-binomial simulation study"
 )
 
 # ---- Predict over polygons ----

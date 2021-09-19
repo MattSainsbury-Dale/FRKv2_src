@@ -12,6 +12,7 @@ FIND_DEPENDS: scripts/Dependencies_find.R
 HTML: 
 	# Remove all.html if it exists (avoid duplication of entries)
 	rm -f all.html
+	touch all.html
 	# Make the shell script executable:
 	chmod +x writehtml.sh
 	# populate all.html with images and tables

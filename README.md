@@ -27,7 +27,7 @@ We provide two convenient options for reproducing the results of the manuscript:
 - Run `all.R` 
 - Run `make all` 
 
-Both options populate the `results` folder with the figures and tables used in the manuscript; these can then be viewed by opening `all.html` in any web-browser (you may need to zoom in-and-out!). To alleviate long run-time issues, we have provided an option to use low-rank versions of the models: This is done by manually setting `quick=TRUE` within `all.R`, or by running `make all quick=TRUE`. Our envisioned workflow for a reviewer is to first run the code with `quick=TRUE` to establish that it is in working order and then re-run it with `quick=FALSE`. (If using `make`, only a subset of the scripts will be re-run a second time.) 
+Both options populate the `results` folder with the figures and tables used in the manuscript; these can then be viewed by opening `all.html` in any web-browser. To alleviate long run-time issues, we have provided an option to use low-rank versions of the models: This is done by manually setting `quick=TRUE` within `all.R`, or by running `make all quick=TRUE`. Our envisioned workflow for a reviewer is to first run the code with `quick=TRUE` to establish that it is in working order and then re-run it with `quick=FALSE`. (If using `make`, only a subset of the scripts will be re-run a second time.) 
 
 
 

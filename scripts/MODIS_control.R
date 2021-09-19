@@ -27,12 +27,13 @@ if (quick) {
 
 
 ## Packages used (use whichever subset you please)
-PACKAGES <- c("FRK", 
-              #"INLA" 
-              "mgcv"#, 
-              #"spNNGP", 
-              #"spBayes"
-              )
+PACKAGES <- c(
+  #"FRK", 
+  "INLA",
+  "mgcv", 
+  #"spNNGP", 
+  "spBayes"
+)
 
 # ---- Load packages and user-defined functions ----
 
@@ -67,7 +68,7 @@ if (quick) {
   ARGS <- list(max.edge.interior = 50, nres = 1, k = 20, n.neighbours = 2, knots_squared = 9) 
 } else {
   # ARGS <- list(max.edge.interior = 5, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 20^2)
-  ARGS <- list(max.edge.interior = 8, nres = 4, k = 2000, n.neighbours = 10, knots_squared = 10^2)
+  ARGS <- list(max.edge.interior = 6.5, nres = 4, k = 1300, n.neighbours = 15, knots_squared = 10^2)
 }
 
 ## Load the model fitting and prediction functions
@@ -255,7 +256,7 @@ write.csv(diagnostics, row.names = FALSE,
 save_html_table(
   diagnostics,
   file = "results/4_1_MODIS_diagnostics.html", 
-  caption = "Section 4.1: MODIS comparison study"
+  caption = "MODIS comparison study"
   )
 
 # ---- Prediction maps ----
