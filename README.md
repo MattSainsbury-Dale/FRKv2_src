@@ -9,7 +9,7 @@ First, download this repo and navigate to its top-level directory within the com
 #### Dependencies
 
 
-The file `dependencies.txt` contains the package dependencies and version numbers. To automatically install the dependencies that are not already present on your system, enter `Rscript scripts/Dependencies_install.R`. Note that this uses the CRAN mirror hosted by the CSIRO in Australia. 
+The file `dependencies.txt` contains the package dependencies and version numbers. To automatically install the dependencies that are not already present on your system, enter `Rscript scripts/Dependencies_install.R`. Note that this uses the CRAN mirror hosted by the CSIRO in Australia. Note also that this script does *not* ensure that the package versions are identical to those used at the time of writing, it simply downloads the latest versions; this is unlikely to cause problems, as most packages are written to be backwards compatible. 
 
 <!---run `make INSTALL_DEPENDS` or --->
 
@@ -23,7 +23,7 @@ Some data sets were too large to be stored on Github: To download them and place
 
 #### Results
 
-To reproduce the results of the manuscript, simply run `Rscript all.R`. This populates the `results` folder with the figures and tables given in the manuscript; these can then be viewed by opening `all.html` in any web browser. To alleviate the computational burden of reviewing this code, "quick", low-rank versions of the models are used by default: This is done to quickly establish that the code is in working order. To run the "non-quick" versions of the models and reproduce the exact results of the manuscript, set `quick = FALSE` within `all.R`. 
+Running `all.R` populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `all.html` in any web browser. To quickly establish that the code is working, "quick", low-rank versions of the models are used by default: To run the "non-quick" versions of the models and reproduce the exact results of the manuscript, set `quick = FALSE` within `all.R`. 
 <!---
 Only a subset of the scripts need to be re-run a second time; these are clearly indicated in `all.R`, and they can be commented out to save on some computation.
 --->
@@ -61,7 +61,7 @@ First download this repo and navigate to its *top-level directory* within termin
 
 #### A note on long run times
 
-The MODIS study takes a few hours if `quick = FALSE`. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the `quick = TRUE` option described above, one may easily reproduce the results from only a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS_control.R`. 
+The MODIS comparison study takes a few hours if `quick = FALSE`. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the `quick = TRUE` option described above, one may easily reproduce the results from subset of packages by editing the variable `PACKAGES` in `scripts/MODIS_control.R`. 
 
 <!---
 ### Note to Windows users
