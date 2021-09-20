@@ -14,6 +14,10 @@ source("./scripts/Plotting_helpers/Plotting_helpers.R")
 source("./scripts/Plotting_helpers/Negbinom_plotting_fns.R")
 source("./scripts/Utility_fns.R")
 
+## Use low-rank versions of the models to establish that the code works? 
+quick <- check_quick()
+nres  <- if (quick) 2 else 3
+
 # Define how we wish to simulate the latent Y process
 simulation_method <- "trig_field"  # model
 
@@ -237,6 +241,7 @@ obs@data[, c("x", "y", "Y", "prob", "mu")] <- NULL
 # ---- Model fitting ----
 
 S <- FRK(f = Z ~ 1, data = list(obs), BAUs = BAUs, 
+         nres = nres,
          response = "negative-binomial", link = "logit", 
          normalise_wts = FALSE, method = "TMB")
 

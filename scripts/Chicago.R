@@ -12,25 +12,8 @@ library("ggpubr")
 
 source("./scripts/Utility_fns.R")
 
-## Use extremely low-rank versions of the models to quickly establish that the 
-## code works? 
-suppressMessages(
-## Package used for reading command line argument
-library("R.utils")
-)
-if (!exists("quick")) {
-  ## Read in low-rank from the command line (i.e., from the makefile)
-  args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
-  if (length(args) == 0) {
-    cat("You have not specified whether or not you want to use quick, low-rank 
-       versions of the models: Setting quick = TRUE\n")
-    quick <- TRUE
-  } else if (length(args)==1) {
-    quick <- as.logical(args[1])
-  } else {
-    stop("Too many arguments to deal with!")
-  }  
-}
+## Use low-rank versions of the models to establish that the code works? 
+quick <- check_quick()
 
 if(quick) {
   nres <- 1

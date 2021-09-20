@@ -20,3 +20,32 @@ save_html_table <- function(df, col_sep = 3, decimals = 3, file = NULL, ...) {
     cat(file = file)
 }
 
+
+## Package used for reading command line argument
+library("R.utils")
+
+## Use extremely low-rank versions of the models to quickly establish that the 
+## code works? 
+check_quick <- function() {
+  if (!exists("quick")) {
+    ## Read in low-rank from the command line (i.e., from the makefile)
+    args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
+    if (length(args) == 0) {
+      cat("You have not specified whether or not you want to use quick, low-rank 
+       versions of the models: Setting quick = TRUE\n")
+      quick <- TRUE
+    } else if (length(args)==1) {
+      quick <- as.logical(args[1])
+    } else {
+      stop("Too many arguments to deal with!")
+    }  
+  }
+  
+  if (quick) {
+    cat("Running low-rank versions of the models: This should be relatively quick\n")
+  } else {
+    cat("Not running low-rank versions of the models: This may take a while\n")
+  }
+  
+  return(quick)
+}

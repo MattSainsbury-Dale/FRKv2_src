@@ -8,6 +8,13 @@ library("raster")   # bind()
 library("ggpubr")
 library("ggmap")    # Stamenmap
 
+source("./scripts/Utility_fns.R")
+
+## Use low-rank versions of the models to establish that the code works? 
+quick <- check_quick()
+nres <- if (quick) 2 else 3
+
+
 ## Some helper functions for plotting
 source("./scripts/Plotting_helpers/Sydney_plotting_fns.R")
 source("./scripts/Plotting_helpers/Plotting_helpers.R")
@@ -46,14 +53,14 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   ## Remove SA regions that have no families of interest
   poly_fit <- subset(poly_fit, number_of_families > 0)
-
+  
   # ---- Plotting training data ----
-
+  
   ## gray background to show SA2s with no families of interest
   SA2_bg <-  geom_polygon(
     data = SpatialPolygonsDataFrame_to_df(SA2_NSW_sub_withk0), 
     aes(lon, lat, group = SA2_MAIN11), fill = "light gray"
-    )
+  )
   
   training_data_plots <- plot_spatial_or_ST(
     poly_fit, 
@@ -119,7 +126,8 @@ Sydney_analysis <- function(fitting = "mixed") {
   }
   
   ## Construct and fit the SRE object
-  S <- FRK(f = number_of_families_in_poverty ~ 1, 
+  S <- FRK(f = number_of_families_in_poverty ~ 1,
+           nres = nres,
            data = list(poly_fit), BAUs = BAUs, 
            response = "binomial", link = "logit", 
            known_sigma2fs = known_sigma2fs) 
@@ -170,7 +178,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   ## Shift the legend title so it doesn't run into the legend box
   plots$interval90_prob <- plots$interval90_prob + theme(legend.title.align = 1.5)
-
+  
   ggsave( 
     ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top"),
     filename = paste0("4_3_Sydney_SA1_predictions_", fitting, ".png"), 
