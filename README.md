@@ -19,7 +19,9 @@ The file `dependencies.txt` contains the package dependencies and version number
 
 Some data sets were too large to be stored on Github: To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, please: 
 - Download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder; and 
-- download the [Sydney shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`.
+- download the [Sydney SA1/SA2/SA3 region shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`. 
+
+(To download the files, click "Explore"" > "Go to resource")
 
 #### Results
 

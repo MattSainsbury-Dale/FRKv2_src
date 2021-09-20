@@ -307,7 +307,6 @@ unobsidx <- FRK:::unobserved_BAUs(S)
 pred$newdata <- pred$newdata[unobsidx, ] 
 
 RMSPE <- function(z,pred) sqrt(mean((z - pred)^2))
-RMSPE(pred$newdata$mu_true, pred$newdata$p_mu)  
 
 ## Coverage and MAPE
 diagnostics <- pred$newdata@data %>% 
