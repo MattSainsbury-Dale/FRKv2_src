@@ -45,6 +45,9 @@ if(!all(downloaded_correctly)) {
     ))
 }
 
+## Temporarily disable the warnings (many harmless warnings occur from ggplot)
+defaultW <- getOption("warn") 
+options(warn = -1) 
 
 cat("\n\n######## STARTING POISSON EXAMPLE OF SECTION 3.1 #############\n\n")
 source("scripts/Poisson_sim.R")
@@ -75,3 +78,5 @@ cat("\n\n######## STARTING CHICAGO EXAMPLE OF SECTION 4.4 #############\n\n")
 source("scripts/Chicago.R") 
 
 
+## Restore original warning settings
+options(warn = defaultW)

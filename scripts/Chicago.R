@@ -33,6 +33,7 @@ source("./scripts/Chicago_prep.R")
 
 # ---- BAUs ----
 
+
 ## Set up the space-time BAUs. 
 ## For the spatial BAUs, we use the Chicago community areas.
 ST_BAUs <- auto_BAUs(manifold = STplane(),
@@ -144,7 +145,7 @@ plot_predictions <- function(subset_time) {
   ## Ensure predictions and observed are on same scale, for easy comparisons
   count_lims <- ST_pred@data %>% 
     subset(t %in% c(2010, 2019)) %>%
-    select(c("number_of_crimes", "p_Z")) %>%
+    dplyr::select(c("number_of_crimes", "p_Z")) %>%
     c() %>% range()
   
   ## Edit titles and legends
@@ -224,7 +225,7 @@ time_series_df <- ST_pred@data[ST_BAU_id, ] %>%
 
 ## Create a long form version for ggplot (so we can split prediction and observed by colour)
 time_series_df_long <- time_series_df %>% 
-  select(community, t, number_of_crimes, p_Z) %>% 
+  dplyr::select(community, t, number_of_crimes, p_Z) %>% 
   melt(id = c("community", "t"))
 
 time_series_plot <- ggplot() + 

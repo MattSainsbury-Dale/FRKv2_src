@@ -8,10 +8,10 @@ quick <- check_quick()
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
   "FRK",
-  "INLA",
-  "mgcv",
-  "spNNGP",
-  "spBayes"
+  "INLA"#,
+  # "mgcv",
+  # "spNNGP",
+  # "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----
@@ -146,7 +146,7 @@ write.csv(all_df_test,
           row.names = FALSE)
 
 times <- rbind(MAR_times, block_times)
-times <- times %>% gather(Method, time, PACKAGES)
+times <- times %>% gather(Method, time, all_of(PACKAGES))
 times$Run <- as.integer(times$Run)
 times$time <- as.numeric(times$time)
 times$time <- times$time/60 # convert to minutes
@@ -212,7 +212,7 @@ all_df_test <- all_df_test %>%
 
 ## Compute diagnostics, split by run, method, and sampling scheme
 diagnostics <- all_df_test %>%
-  group_by(Sampling_scheme, Run, Method) %>%
+  dplyr::group_by(Sampling_scheme, Run, Method) %>%
   summarise(Brier = BrierScore(z, pred),
             AUC = AUC(z, pred), 
             time = time[1])
@@ -220,7 +220,7 @@ diagnostics <- all_df_test %>%
 ## Compute average diagnostics, split by method and sampling scheme, but averaged over all runs
 ## (the averaging is redundant for the paper, because we do only one run)
 diagnostics <- diagnostics %>%  
-  group_by(Sampling_scheme, Method) %>%
+  dplyr::group_by(Sampling_scheme, Method) %>%
   summarise(
     Brier = mean(Brier),
     AUC = mean(AUC), 

@@ -1,6 +1,7 @@
 # Source code for FRK v2 paper
 
-This repository contains the source code to replicate the results of the FRK v2 paper. 
+This repository contains the source code for reproducing the results in "Modelling, fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK"
+
 
 ## Instructions
 
