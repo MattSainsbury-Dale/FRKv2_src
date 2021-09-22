@@ -12,9 +12,5 @@ depends <- unique(depends$Package)
 ## we can ensure reproducible results in the future. 
 pkg_versions <- sapply(depends, function(pkg) as.character(packageVersion(pkg)))
 
-## Save the list of dependencies to a text file
-write.table(data.frame(depends, pkg_versions), "dependencies.txt", row.names = FALSE, col.names = FALSE, quote = FALSE)
-
-
-
-
+## Save the list of dependencies and package versions
+write.table(pkg_versions, "dependencies.txt", col.names = FALSE)

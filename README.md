@@ -8,20 +8,31 @@ First, download this repo and navigate to its top-level directory within the com
 
 #### Dependencies
 
+The file `dependencies.txt` contains the package dependencies and version numbers. These package dependencies are automatically installed by the replication script `all.R`. If called from an interactive environment (e.g., Rstudio), the user will be asked whether or not pre-existing packages should be re-installed with the correct version numbers. If called from a non-interactive environment (e.g., from the command line), pre-existing packages will not be re-installed, although this can be changed by simply setting `install_correct_versions = TRUE` within `all.R`.
 
-The file `dependencies.txt` contains the package dependencies and version numbers. To automatically install the dependencies that are not already present on your system, enter `Rscript scripts/Dependencies_install.R`. Note that this uses the CRAN mirror hosted by the CSIRO in Australia. Note also that this script does *not* ensure that the package versions are identical to those used at the time of writing, it simply downloads the latest versions; this is unlikely to cause problems, as most packages are written to be backwards compatible. 
-
-<!---run `make INSTALL_DEPENDS` or --->
 
 #### Data
 
 <!---These include the Chicago crime data set and the shapefiles used in the Sydney spatial change-of-support example.--->
 
-Some data sets were too large to be stored on Github: To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, please: 
+Some data sets were too large to be stored on Github (a few hundred Mb in total): To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, or if the data is not downloading as expected, please: 
 - Download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder; and 
-- download the [Sydney SA1/SA2/SA3 region shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`. 
+- download the [folders containing the Sydney SA1/SA2/SA3 region shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`. 
 
 (To download the files, click "Explore"" > "Go to resource")
+
+The `./data/` folder should contain the following files after the above downloads (as well as other files that come with the repo): 
+
+```bash
+├── data
+│   ├── chicago_crime_df.Rda
+│   ├── Sydney_shapefiles
+│   │   ├── SA1
+│   │   ├── SA2
+│   │   ├── SA3
+```
+
+Note that we have included checks in `all.R` to ensure that the data is downloaded correctly. 
 
 #### Results
 

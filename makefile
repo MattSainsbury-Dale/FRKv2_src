@@ -1,4 +1,4 @@
-all: Poisson_sim Negbinom_sim Heaton Sydney Am Chicago MODIS
+all: INSTALL_DEPENDS DATA Poisson_sim Negbinom_sim Heaton Sydney Am Chicago MODIS
 
 clean:
 	rm -f intermediates/*
@@ -25,6 +25,7 @@ INSTALL_DEPENDS: scripts/Dependencies_install.R
 
 DATA: DATA.sh
 	chmod +x DATA.sh
+	if [ ! -d "data/Sydney_shapefiles" ]; then mkdir data/Sydney_shapefiles; fi
 	./DATA.sh
 
 
