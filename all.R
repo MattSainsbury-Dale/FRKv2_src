@@ -62,7 +62,7 @@ cat("\n\n######## STARTING HEATON COMPARISON OF SECTION 3.3 #############\n\n")
 source("scripts/Heaton.R")
 
 cat("\n\n######## STARTING MODIS COMPARISON OF SECTION 4.1 #############\n\n")
-source("scripts/MODIS_control.R")
+source("scripts/MODIS.R")
 
 cat("\n\n######## STARTING AMERICIUM COMPARISON OF SECTION 4.2 #############\n\n")
 source("scripts/Am.R")
