@@ -90,11 +90,11 @@ results/Heaton_FRKv2.csv: scripts/Heaton.R
 
 MODIS_OBJECTS = results/MODIS_data.png results/MODIS_MAR_predictions.png results/MODIS_block_predictions.png results/MODIS_ROC.png
 MODIS: $(MODIS_OBJECTS)
-$(MODIS_OBJECTS): scripts/MODIS_control.R 
-	Rscript scripts/MODIS_control.R $(quick)
-	if [ $(quick) = TRUE ]; then touch scripts/MODIS_control.R; fi
-scripts/MODIS_control.R: scripts/MODIS.R 
-scripts/MODIS.R: scripts/MODIS_modelling_fns
+$(MODIS_OBJECTS): scripts/MODIS.R 
+	Rscript scripts/MODIS.R $(quick)
+	if [ $(quick) = TRUE ]; then touch scripts/MODIS.R; fi
+scripts/MODIS.R: scripts/MODIS_analysis.R 
+scripts/MODIS_analysis.R: scripts/MODIS_modelling_fns
 
 
 Chicago_OBJECTS = results/Chicago_data_pred_uncertainty.png results/Chicago_focused_CAs_time_series.png results/Chicago_focused_CAs_predictive_distributions.png results/Chicago_coverage_and_MAPE.csv

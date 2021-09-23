@@ -79,7 +79,7 @@ First download this repo and navigate to its *top-level directory* within termin
 
 #### A note on long run times
 
-The MODIS comparison study takes a few hours to obtain the exact results of the manuscript. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the low-rank option described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS_control.R`. You may also wish to comment out some sections in `all.R`, as you see fit. 
+The MODIS comparison study takes a few hours to obtain the exact results of the manuscript. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the low-rank option described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. You may also wish to comment out some sections in `all.R`, as you see fit. 
 
 <!---
 ### Note to Windows users
