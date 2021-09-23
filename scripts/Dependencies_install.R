@@ -20,7 +20,7 @@ if(!("dggrids" %in% rownames(installed.packages())))
 installed_idx <- names(pkg_versions) %in% rownames(installed.packages())
 new_packages  <- names(pkg_versions)[!(installed_idx)] 
 
-if (exists("install_correct_versions") && install_correct_versions) {
+if (exists("install_exact_versions") && install_exact_versions) {
   ## Find the packages that are installed, but not the correct version
   installed_pkg_versions <- sapply(names(pkg_versions)[installed_idx], function(pkg) as.character(packageVersion(pkg)))
   idx          <- installed_pkg_versions != pkg_versions[installed_idx]
@@ -45,7 +45,7 @@ if(length(new_packages)) {
 
 ## Change the already installed packages to the correct versions IF we have been told to do so
 if(length(already_installed_pkgs_different_versions)) {
-  if (exists("install_correct_versions") && install_correct_versions) {
+  if (exists("install_exact_versions") && install_exact_versions) {
     for (pkg in already_installed_pkgs_different_versions) {
       devtools::install_version(pkg, version = pkg_versions[pkg], repos = CRANMIRROR)
     }

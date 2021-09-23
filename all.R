@@ -1,33 +1,36 @@
-## Set the variable "quick":
-quick <- TRUE
+# Facilitates user input regardless of how this script was invoked
+user_decision <- function(prompt) {
+  
+  if (interactive()) {
+    answer <- readline(prompt)
+  } else {
+    cat(prompt)
+    answer <- readLines("stdin", n = 1)
+  }
+  
+  answer <- toupper(answer)
+  
+  if (answer != "Y" && answer != "N") {
+    cat("Please enter Y or N.\n")
+    answer <- user_decision(prompt)
+  }
+  
+  return(answer)
+}
+
+## Should we use "quick", low-rank versions of the models?
+quick <- user_decision("Do you wish to use low-rank versions of the models to quickly establish that the code is working? (Y/N)\n")
+quick <- quick == "Y" # Convert to Boolean
+
 
 ## Install dependencies:
-## (See here (https://stackoverflow.com/a/44013192/16776594) for a trick to make 
-## tprompting work from the command line)
-
-if (interactive()) {
-  answer1 <- readline(cat("Do you want to automatically install package dependencies? (Y/N)\n"))
-  answer1 <- toupper(answer1)
-  
-  if (answer1 != "Y" && answer1 != "N") {
-    stop("Please enter Y or N.")
-  } else if (answer1 == "Y") {
-    answer2 <- readline(cat("Do you want to ensure that all package versions are as given in dependencies.txt? (Y/N)\n"))
-    answer2 <- toupper(answer2)
-    if (answer2 != "Y" && answer2 != "N") {
-      stop("Please enter Y or N.")
-    } else if (answer == "N") {
-      install_correct_versions <- FALSE
-    } else if (answer == "Y") {
-      install_correct_versions <- TRUE
-    }
-    source("scripts/Dependencies_install.R")
-  }
-} else {
-  ## Just install the packages but do not enforce the correct versions 
-  install_correct_versions <- FALSE
+install_depends <- user_decision("Do you want to automatically install package dependencies? (Y/N)\n")
+if (install_depends == "Y") {
+  install_exact_versions <- user_decision("Do you want to ensure that all package versions are as given in dependencies.txt? (Y/N)\n")
+  install_exact_versions <- install_exact_versions == "Y" # Convert to Boolean
   source("scripts/Dependencies_install.R")
 }
+
 
 ## Check that the data has been downloaded: 
 downloaded_correctly <- c(
