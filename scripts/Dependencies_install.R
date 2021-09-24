@@ -1,5 +1,3 @@
-# ---- Install dependencies ----
-
 if (!("devtools" %in% rownames(installed.packages()))) {
   install.packages("devtools", repos = CRANMIRROR)
 }
@@ -10,13 +8,38 @@ tmp <- read.table("dependencies.txt", header = FALSE)
 pkg_versions <- setNames(as.character(tmp[, 2]), tmp[, 1])
 rm(tmp)
 
-## Install packages from non-standard repositories, and remove these packages
-## from the list to search so that the script does not attempt to re-install them:
-pkg_versions <- pkg_versions[!(names(pkg_versions) %in% c("INLA", "ddgrids"))]
-if(!("INLA" %in% rownames(installed.packages())))
-  install.package("INLA", repos="https://inla.r-inla-download.org/R/stable")
+
+# ---- Non-CRAN packages ----
+
+## These packages are treated individually because they are not available on 
+## CRAN, so we need to specify their repos. 
+
+## dggrids is simple to deal with, so we just install the current version: 
 if(!("dggrids" %in% rownames(installed.packages())))
   install.packages("dggrids", repos="https://andrewzm.github.io/dggrids-repo", type= "source")
+
+
+if(!("INLA" %in% rownames(installed.packages()))) {
+  if (exists("install_exact_versions") && install_exact_versions) {
+    # devtools::install_version("INLA", 
+    #                           # repos = "https://inla.r-inla-download.org/R/", 
+    #                           repos = "https://inla.r-inla-download.org/R/stable", 
+    #                           version = pkg_versions["INLA"])
+    
+    ## FIXME: Can't get this to work. Not sure how to download exact versions from 
+    ## non-standard repo. Just installing the current stable version for now. 
+    install.package("INLA", repos="https://inla.r-inla-download.org/R/stable")
+    
+  } else {
+    install.package("INLA", repos="https://inla.r-inla-download.org/R/stable")
+  }
+}
+
+## Remove these packages from the search list so that the script does not 
+## attempt to re-install them
+pkg_versions <- pkg_versions[!(names(pkg_versions) %in% c("INLA", "ddgrids"))]
+
+# ---- CRAN packages ----
 
 ## Find the packages not yet installed and add them to the list
 installed_idx <- names(pkg_versions) %in% rownames(installed.packages())
