@@ -6,16 +6,19 @@ load("./data/chicago_bbox.RData")
 ## Create map layer to place under all plots
 chicago_map <- ggmap(chicago)
 
+
 ## Define x (longitude) and y (latitude) limits here. This will restrict the plots
 ## that use chicago_map as a base layer. 
 x_lims <- xlim(c(chicago_bbox["left"], chicago_bbox["right"])) 
-y_lims <- xlim(c(chicago_bbox["bottom"], chicago_bbox["top"])) 
+y_lims <- ylim(c(chicago_bbox["bottom"], chicago_bbox["top"])) 
 
 ## Add axis labels/limits and theme choices to chicago_map to reduce code repetition
+suppressMessages({
 chicago_map <- chicago_map + 
   x_lims + y_lims +
   xlab("lon (deg)") + ylab("lat (deg)") + 
   theme_bw() + coord_fixed()
+})
 
 
 # ---- Chicago crime dataset ----
@@ -35,7 +38,7 @@ df <- droplevels(df) # Drop unused levels
 # ---- Chicago community areas ----
 
 ## Load Shapefile of community areas, and name the coordinates
-community_areas <- readShapePoly("./data/Chicago_shapefiles/chicago_community_areas.shp")
+suppressWarnings(community_areas <- readShapePoly("./data/Chicago_shapefiles/chicago_community_areas.shp"))
 coordnames(community_areas) <- c("longitude", "latitude")
 
 ## The polygon IDs are labelled from 0 to 76, and are not even associated 
@@ -83,20 +86,24 @@ idx <- community_areas@data$area_num_1 %>% as.character %>% as.numeric
 ## the internal integer codes.)
 community_areas$population <- tmp[idx]
 
+suppressMessages({
 g_population <- plot_spatial_or_ST(community_areas, "population", map_layer =  chicago_map,  
                                    colour = "black", size = 0.3)[[1]] + 
   geom_text(data = cbind(data.frame(community_areas), coordinates(community_areas)), 
             aes(label = area_num_1), size = 2)
+})
 
 # ---- Spatio-temporal dataframe (one-year time periods) ----
 
 ## Create spatio-temporal dataframe.
 ## Given that 2020 is incomplete, we will omit it from this study. 
+suppressMessages({
 ST_df <- df %>% 
   subset(year != 2020) %>%
   group_by(year, longitude, latitude) %>%
   dplyr::summarise(number_of_crimes = n()) %>%
   as.data.frame()
+})
 
 ## Visualization: Number of crimes in each year:
 ## Supports the use of a piecewise temporal trend however, for simplicity, we do 

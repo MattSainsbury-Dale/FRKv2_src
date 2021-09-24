@@ -1,5 +1,7 @@
+suppressMessages({
 library("htmlTable")
 library("stringr")
+})
 save_html_table <- function(df, col_sep = 3, decimals = 3, file = NULL, ...) {
   
   # Round to decimals
@@ -33,7 +35,7 @@ check_quick <- function() {
     args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
     if (length(args) == 0) {
       cat("You have not specified whether or not you want to use quick, low-rank 
-       versions of the models: Setting quick = TRUE\n")
+       versions of the models: Setting quick = TRUE.\n")
       quick <- TRUE
     } else if (length(args)==1) {
       quick <- as.logical(args[1])
@@ -43,9 +45,9 @@ check_quick <- function() {
   }
   
   if (quick) {
-    cat("Running low-rank versions of the models: This should be relatively quick\n")
+    cat("Running low-rank versions of the models: This should be relatively quick.\n")
   } else {
-    cat("Not running low-rank versions of the models: This may take a while\n")
+    cat("Not running low-rank versions of the models: This may take a while.\n")
   }
   
   return(quick)

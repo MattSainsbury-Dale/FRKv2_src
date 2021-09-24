@@ -1,4 +1,6 @@
+suppressMessages(
 library("FRK")
+)
 Am_data <- read.csv("./data/Am_data.csv")
 GZ_df <- read.csv("./intermediates/Am_GZ.csv")
 

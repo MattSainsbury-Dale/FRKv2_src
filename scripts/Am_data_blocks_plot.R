@@ -1,10 +1,10 @@
+suppressMessages({
 library("FRK")
 library("ggplot2")
-GZ_df <- read.csv("./intermediates/Am_GZ.csv")
+})
+GZ_df   <- read.csv("./intermediates/Am_GZ.csv")
 Am_data <- read.csv("./intermediates/Am_data.csv")
-blocks <- readRDS("./intermediates/Am_blocks.rds")
-
-
+blocks  <- readRDS("./intermediates/Am_blocks.rds")
 
 nasa_palette <- c("#03006d","#02008f","#0000b6","#0001ef","#0000f6","#0428f6","#0b53f7","#0f81f3",
                   "#18b1f5","#1ff0f7","#27fada","#3efaa3","#5dfc7b","#85fd4e","#aefc2a","#e9fc0d","#f6da0c","#f5a009",

@@ -15,6 +15,7 @@
 #     4. Run FRK using Z, then compute diagnostics using predictions and 
 #        previously computed true process value.
 
+suppressMessages({
 library("FRK")
 library("ggplot2")
 library("sp")
@@ -24,6 +25,7 @@ library("RandomFields")
 
 source("./scripts/Plotting_helpers/Plotting_helpers.R")
 source("./scripts/Utility_fns.R")
+})
 
 # Define how we wish to simulate the latent process Y
 simulation_method <-  "trig_field" # "model" 
@@ -94,7 +96,9 @@ for (i in 1:max_nres) {
     S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
                           nres = i, BAUs = BAUs, 
                           response = "poisson", 
-                          link = "log")
+                          link = "log", 
+                          # manually set these arguments to reduce console output:
+                          K_type = "precision", method = "TMB", est_error = FALSE) 
     RNGversion("3.6.0"); set.seed(1)
     pred_list[[i]] <- predict(S_list[[i]], type = c("link", "mean"))
   })
@@ -170,8 +174,10 @@ if (simulation_method == "trig_field") {
     labs(title = bquote(bold("Z")))
     scale_colour_distiller(palette = "Spectral", name = "", breaks = breaks_data)
 
+    suppressMessages(
   plot_list$interval90_mu <- plot_list$interval90_mu +
     scale_fill_distiller(palette = "BrBG", name = "", breaks = c(100, 250, 400))
+  )
 }
 
 plot_list$Z <- plot_list$Z +  labs(title = bquote(bold("Z"))) 

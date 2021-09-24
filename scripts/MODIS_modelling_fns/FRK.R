@@ -15,7 +15,9 @@ MODIS_FRK_fit <- function(df_train, nres = 4) {
   
   ## Construct SRE object
   M       <- SRE(f = z ~ 1, data = list(zspdf), basis = B, BAUs = BAUs, 
-                 K_type = "precision", response = "binomial", link = "logit")
+                 K_type = "precision", response = "binomial", link = "logit", 
+                 # manually set these arguments to reduce console output:
+                 est_error = FALSE)
   
   ## Fitting
   M <- SRE.fit(M, method = "TMB") 
@@ -27,9 +29,11 @@ MODIS_FRK_pred <- function(pred_locs, FRK_object) {
   
   ## Convert prediction locations to SpatialPointsDataFrame
   coordinates(pred_locs) = ~ x + y
+  invisible(capture.output(
   pred <- predict(FRK_object, type = "mean", 
                   newdata = pred_locs,
                   percentiles = NULL)  
+  ))
   
   return(pred$newdata$p_mu)
 }

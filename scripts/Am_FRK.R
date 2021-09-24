@@ -7,6 +7,7 @@ Am_data <- read.csv("./intermediates/Am_data.csv")
 BAUs <- readRDS("./intermediates/Am_BAUs.rds")
 blocks <- readRDS("./intermediates/Am_blocks.rds")
 
+cat("Starting FRK section...\n")
 
 # ---- FRK ----
 
@@ -19,10 +20,10 @@ coordinates(Am_data) = ~ Easting + Northing
 BAUs$fs <- 1     # scalar matrix for fine scale variation
 Am_data$std <- 1 # set measurement error to small value to replicate lognormal kriging
 
-# M <- FRK(f = Am ~ x1 + x2 + x3, data = list(Am_data),
 M <- FRK(f = Am ~ -1 + x1 + x2 + x3 + x4, data = list(Am_data),
-         response = "gaussian", link = "log",
-         BAUs = BAUs, est_error = FALSE)
+         response = "gaussian", link = "log", BAUs = BAUs, est_error = FALSE,
+         # manually set these arguments to reduce console output:
+         K_type = "precision", method = "TMB")
 
 
 # ---- Predict over the blocks ----
@@ -47,6 +48,4 @@ write.csv(FRK_results,
           file = "./intermediates/Am_FRK.csv", 
           row.names = FALSE)
 
-
-
-
+cat("FRK section complete.\n")

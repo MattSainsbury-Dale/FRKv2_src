@@ -1,11 +1,15 @@
+suppressMessages({
 library("georob")
 library("sp")
 library("dplyr")
 library("reshape2")
+})
 
 Am_data <- read.csv("./intermediates/Am_data.csv")
-BAUs <- readRDS("./intermediates/Am_BAUs.rds")
-blocks <- readRDS("./intermediates/Am_blocks.rds")
+BAUs    <- readRDS("./intermediates/Am_BAUs.rds")
+blocks  <- readRDS("./intermediates/Am_blocks.rds")
+
+cat("Starting georob section...\n")
 
 # ---- 3.1 Exploratory analysis ----
 
@@ -28,8 +32,10 @@ r.georob.m0.spher.reml <- georob(log(Am) ~ -1 + x1 + x2 + x3 + x4,
 # The diagnostics at the begin of the summary output suggest that maximization of the
 # restricted log-likelihood by nlminb() was successful. Nevertheless, before we interprete
 # the output, we compute the profile log-likelihood for the range to see whether the maximization has found the global maximum:
+invisible(capture.output({ # Prevent a very, very long and annoying message from filling up the console when called using Rscript
 r.prfl.m0.spher.reml.scale <- profilelogLik(r.georob.m0.spher.reml,
                                             values=data.frame(scale=seq(50, 200, by=10)))
+}))
 
 ## In the vignette, they refit the model with maximum likelihood in order to 
 ## perform step-wise covariate selection. Although we do not wish to perform
@@ -164,3 +170,5 @@ georob_results <- georob_results %>%
 write.csv(georob_results, 
           file = "./intermediates/Am_georob.csv", 
           row.names = FALSE)
+
+cat("georob section complete.\n")

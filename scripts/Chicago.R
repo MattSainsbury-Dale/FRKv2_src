@@ -1,3 +1,4 @@
+suppressMessages({
 library("FRK") 
 library("dplyr")
 library("ggplot2")
@@ -11,6 +12,7 @@ library("htmltab")
 library("ggpubr")
 
 source("./scripts/Utility_fns.R")
+})
 
 ## Use low-rank versions of the models to establish that the code works? 
 quick <- check_quick()
@@ -23,7 +25,7 @@ if(quick) {
   fs_by_spatial_BAU <- TRUE
 }
 
-cat(paste("Chicago example: Using", nres, "basis-function resolutions.\n"))
+cat(paste("Chicago example: Using", nres, "basis-function resolution(s).\n"))
 
 
 # ---- Preprocessing ----
@@ -62,12 +64,20 @@ basis <- auto_basis(STplane(),
                     tunit = "years", 
                     nres = nres)
 
+
+suppressWarnings(
+# Suppress the warning "Removing data points that do not fall into any BAUs...":
+# It is fine in this example, as some small number of crimes may fall outside of 
+# the community area boundaries, and it is fine to omit these crimes. 
 M <- FRK(f = number_of_crimes ~ log(population), 
          data = chicago_crimes_fit, basis = basis, BAUs = ST_BAUs,         
-         response = "poisson", 
+         response = "poisson",
          link = "log", 
          sum_variables = "number_of_crimes", 
-         fs_by_spatial_BAU = fs_by_spatial_BAU)
+         fs_by_spatial_BAU = fs_by_spatial_BAU, 
+         # manually set these arguments to reduce console output:
+         K_type = "precision", method = "TMB", est_error = FALSE)
+)
 
 # print(object.size(M), units = "Mb")
 # Chicago_SRE_object <- M
@@ -104,9 +114,15 @@ ST_pred <- pred$newdata
 ## these years. The simplest approach is to simply map the entire dataset to 
 ## the BAUs, and then subset the data corresponding to validation years.
 
-## Map the prediction and forecast crime data to BAUs. 
+## Map the prediction and forecast crime data to BAUs.
+# NB: Suppress the warning "Removing data points that do not fall into any BAUs...":
+# It is fine in this example, as some small number of crimes may fall outside of 
+# the community area boundaries, and it is fine to omit these crimes. 
+suppressWarnings(
 binned_data <- FRK:::map_data_to_BAUs(chicago_crimes, sp_pols = ST_pred, 
                                       sum_variables = "number_of_crimes")
+)
+
 
 ## Extract the data and arrange by the BAU id
 df_val <- binned_data@data %>% arrange(n)
@@ -121,16 +137,19 @@ ST_pred@data$number_of_crimes <- df_val$number_of_crimes
 ## NB: subset_time are the years we wish to visualise
 plot_predictions <- function(subset_time) {
   
+  suppressMessages({
   ## Plot the predictions and uncertainty
+  
   plots <- plot(M, pred$newdata,
                 map_layer = chicago_map, subset_time = subset_time, 
                 colour = "black", size = 0.3, alpha = 0.85)
-  
+
   ## plot the validation data. 
   ## NB: plot() does plot the data used in model fitting, but since 2010 and 
   ## 2019 are validation years (i.e., those years were omitted during model 
   ## fitting), we don't have any data to plot! 
   ## Construct the plot manually:
+
   plots$number_of_crimes <- plot_spatial_or_ST(
     ST_pred, all.vars(M@f)[1],
     map_layer = chicago_map, subset_time = subset_time, 
@@ -180,6 +199,7 @@ plot_predictions <- function(subset_time) {
                           plot.margin = unit(c(0,0,0,0), "lines")) +
                     scale_x_continuous(breaks = c(-87.6, -87.8), expand = c(0, 0)) + 
                     scale_y_continuous(n.breaks = 3, expand = c(0, 0)))
+  })
   
   return(plots)
 }
@@ -292,6 +312,7 @@ ggsave(predictive_distribution_plots,
 
 ## Empirical coverage, and the MAPE (how close was the predicted crime to 
 ## the true crime in each year (on average)?
+suppressMessages({
 Chicago_coverage_and_MAPE <- ST_pred@data %>% 
   subset(t %in% c(2010, 2019)) %>% 
   mutate(
@@ -311,6 +332,7 @@ Chicago_coverage_and_MAPE <- ST_pred@data %>%
     MAPE = mean(absolute_percentage_error) * 100
   ) %>% 
   as.data.frame()
+})
 
 Chicago_coverage_and_MAPE$average_coverage_difference <- 
   rowMeans(Chicago_coverage_and_MAPE[, paste0("coverage_", seq(90, 60, -10))] - 

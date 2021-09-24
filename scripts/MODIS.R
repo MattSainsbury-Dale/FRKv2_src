@@ -1,6 +1,7 @@
 ## This script produces the results for Section 4.1 of the FRK v2 paper. 
-
+suppressMessages(
 source("./scripts/Utility_fns.R")
+)
 
 ## Use low-rank versions of the models to establish that the code works? 
 quick <- check_quick()
@@ -8,10 +9,10 @@ quick <- check_quick()
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
   "FRK",
-  "INLA"#,
-  # "mgcv",
-  # "spNNGP",
-  # "spBayes"
+  "INLA",
+  "mgcv",
+  "spNNGP",
+  "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----
@@ -51,7 +52,9 @@ if (quick) {
 }
 
 ## Load the model fitting and prediction functions
-mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
+suppressMessages(
+  mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
+)
 
 ## Load user defined functions 
 ## These include functions to compute diagnostics, convert data frames from wide

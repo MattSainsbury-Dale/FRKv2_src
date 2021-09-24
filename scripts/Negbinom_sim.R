@@ -1,4 +1,6 @@
 ## Toy example for spatial COS.
+
+suppressMessages({
 library("FRK")
 library("sp")
 library("ggplot2")
@@ -13,6 +15,7 @@ source("./scripts/Negbinom_SpatialPolygon_fns.R")
 source("./scripts/Plotting_helpers/Plotting_helpers.R")
 source("./scripts/Plotting_helpers/Negbinom_plotting_fns.R")
 source("./scripts/Utility_fns.R")
+})
 
 ## Use low-rank versions of the models to establish that the code works? 
 quick <- check_quick()
@@ -243,7 +246,9 @@ obs@data[, c("x", "y", "Y", "prob", "mu")] <- NULL
 S <- FRK(f = Z ~ 1, data = list(obs), BAUs = BAUs, 
          nres = nres,
          response = "negative-binomial", link = "logit", 
-         normalise_wts = FALSE, method = "TMB")
+         # manually set these arguments to reduce console output:
+         K_type = "precision", method = "TMB", est_error = FALSE,
+         normalise_wts = FALSE)
 
 # ---- Predict over the BAUs ----
 

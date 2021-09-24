@@ -10,9 +10,11 @@ tmp <- read.table("dependencies.txt", header = FALSE)
 pkg_versions <- setNames(as.character(tmp[, 2]), tmp[, 1])
 rm(tmp)
 
-## Install packages from non-standard repositories
+## Install packages from non-standard repositories, and remove these packages
+## from the list to search so that the script does not attempt to re-install them:
+pkg_versions <- pkg_versions[!(names(pkg_versions) %in% c("INLA", "ddgrids"))]
 if(!("INLA" %in% rownames(installed.packages())))
-  install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable")
+  install.package("INLA", repos="https://inla.r-inla-download.org/R/stable")
 if(!("dggrids" %in% rownames(installed.packages())))
   install.packages("dggrids", repos="https://andrewzm.github.io/dggrids-repo", type= "source")
 
@@ -25,7 +27,6 @@ if (exists("install_exact_versions") && install_exact_versions) {
   installed_pkg_versions <- sapply(names(pkg_versions)[installed_idx], function(pkg) as.character(packageVersion(pkg)))
   idx          <- installed_pkg_versions != pkg_versions[installed_idx]
   already_installed_pkgs_different_versions <- names(installed_pkg_versions)[idx]
-  # new_packages <- c(new_packages, names(installed_pkg_versions)[idx])
 }
 
 ## If FRK is already present but not FRK version 2.0.1, 
@@ -33,9 +34,8 @@ if (exists("install_exact_versions") && install_exact_versions) {
 if (!("FRK" %in% new_packages) && packageVersion("FRK") < '2.0.1') 
   new_packages <- c(new_packages, "FRK")
 
-
-## Now install the new packages: Here, we always install the correct package 
-## version (why not)
+## Now install the new packages: Here, we always install the correct 
+## package version (no reason not to)
 if(length(new_packages)) {
   cat("Package dependencies are being installed automatically using scripts/Dependencies_install.R\n")
   for (pkg in new_packages) {
@@ -44,11 +44,9 @@ if(length(new_packages)) {
 }
 
 ## Change the already installed packages to the correct versions IF we have been told to do so
-if(length(already_installed_pkgs_different_versions)) {
-  if (exists("install_exact_versions") && install_exact_versions) {
+if(exists("install_exact_versions") && install_exact_versions && length(already_installed_pkgs_different_versions)) {
     for (pkg in already_installed_pkgs_different_versions) {
       devtools::install_version(pkg, version = pkg_versions[pkg], repos = CRANMIRROR)
-    }
   } 
 } 
 

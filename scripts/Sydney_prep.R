@@ -95,7 +95,8 @@ idx <- which(SA2_NSW_sub@data$number_of_families == 0)
 cat("SA2s with no families of interest: ", 
     paste(SA2_NSW_sub@data$SA2_NAME11[idx], collapse=", "), "\n")
 SA2_NSW_sub <- subset(SA2_NSW_sub, number_of_families > 0)
-cat("Number of SA2s with at least 1 family of interest:", length(SA2_NSW_sub), "\n")
+cat("Removed SA2s with no families of interest.\n")
+cat("Number of SA2s:", length(SA2_NSW_sub), "\n")
 
 ## Now deal with the SA1s
 SA1 <- readShapePoly("./data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp", delete_null_obj=TRUE)

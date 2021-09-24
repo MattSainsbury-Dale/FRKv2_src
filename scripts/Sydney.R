@@ -1,3 +1,4 @@
+suppressMessages({
 library("FRK")
 library("plyr")     # round_any()
 library("dplyr")    
@@ -9,29 +10,34 @@ library("ggpubr")
 library("ggmap")    # Stamenmap
 
 source("./scripts/Utility_fns.R")
+  
+## Some helper functions for plotting
+source("./scripts/Plotting_helpers/Sydney_plotting_fns.R")
+source("./scripts/Plotting_helpers/Plotting_helpers.R")
+})
+
 
 ## Use low-rank versions of the models to establish that the code works? 
 quick <- check_quick()
 nres <- if (quick) 2 else 3
 
 
-## Some helper functions for plotting
-source("./scripts/Plotting_helpers/Sydney_plotting_fns.R")
-source("./scripts/Plotting_helpers/Plotting_helpers.R")
-source("./scripts/Utility_fns.R")
-
 # ---- Data preprocessing ----
 
+suppressMessages(suppressWarnings(
 source("./scripts/Sydney_prep.R")
+))
 
 # ---- Sydney Stamen map ----
 
 ## map background to show Sydney
 ## NB: get_stamenmap() does NOT require a google API
 Sydney_bbox <- c(left = 150.72, bottom = -34.2, right = 151.32, top = -33.65)
-Sydney_map  <- get_stamenmap(bbox = Sydney_bbox, 
-                             maptype = "toner-background", 
-                             color = "bw")
+suppressMessages({
+  Sydney_map  <- get_stamenmap(bbox = Sydney_bbox, 
+                               maptype = "toner-background", 
+                               color = "bw")
+})
 save(Sydney_map, file = "./data/Sydney_map.RData") 
 
 ## Create map layer to place under all plots
@@ -62,11 +68,13 @@ Sydney_analysis <- function(fitting = "mixed") {
     aes(lon, lat, group = SA2_MAIN11), fill = "light gray"
   )
   
+  suppressMessages({
   training_data_plots <- plot_spatial_or_ST(
     poly_fit, 
     c("number_of_families", "Proportion_poverty"),
     map_layer = Sydney_map + SA2_bg, colour = "black", size = 0.1
   )
+  })
   
   ## Adjust the legend breaks and legend labels:
   breaks <- list(
@@ -83,6 +91,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   lab1 <- xlab("lon (deg)")
   lab2 <- ylab("lat (deg)")
   
+  suppressMessages({
   training_data_plots <- lapply(
     names(training_data_plots), function(i) {
       gg <- training_data_plots[[i]] 
@@ -92,6 +101,9 @@ Sydney_analysis <- function(fitting = "mixed") {
       return(gg)
     }
   )
+  })
+  
+  figure <- ggarrange(plotlist = training_data_plots, align = "hv", nrow = 1, legend = "top")
   
   ggsave( 
     ggarrange(plotlist = training_data_plots, align = "hv", nrow = 1, legend = "top"),
@@ -130,7 +142,9 @@ Sydney_analysis <- function(fitting = "mixed") {
            nres = nres,
            data = list(poly_fit), BAUs = BAUs, 
            response = "binomial", link = "logit", 
-           known_sigma2fs = known_sigma2fs) 
+           known_sigma2fs = known_sigma2fs, 
+           # manually set these arguments to reduce console output:
+           K_type = "precision", method = "TMB", est_error = FALSE) 
   
   # ---- Prediction over the SA1s ----
   
@@ -163,6 +177,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   # ---- Plotting SA1 predictions ----
   
+  suppressMessages({
   plots <- plot(
     S, pred$newdata, 
     map_layer = Sydney_map + SA2_bg,             # optional layer to put below the plotting geom
@@ -178,9 +193,14 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   ## Shift the legend title so it doesn't run into the legend box
   plots$interval90_prob <- plots$interval90_prob + theme(legend.title.align = 1.5)
+  })
+  
+  suppressWarnings(
+    figure <- ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top")
+    )
   
   ggsave( 
-    ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top"),
+    figure,
     filename = paste0("4_3_Sydney_SA1_predictions_", fitting, ".png"), 
     device = "png", width = 9.5, height = 4.4, path = "./results/"
   )
@@ -189,9 +209,8 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   RNGversion("3.6.0"); set.seed(1)
   pred <- predict(S, newdata = SA3_NSW_sub)
-  plots <- plot(S, pred$newdata, colour = "black", map_layer = Sydney_map, alpha = 0.9)
   
-  ## Change the breaks, labels, and font size
+  ## breaks, labels, and font size
   breaks <- list(
     p_prob          = c(0.1, 0.16, 0.22), 
     interval90_prob = c(0.006, 0.009, 0.012), 
@@ -199,6 +218,8 @@ Sydney_analysis <- function(fitting = "mixed") {
     interval90_mu   = c(150, 225, 300)
   )
   
+  suppressMessages({
+  plots <- plot(S, pred$newdata, colour = "black", map_layer = Sydney_map, alpha = 0.9)
   plotnames <- names(plots)
   plots <- lapply(
     names(plots), function(i) {
@@ -209,6 +230,7 @@ Sydney_analysis <- function(fitting = "mixed") {
       return(gg)
     }
   )
+  })
   names(plots) <- plotnames
   
   ## Simple legends (useful for presentations)
@@ -217,17 +239,22 @@ Sydney_analysis <- function(fitting = "mixed") {
   ## Shift the legend title so it doesn't run into the legend box
   plots$interval90_prob <- plots$interval90_prob + theme(legend.title.align = 1.8)
   plots$interval90_mu <- plots$interval90_mu + theme(legend.title.align = 1.5)
+
+  
+  suppressWarnings(
+    figure <- ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top")
+  )
   
   ggsave( 
-    ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top"),
+    figure,
     filename = paste0("4_3_Sydney_SA3_predictions_probability_", fitting, ".png"), 
     device = "png", width = 9.5, height = 4.4, path = "./results/"
   )
 }
 
-cat("Conducting Sydney analysis: Using a mixture of SA1 and SA2 regions as training data")
+cat("Conducting Sydney analysis: Using a mixture of SA1 and SA2 regions as training data.\n")
 Sydney_analysis(fitting = "mixed")
 
 ## This is only used for presentations, and not at all in the paper:
-# cat("Conducting Sydney analysis: Using only SA2 regions as training data")
+# cat("Conducting Sydney analysis: Using only SA2 regions as training data.\n")
 # Sydney_analysis(fitting = "SA2s")

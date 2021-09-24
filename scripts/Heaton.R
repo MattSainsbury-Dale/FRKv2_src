@@ -1,3 +1,4 @@
+suppressMessages({
 library("FRK")
 library("sp")
 library("ggplot2")
@@ -5,6 +6,7 @@ library("scoringRules") # crps_sample()
 library("dplyr")
 library("ggpubr")
 source("./scripts/Utility_fns.R")
+})
 
 ## Use low-rank versions of the models to establish that the code works? 
 quick <- check_quick()

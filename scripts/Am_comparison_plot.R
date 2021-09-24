@@ -15,8 +15,6 @@ combined_df <- FRK_df %>%
   ## alter the labels to change the facet_wrap titles:
   mutate(variable = factor(
     variable, 
-    # labels = c("'Block prediction /' ~ 10^3 ~ 'counts' ~ min^-1", 
-    #            "'RMSPE from block prediction /' ~ 10^3 ~ 'counts' ~ min^-1")
     labels = c("'Block prediction'", "'RMSPE from block prediction'")
     ))
 

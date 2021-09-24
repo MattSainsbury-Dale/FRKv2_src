@@ -1,4 +1,6 @@
+suppressMessages(
 library("sp")
+)
 GZ_df <- read.csv("./intermediates/Am_GZ.csv")
 
 # centre, width, and height
