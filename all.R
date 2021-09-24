@@ -19,7 +19,7 @@ user_decision <- function(prompt) {
 }
 
 ## Should we use "quick", low-rank versions of the models?
-quick <- user_decision("Do you wish to use low-rank versions of the models to quickly establish that the code is working? (Y/N)\n")
+quick <- user_decision("Do you wish to use low-rank versions of the models to quickly establish that the code is working (note that the generated results and plots will not exactly match those in the manuscript if you reply Y to this option)? (Y/N)\n")
 quick <- quick == "Y" # Convert to Boolean
 
 
