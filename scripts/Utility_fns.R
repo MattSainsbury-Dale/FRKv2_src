@@ -1,6 +1,8 @@
 suppressMessages({
 library("htmlTable")
 library("stringr")
+## Package used for reading command line argument
+library("R.utils")
 })
 save_html_table <- function(df, col_sep = 3, decimals = 3, file = NULL, ...) {
   
@@ -24,8 +26,7 @@ save_html_table <- function(df, col_sep = 3, decimals = 3, file = NULL, ...) {
 
 
 
-## Package used for reading command line argument
-library("R.utils")
+
 
 ## Use extremely low-rank versions of the models to quickly establish that the 
 ## code works? 

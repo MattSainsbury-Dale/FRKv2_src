@@ -20,10 +20,14 @@ coordinates(Am_data) = ~ Easting + Northing
 BAUs$fs <- 1     # scalar matrix for fine scale variation
 Am_data$std <- 1 # set measurement error to small value to replicate lognormal kriging
 
+suppressWarnings( # Suppress warning about log-link being inappropriate for Gaussian data 
+  
 M <- FRK(f = Am ~ -1 + x1 + x2 + x3 + x4, data = list(Am_data),
          response = "gaussian", link = "log", BAUs = BAUs, est_error = FALSE,
          # manually set these arguments to reduce console output:
          K_type = "precision", method = "TMB")
+
+)
 
 
 # ---- Predict over the blocks ----

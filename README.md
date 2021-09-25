@@ -36,7 +36,7 @@ When running `all.R`, the user will be asked if they wish to install package dep
 
 ### Results
 
-Running `all.R` populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `all.html` in any web browser. To quickly establish that the code is working, low-rank versions of the models can be used: The user is prompted for their choice when running `all.R`.
+Running `all.R` (e.g., with `Rscript all.R`) populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `all.html` in any web browser. To quickly establish that the code is working, low-rank versions of the models can be used: The user is prompted for their choice when running `all.R`.
 
 <!---
 "quick", low-rank versions of the models are used by default: To run the "non-quick" versions of the models and reproduce the exact results of the manuscript, set `quick = FALSE` within `all.R`. 

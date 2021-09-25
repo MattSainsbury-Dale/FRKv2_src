@@ -6,6 +6,7 @@ library("scoringRules") # crps_sample()
 library("dplyr")
 library("ggpubr")
 source("./scripts/Utility_fns.R")
+options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 })
 
 ## Use low-rank versions of the models to establish that the code works? 

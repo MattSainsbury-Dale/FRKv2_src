@@ -1,7 +1,5 @@
-## This script produces the results for Section 4.1 of the FRK v2 paper. 
-suppressMessages(
 source("./scripts/Utility_fns.R")
-)
+
 
 ## Use low-rank versions of the models to establish that the code works? 
 quick <- check_quick()
@@ -35,6 +33,9 @@ library("INLA")
 library("spNNGP")
 library("spBayes")
 })
+
+
+options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 
 ## Arguments to packages: These arguments in some way define the number of 
 ## basis functions used for each model. For instance, nres specifies the number of 
@@ -211,7 +212,7 @@ ggsave(figure,
 all_df_test <- all_df_test %>% 
   gather(Method, pred, paste0("pred_", PACKAGES)) %>%
   mutate(Method = str_remove(Method, "pred_")) %>% 
-  left_join(times)
+  left_join(times, by = c("Run", "Sampling_scheme", "Method"))
 
 ## Compute diagnostics, split by run, method, and sampling scheme
 diagnostics <- all_df_test %>%
@@ -298,13 +299,15 @@ compute_ROC_objects <- function(df, scheme, run = 1) {
     ROC_list[[method]] <- all_df_test %>%
       filter(Method == method) %>% 
       filter(Sampling_scheme == scheme, Run == run) %>% 
-      pROC::roc(z, pred)
+      pROC::roc(z, pred, quiet = TRUE, auc = FALSE)
   }
   return(ROC_list)
 }
 
+
 block_ROC_list <- compute_ROC_objects(all_df_test, scheme = "block")
 MAR_ROC_list   <- compute_ROC_objects(all_df_test, scheme = "MAR")
+
 
 FRK_idx <- which(PACKAGES == "FRK")
 

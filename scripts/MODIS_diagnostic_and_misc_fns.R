@@ -1,6 +1,6 @@
 ## Define the functions we will use for comparing across methods
 BrierScore <- function(Z, pred) mean((Z - pred)^2)
-AUC <- function(Z, pred) as.numeric(pROC::auc(Z, pred))
+AUC <- function(Z, pred) suppressMessages(as.numeric(pROC::auc(Z, pred)))
 
 compute_diagnostics_MODIS <- function(df) {
   summarise(df, Brier = BrierScore(z, pred), AUC = AUC(z, pred))

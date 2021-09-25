@@ -10,7 +10,7 @@ library("sp")
 library("stringr")
 library("htmltab")
 library("ggpubr")
-
+options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 source("./scripts/Utility_fns.R")
 })
 
@@ -312,7 +312,6 @@ ggsave(predictive_distribution_plots,
 
 ## Empirical coverage, and the MAPE (how close was the predicted crime to 
 ## the true crime in each year (on average)?
-suppressMessages({
 Chicago_coverage_and_MAPE <- ST_pred@data %>% 
   subset(t %in% c(2010, 2019)) %>% 
   mutate(
@@ -332,7 +331,6 @@ Chicago_coverage_and_MAPE <- ST_pred@data %>%
     MAPE = mean(absolute_percentage_error) * 100
   ) %>% 
   as.data.frame()
-})
 
 Chicago_coverage_and_MAPE$average_coverage_difference <- 
   rowMeans(Chicago_coverage_and_MAPE[, paste0("coverage_", seq(90, 60, -10))] - 
