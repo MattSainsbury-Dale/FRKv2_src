@@ -48,23 +48,23 @@ if(!all(downloaded_correctly)) {
     ))
 }
 
-cat("\n\n######## STARTING POISSON EXAMPLE OF SECTION 3.1 #############\n\n")
-source("scripts/Poisson_sim.R")
-
-cat("\n\n######## STARTING NEGATIVE-BINOMIAL EXAMPLE OF SECTION 3.2 #############\n\n")
-source("scripts/Negbinom_sim.R")
-
-cat("\n\n######## STARTING HEATON COMPARISON OF SECTION 3.3 #############\n\n")
-source("scripts/Heaton.R")
-
-cat("\n\n######## STARTING MODIS COMPARISON OF SECTION 4.1 #############\n\n")
-source("scripts/MODIS.R")
-
-cat("\n\n######## STARTING AMERICIUM COMPARISON OF SECTION 4.2 #############\n\n")
-source("scripts/Am.R")
-
-cat("\n\n######## STARTING SYDNEY EXAMPLE OF SECTION 4.3 #############\n\n")
-source("scripts/Sydney.R")
+# cat("\n\n######## STARTING POISSON EXAMPLE OF SECTION 3.1 #############\n\n")
+# source("scripts/Poisson_sim.R")
+# 
+# cat("\n\n######## STARTING NEGATIVE-BINOMIAL EXAMPLE OF SECTION 3.2 #############\n\n")
+# source("scripts/Negbinom_sim.R")
+# 
+# cat("\n\n######## STARTING HEATON COMPARISON OF SECTION 3.3 #############\n\n")
+# source("scripts/Heaton.R")
+# 
+# cat("\n\n######## STARTING MODIS COMPARISON OF SECTION 4.1 #############\n\n")
+# source("scripts/MODIS.R")
+# 
+# cat("\n\n######## STARTING AMERICIUM COMPARISON OF SECTION 4.2 #############\n\n")
+# source("scripts/Am.R")
+# 
+# cat("\n\n######## STARTING SYDNEY EXAMPLE OF SECTION 4.3 #############\n\n")
+# source("scripts/Sydney.R")
 
 cat("\n\n######## STARTING CHICAGO EXAMPLE OF SECTION 4.4 #############\n\n")
 source("scripts/Chicago.R")
