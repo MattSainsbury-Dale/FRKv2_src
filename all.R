@@ -19,7 +19,7 @@ user_decision <- function(prompt) {
 }
 
 ## Should we use "quick", low-rank versions of the models?
-quick <- user_decision("Do you wish to use low-rank versions of the models to quickly establish that the code is working (note that the generated results and plots will not exactly match those in the manuscript if you reply 'y' to this option)? (y/n)\n")
+quick <- user_decision("Do you wish to use very-low-dimensional representations of the models to quickly establish that the code is working (note that the generated results and plots will not exactly match those in the manuscript if you reply 'y', and you will need at least 32GB of RAM and/or swap space if you reply 'n')? (y/n)\n")
 quick <- quick == "y" # Convert to Boolean
 
 
@@ -48,23 +48,40 @@ if(!all(downloaded_correctly)) {
     ))
 }
 
+
+
+
 cat("\n\n######## STARTING POISSON EXAMPLE OF SECTION 3.1 #############\n\n")
 source("scripts/Poisson_sim.R")
+rm(list = setdiff(ls(), "quick"))
+gc()
 
 cat("\n\n######## STARTING NEGATIVE-BINOMIAL EXAMPLE OF SECTION 3.2 #############\n\n")
 source("scripts/Negbinom_sim.R")
+rm(list = setdiff(ls(), "quick"))
+gc()
 
 cat("\n\n######## STARTING HEATON COMPARISON OF SECTION 3.3 #############\n\n")
 source("scripts/Heaton.R")
+rm(list = setdiff(ls(), "quick"))
+gc()
 
 cat("\n\n######## STARTING MODIS COMPARISON OF SECTION 4.1 #############\n\n")
 source("scripts/MODIS.R")
+rm(list = setdiff(ls(), "quick"))
+gc()
 
 cat("\n\n######## STARTING AMERICIUM COMPARISON OF SECTION 4.2 #############\n\n")
 source("scripts/Am.R")
+rm(list = setdiff(ls(), "quick"))
+gc()
 
 cat("\n\n######## STARTING SYDNEY EXAMPLE OF SECTION 4.3 #############\n\n")
 source("scripts/Sydney.R")
+rm(list = setdiff(ls(), "quick"))
+gc()
 
 cat("\n\n######## STARTING CHICAGO EXAMPLE OF SECTION 4.4 #############\n\n")
 source("scripts/Chicago.R")
+rm(list = setdiff(ls(), "quick"))
+gc()

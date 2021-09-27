@@ -9,7 +9,7 @@ source("./scripts/Utility_fns.R")
 options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 })
 
-## Use low-rank versions of the models to establish that the code works? 
+## Use very-low-dimensional representations of the models to establish that the code works? 
 quick <- check_quick()
 nres <- if (quick) 2 else 4
 
