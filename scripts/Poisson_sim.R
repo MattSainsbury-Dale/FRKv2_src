@@ -92,6 +92,9 @@ coordinates(Poisson_simulated) <- ~ x + y
 max_nres <- 3
 pred_list <- S_list <- timings <- list()
 for (i in 1:max_nres) {
+  
+  cat(paste0("\nStarting analysis with nres = ", i, ".\n"))
+  
   timings[[i]] <- system.time({
     S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
                           nres = i, BAUs = BAUs, 

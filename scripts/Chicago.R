@@ -336,16 +336,11 @@ Chicago_coverage_and_MAPE <- ST_pred@data %>%
 
 nominal_coverages <- matrix(rep(seq(90, 60, -10), 2), nrow = 2, byrow = TRUE)
 
-
-Chicago_coverage_and_MAPE %>% 
-  select(contains("coverage_")) %>% 
-  `-`(nominal_coverages) %>% 
-  rowMeans
-
 Chicago_coverage_and_MAPE$average_coverage_difference <- 
   Chicago_coverage_and_MAPE %>% 
-  select(contains("coverage_")) %>% 
+  dplyr::select(contains("coverage_")) %>% 
   `-`(nominal_coverages) %>% 
+  as.matrix() %>%
   rowMeans
 
 write.csv(Chicago_coverage_and_MAPE, 
