@@ -91,6 +91,7 @@ coordinates(Poisson_simulated) <- ~ x + y
 ## object using 1, 2, and 3 resolutions of basis functions.
 max_nres <- 3
 pred_list <- S_list <- timings <- list()
+RNGversion("3.6.0"); set.seed(1)
 for (i in 1:max_nres) {
   
   cat(paste0("\nStarting analysis with nres = ", i, ".\n"))
@@ -102,7 +103,6 @@ for (i in 1:max_nres) {
                           link = "log", 
                           # manually set these arguments to reduce console output:
                           K_type = "precision", method = "TMB", est_error = FALSE) 
-    RNGversion("3.6.0"); set.seed(1)
     pred_list[[i]] <- predict(S_list[[i]], type = c("link", "mean"))
   })
 }
@@ -160,8 +160,6 @@ data_lims  <- range(pred_list[[max_nres]]$newdata$p_mu, Poisson_simulated$Z, BAU
 plot_list$p_mu    <- plot_list$p_mu %>% change_legend_limits(limits = data_lims) 
 plot_list$mu_true <- plot_list$mu_true %>% change_legend_limits(limits = data_lims) 
 plot_list$Z       <- plot_list$Z %>% change_legend_limits(limits = data_lims, aesthetic = "colour") 
-
-
 
 
 # Adjust the breaks
@@ -248,8 +246,13 @@ diagnostics <- lapply(pred_list, function(pred) {
 
 diagnostics <- do.call(rbind.data.frame, diagnostics)
 
-diagnostics <- cbind(diagnostics, 
-                     run_time = sapply(timings, function(x) x["elapsed"]))
+diagnostics <- cbind(
+  basis_functions = sapply(S_list, function(x) nbasis(slot(x, "basis"))),
+  diagnostics, 
+  run_time_minutes = sapply(timings, function(x) x["elapsed"] / 60)
+  )
+
+rownames(diagnostics) <- paste0("nres", rownames(diagnostics))
 
 write.csv(diagnostics, file = "./results/3_3_Poisson_nres_comparison.csv")
 

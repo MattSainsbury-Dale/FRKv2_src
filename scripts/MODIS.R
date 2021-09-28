@@ -49,7 +49,7 @@ options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 if (quick) {
   ARGS <- list(max.edge.interior = 50, nres = 1, k = 20, n.neighbours = 2, knots_squared = 9) 
 } else {
-  ARGS <- list(max.edge.interior = 4, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 10^2)
+  ARGS <- list(max.edge.interior = 4, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 20^2)
 }
 
 ## Load the model fitting and prediction functions

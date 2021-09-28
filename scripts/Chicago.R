@@ -25,7 +25,7 @@ if(quick) {
   fs_by_spatial_BAU <- TRUE
 }
 
-cat(paste("Chicago example: Using", nres, "basis-function resolution(s).\n"))
+cat(paste("Chicago example: Using", nres, "resolution(s) of spatial basis functions.\n"))
 
 
 # ---- Preprocessing ----
@@ -47,7 +47,7 @@ ST_BAUs$fs <- 1 # scalar fine-scale variance matrix
 ## Create population covariate
 ST_BAUs$population <- community_areas$population
 
-## Add covariates to BAUs that can be used to make a piecewise-linear temporal trend
+## Add covariates that can be used to make a piecewise-linear temporal trend.
 ## As the inclusion of the trend did not significantly affect the results, it 
 ## was omitted from the paper to simplify the exposition.
 
@@ -57,12 +57,28 @@ ST_BAUs$population <- community_areas$population
 # ST_BAUs$x3 <- as.numeric(year >= 2014)
 # ST_BAUs$x4 <- year * ST_BAUs$x3
 
+
 # ---- Model fitting ----
 
 basis <- auto_basis(STplane(), 
                     chicago_crimes_fit, 
                     tunit = "years", 
                     nres = nres)
+
+
+# ## SRE() / SRE.fit() workflow
+# M <- SRE(f = number_of_crimes ~ log(population), 
+#          data = chicago_crimes_fit, basis = basis, BAUs = ST_BAUs,         
+#          response = "poisson",
+#          link = "log", 
+#          sum_variables = "number_of_crimes", 
+#          fs_by_spatial_BAU = fs_by_spatial_BAU, 
+#          # manually set these arguments to reduce console output:
+#          K_type = "precision", est_error = FALSE)
+# 
+# system.time(
+#   M <- SRE.fit(M, method = "TMB")
+# )
 
 
 suppressWarnings(

@@ -91,7 +91,7 @@ diagnostics <- pred_df[validx, ] %>%
                                     dat = pred$MC$Z_samples[validx, ])),
             Cov95 = mean(Z_percentile_2.5 < TrueTemp & TrueTemp < Z_percentile_97.5), 
             intScore = mean(intervalScore(Z = TrueTemp, l = Z_percentile_2.5, u = Z_percentile_97.5)), 
-            runtime = runtime["elapsed"] / 60 # elapsed runtime in minutes
+            runtime_minutes = runtime["elapsed"] / 60 # elapsed runtime in minutes
             ) %>% 
   as.data.frame()
 
