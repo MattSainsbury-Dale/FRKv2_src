@@ -37,38 +37,71 @@ df_test  <- df[unobs.id, ]
 times         <- list()         ## store fitting times
 fitted_model_objects <- list()  ## store model objects (which may be of use later)
 
+## More informative information about the sampling framework
+missing_fwk_informative <- if(missing_fwk == "MAR") {
+  "missing at random (MAR)"
+} else if (missing_fwk == "block") {
+  "missing block (MB)"
+}
+
+cat(paste("\n---- Starting the MODIS comparison using the"), missing_fwk_informative, "sampling scheme ----\n")
+
+print_run_time <- function(pkg, times) {
+  cat(paste("Finished", pkg, "analysis in", round(times[[pkg]]["elapsed"] / 60, 4), "minutes.\n"))
+}
+
 
 ## NB: MODIS_INLA() also assigns the fitted values (i.e., predictions at
 ## training locations) of the INLA to the parent environment (the environment
 ## from which the function was called) in an object named "INLA_fitted_values".
-if("INLA" %in% PACKAGES)
-  times$INLA <- system.time(
+if("INLA" %in% PACKAGES) {
+  cat("\nStarting INLA analysis...")
+    times$INLA <- system.time(
     df_test$pred_INLA <- MODIS_INLA(pred_locs = df_test, df_train = df_train, max.edge.interior = ARGS$max.edge.interior)
   )
+  print_run_time("INLA", times)
+}
 
-if("FRK" %in% PACKAGES)
-  times$FRK <- system.time({
+
+if("FRK" %in% PACKAGES) {
+  cat("\nStarting FRK analysis...")
+    times$FRK <- system.time({
     fitted_model_objects$FRK <- MODIS_FRK_fit(df_train, nres = ARGS$nres)
     df_test$pred_FRK <- MODIS_FRK_pred(df_test, fitted_model_objects$FRK)
   })
+  print_run_time("FRK", times)
+}
 
-if("mgcv" %in% PACKAGES)
-  times$mgcv <- system.time({
+
+if("mgcv" %in% PACKAGES) {
+    cat("\nStarting mgcv analysis...")
+    times$mgcv <- system.time({
     fitted_model_objects$mgcv <- MODIS_mgcv_fit(df_train, k = ARGS$k)
     df_test$pred_mgcv <- MODIS_mgcv_pred(df_test, fitted_model_objects$mgcv)
   })
+  print_run_time("mgcv", times)
+}
 
-if("spNNGP" %in% PACKAGES)
-  times$spNNGP <- system.time({
+
+if("spNNGP" %in% PACKAGES) {
+  cat("\nStarting spNNGP analysis...")
+    times$spNNGP <- system.time({
     fitted_model_objects$spNNGP <- MODIS_spNNGP_fit(df_train, n.neighbours = ARGS$n.neighbours)
     df_test$pred_spNNGP <- MODIS_spNNGP_pred(df_test, fitted_model_objects$spNNGP)
   })
+  print_run_time("spNNGP", times)
+}
 
-if("spBayes" %in% PACKAGES)
-  times$spBayes <- system.time({
+
+if("spBayes" %in% PACKAGES) {
+  cat("\nStarting spBayes analysis...")
+    times$spBayes <- system.time({
     fitted_model_objects$spBayes <- MODIS_spBayes_fit(df_train, knots_squared = ARGS$knots_squared)
     df_test$pred_spBayes <- MODIS_spBayes_pred(df_test, fitted_model_objects$spBayes)
   })
+  print_run_time("spBayes", times)
+}
+
 
 times <- sapply(times, function(x) unname(x["elapsed"]))
 times <- times[PACKAGES] 
