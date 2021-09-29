@@ -1,5 +1,6 @@
 suppressMessages({
 library("FRK")
+library("gstat")
 library("sp")
 library("ggplot2")
 library("scoringRules") # crps_sample() 

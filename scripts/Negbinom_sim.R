@@ -319,7 +319,7 @@ diagnostics <- pred$newdata@data %>%
     true_in_pred_interval90 = mu_percentile_5 <= mu_true & mu_true <= mu_percentile_95,
     absolute_percentage_error = abs(p_mu - mu_true)/mu_true
   ) %>%
-  summarise(
+  dplyr::summarise(
     coverage_90 = mean(true_in_pred_interval90),
     MAPE = mean(absolute_percentage_error) * 100, 
     RMSPE = RMSPE(mu_true, p_mu)  

@@ -26,12 +26,12 @@ if(!("INLA" %in% rownames(installed.packages()))) {
     #                           repos = "https://inla.r-inla-download.org/R/stable", 
     #                           version = pkg_versions["INLA"])
     
-    ## FIXME: Can't get this to work. Not sure how to download exact versions from 
-    ## non-standard repo. Just installing the current stable version for now. 
-    install.package("INLA", repos="https://inla.r-inla-download.org/R/stable")
+    ## Can't get the above to work. Not sure how to download exact versions from 
+    ## non-standard repos. Just installing the current stable versions for now. 
+    install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable")
     
   } else {
-    install.package("INLA", repos="https://inla.r-inla-download.org/R/stable")
+    install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable")
   }
 }
 

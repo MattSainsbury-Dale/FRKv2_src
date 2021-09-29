@@ -338,7 +338,7 @@ Chicago_coverage_and_MAPE <- ST_pred@data %>%
     absolute_percentage_error = abs(p_Z - number_of_crimes)/number_of_crimes
   ) %>%
   group_by(t) %>%
-  summarise(
+  dplyr::summarise(
     ## Also multiply by 100 so that reported values are a percentage
     coverage_90 = mean(data_in_pred_interval_90) * 100,
     coverage_80 = mean(data_in_pred_interval_80) * 100,

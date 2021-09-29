@@ -25,6 +25,11 @@ library("dplyr")
 library("sp")
 library("stringr")
 library("tidyr")
+  
+## Packages required by INLA
+library("foreach")
+library("splancs")
+library("rgdal")
 
 ## Packages used in the comparison study
 library("FRK") 
@@ -217,7 +222,7 @@ all_df_test <- all_df_test %>%
 ## Compute diagnostics, split by run, method, and sampling scheme
 diagnostics <- all_df_test %>%
   dplyr::group_by(Sampling_scheme, Run, Method) %>%
-  summarise(Brier = BrierScore(z, pred),
+  dplyr::summarise(Brier = BrierScore(z, pred),
             AUC = AUC(z, pred), 
             time = time[1])
 
@@ -225,7 +230,7 @@ diagnostics <- all_df_test %>%
 ## (the averaging is redundant for the paper, because we do only one run)
 diagnostics <- diagnostics %>%  
   dplyr::group_by(Sampling_scheme, Method) %>%
-  summarise(
+  dplyr::summarise(
     Brier = mean(Brier),
     AUC = mean(AUC), 
     time = mean(time)) %>% 

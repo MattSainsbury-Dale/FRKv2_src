@@ -27,15 +27,26 @@ install_depends <- user_decision("Do you want to automatically install package d
 if (install_depends == "y") {
   install_exact_versions <- user_decision("Do you want to ensure that all package versions are as given in dependencies.txt? (y/n)\n")
   install_exact_versions <- install_exact_versions == "y" # Convert to Boolean
+  
+  if (install_exact_versions) {
+    cat("When changing the packages to the versions specified in dependencies.txt, please use your discretion when answering the question “Which would you like to update?”.  Updating all packages (i.e., option 3) may cause errors.")
+  }
+  
   source("scripts/Dependencies_install.R")
 }
 
+
 ## Check that the data has been downloaded: 
 downloaded_correctly <- c(
-  file.exists("./data/Sydney_shapefiles/SA1/"), 
-  file.exists("./data/Sydney_shapefiles/SA2/"), 
-  file.exists("./data/Sydney_shapefiles/SA3/"), 
-  file.exists("./data/chicago_crime_df.Rda")
+  file.exists("./data/chicago_crime_df.Rda"),
+  # Check that the Sydney SA directories exist:
+  file.exists("./data/Sydney_shapefiles/SA1"), 
+  file.exists("./data/Sydney_shapefiles/SA2"), 
+  file.exists("./data/Sydney_shapefiles/SA3"),
+  # Check that the actual shapefiles exist:
+  file.exists("./data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp"), 
+  file.exists("./data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp"), 
+  file.exists("./data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp")
   )
 names(downloaded_correctly) <- c("SA1", "SA2", "SA3", "chicago_crime_df.Rda")
 if(!all(downloaded_correctly)) {
