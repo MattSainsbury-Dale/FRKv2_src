@@ -1,3 +1,4 @@
+"maps" "3.3.0"
 "devtools" "2.3.2"
 "dplyr" "1.0.5"
 "foreach" "1.5.0"

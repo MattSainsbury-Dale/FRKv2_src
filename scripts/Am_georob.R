@@ -3,6 +3,10 @@ library("georob")
 library("sp")
 library("dplyr")
 library("reshape2")
+  
+# This package is required by georob, and it doesn't always install if
+# we don't explicitly add it to dependencies.txt.
+library("maps")
 })
 
 Am_data <- read.csv("./intermediates/Am_data.csv")

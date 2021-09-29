@@ -15,5 +15,10 @@ pkg_versions <- sapply(depends, function(pkg) as.character(packageVersion(pkg)))
 ## Sort into alphabetical order:
 pkg_versions <- pkg_versions[sort(names(pkg_versions))]
 
+## However, we want maps to install before georob: 
+maps_idx <- which(names(pkg_versions) == "maps")
+
+pkg_versions <- c(pkg_versions[maps_idx], pkg_versions[-maps_idx])
+
 ## Save the list of dependencies and package versions
 write.table(pkg_versions, "dependencies.txt", col.names = FALSE)
