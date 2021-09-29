@@ -22,12 +22,12 @@ if(quick) {
   fs_by_spatial_BAU <- FALSE
   link <- "log"
 } else {
-  # nres <- 3
-  # fs_by_spatial_BAU <- TRUE
-  # link <- "log" 
-  nres <- 2
+  nres <- 3
   fs_by_spatial_BAU <- TRUE
-  link <- "sqrt"
+  link <- "log"
+  # nres <- 2
+  # fs_by_spatial_BAU <- TRUE
+  # link <- "sqrt"
 }
 
 cat(paste("Chicago example: Using", nres, "resolution(s) of spatial basis functions.\n"))
