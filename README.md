@@ -1,6 +1,6 @@
 # Source code for FRK v2 paper
 
-This repository contains the source code for reproducing the results in "Modelling, fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK". The replication may be down using a single script, `all.R`; we give detailed instructions subsequently.  
+This repository contains the source code for reproducing the results in "Modelling, fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK". The replication is done with a single script, `all.R`; we give detailed instructions subsequently.  
 
 ## Instructions
 
@@ -12,9 +12,7 @@ Some data sets were too large to be stored on Github (a few hundred Mb in total)
 - Download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder; and 
 - download the [folders containing the Sydney SA1/SA2/SA3 region shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`. 
 
-(To download the files, click "Explore" > "Go to resource")
-
-The `./data/` folder should contain the following files (as well as other files that come with the repo), and we have included checks in `all.R` to ensure that this is the case:
+(To download the files, click "Explore" > "Go to resource".) The `data` folder should contain the following files (as well as other files automatically downloaded from Github), and we have included checks in `all.R` to ensure that this is the case:
 
 ```bash
 ├── data
@@ -27,7 +25,7 @@ The `./data/` folder should contain the following files (as well as other files 
 
 ### Dependencies
 
-When running `all.R`, the user will be asked if they wish to install package dependencies; if they choose to do so, they will then be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt`. 
+When running `all.R`, the user will be asked if they wish to install package dependencies; if they choose to do so, they will then be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt`. When changing the packages to the versions specified in dependencies.txt, please use your discretion when answering the question “Which would you like to update?”. Updating all packages (i.e., option 3) may cause errors.
 
 ### Results
 

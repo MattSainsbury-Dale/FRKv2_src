@@ -20,9 +20,14 @@ quick <- check_quick()
 if(quick) {
   nres <- 1
   fs_by_spatial_BAU <- FALSE
+  link <- "log"
 } else {
-  nres <- 3
+  # nres <- 3
+  # fs_by_spatial_BAU <- TRUE
+  # link <- "log" 
+  nres <- 2
   fs_by_spatial_BAU <- TRUE
+  link <- "sqrt"
 }
 
 cat(paste("Chicago example: Using", nres, "resolution(s) of spatial basis functions.\n"))
@@ -65,30 +70,16 @@ basis <- auto_basis(STplane(),
                     tunit = "years", 
                     nres = nres)
 
-
-# ## SRE() / SRE.fit() workflow
-# M <- SRE(f = number_of_crimes ~ log(population), 
-#          data = chicago_crimes_fit, basis = basis, BAUs = ST_BAUs,         
-#          response = "poisson",
-#          link = "log", 
-#          sum_variables = "number_of_crimes", 
-#          fs_by_spatial_BAU = fs_by_spatial_BAU, 
-#          # manually set these arguments to reduce console output:
-#          K_type = "precision", est_error = FALSE)
-# 
-# system.time(
-#   M <- SRE.fit(M, method = "TMB")
-# )
-
+link_fn <- get(link) # convert from string to function, for use in formula below
 
 suppressWarnings(
 # Suppress the warning "Removing data points that do not fall into any BAUs...":
 # It is fine in this example, as some small number of crimes may fall outside of 
 # the community area boundaries, and it is fine to omit these crimes. 
-M <- FRK(f = number_of_crimes ~ log(population), 
+# M <- FRK(f = number_of_crimes ~ log(population), 
+M <- FRK(f = number_of_crimes ~ link_fn(population), 
          data = chicago_crimes_fit, basis = basis, BAUs = ST_BAUs,         
-         response = "poisson",
-         link = "log", 
+         response = "poisson", link = link, 
          sum_variables = "number_of_crimes", 
          fs_by_spatial_BAU = fs_by_spatial_BAU, 
          # manually set these arguments to reduce console output:

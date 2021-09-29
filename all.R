@@ -1,3 +1,7 @@
+## FIXME: Yi received an error:
+"For georob, I had to change to v 0.3.14 to avoid an instlaling error. The error
+was 'package maps is not installed for arch = i386'"
+
 ## Facilitates user input regardless of how this script was invoked
 user_decision <- function(prompt) {
   
@@ -47,14 +51,14 @@ downloaded_correctly <- c(
   file.exists("./data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp"), 
   file.exists("./data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp"), 
   file.exists("./data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp")
-  )
+)
 names(downloaded_correctly) <- c("SA1", "SA2", "SA3", "chicago_crime_df.Rda")
 if(!all(downloaded_correctly)) {
   stop(paste0(
     "Some files have not been downloaded or are in the wrong place.\nProblematic files: \n", 
     names(downloaded_correctly)[!downloaded_correctly], 
     "\nIf on Linux/Unix, run 'make DATA', otherwise please see the README for download instructions."
-    ))
+  ))
 }
 
 ## Helper functions for running the scripts and providing informative output
