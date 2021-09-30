@@ -1,6 +1,6 @@
 # Source code for FRK v2 paper
 
-This repository contains the source code for reproducing the results in "Modelling, fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK". The replication is done with a single script, `all.R`; we give detailed instructions subsequently.  
+This repository contains the source code for reproducing the results in "Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK". We give instructions subsequently.  
 
 ## Instructions
 
@@ -12,7 +12,7 @@ Some data sets were too large to be stored on Github (a few hundred Mb in total)
 - Download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder; and 
 - download the [folders containing the Sydney SA1/SA2/SA3 region shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`. 
 
-(To download the files, click "Explore" > "Go to resource".) The `data` folder should contain the following files (as well as other files automatically downloaded from Github), and we have included checks in `all.R` to ensure that this is the case:
+(To download the files, click "Explore" > "Go to resource".) The `data` folder should contain the following files (as well as other files automatically downloaded from Github): 
 
 ```bash
 ├── data
@@ -23,17 +23,23 @@ Some data sets were too large to be stored on Github (a few hundred Mb in total)
 │   │   ├── SA3
 ```
 
+Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if these files are not present.
+
 ### Dependencies
 
-When running `all.R`, the user will be asked if they wish to install package dependencies; if they choose to do so, they will then be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt`. When changing the packages to the versions specified in dependencies.txt, please use your discretion when answering the question “Which would you like to update?”. Updating all packages (i.e., option 3) may cause errors.
+When running the replication script, the user will be asked if they wish to install package dependencies; if they choose to do so, they will then be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt`. When changing the packages to the versions specified in `dependencies.txt`, please use your discretion when answering the question “Which would you like to update?”. Updating all packages (i.e., option 3) may cause errors.
 
 ### Results
 
-Running `all.R` (e.g., with `Rscript all.R`) populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running `all.R`. Note that you will need at least 32GB of RAM and/or swap space to run the full models. 
+The replication script is `all.sh`, invoked using `bash all.sh`. Running it populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script.  
+
+#### Hardware requirements
+
+You will need at least 32GB of RAM and/or swap space to run the full models. 
 
 #### A note on long run times
 
-The MODIS comparison study takes a few hours to obtain the exact results of the manuscript. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the low-rank option described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. You may also wish to comment out some sections in `all.R`, as you see fit. 
+The MODIS comparison study takes several hours to obtain the exact results of the manuscript. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the option of using low-dimensional representations as described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. You may also wish to comment out some sections in the replication script, as you see fit. 
 
 <!---
 ### Note to Windows users
