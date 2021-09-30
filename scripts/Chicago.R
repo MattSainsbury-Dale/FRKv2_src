@@ -17,18 +17,24 @@ source("./scripts/Utility_fns.R")
 ## Use very-low-dimensional representations of the models to establish that the code works? 
 quick <- check_quick()
 
+
+if (!exists("Chicago_nres")) {
+  warning("Chicago_nres not specified: Using nres = 1.")
+  Chicago_nres <- 1
+} 
+
+nres <- Chicago_nres # Chicago_nres set in all.R
+
 if(quick) {
-  nres <- 1
   fs_by_spatial_BAU <- FALSE
-  link <- "log"
 } else {
-  nres <- 3
   fs_by_spatial_BAU <- TRUE
-  link <- "log"
   # nres <- 2
   # fs_by_spatial_BAU <- TRUE
   # link <- "sqrt"
 }
+
+link <- "log"
 
 cat(paste("Chicago example: Using", nres, "resolution(s) of spatial basis functions.\n"))
 

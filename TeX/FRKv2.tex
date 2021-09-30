@@ -1257,13 +1257,42 @@ where $\otimes$ is the Kronecker product.
 This form for $\vec{Q}$ leads to significant computational savings. 
   For the random coefficients associated with the temporal basis functions, \pkg{FRK} v2 uses a first-order autoregressive model. 
 
+% In a spatio-temporal setting, it is possible that each spatial BAU is observed multiple times. 
+% In these situations, \pkg{FRK} v2 allows each spatial BAU to be associated with its own fine-scale variance parameter. 
+% This model may be advantageous when the variance of the fine-scale component is spatially varying. 
+% Specifically, let $N_s$ and $N_t$ denote the number of spatial and temporal BAUs, respectively (so that $N = N_sN_t$).
+% Then, in addition to modelling \mbox{$\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{V})$},
+% where $\vec{V}$ is a known, positive-definite diagonal matrix, \pkg{FRK} v2 also allows the model
+%$\vec{\xi} \sim \Gau(\vec{0}, \vec{\Sigma}_\xi)$ where, assuming that the BAUs are ordered such that space runs faster than time,    
+%%\begin{equation}\label{eqn:fine-scale_cov_mat_fs_by_spatial_BAU}
+%%    \vec{\Sigma}_\xi \equiv
+%%\begin{pmatrix}
+%%\text{diag}(\vec{\sigma}^2_\xi) \odot \vec{V}_{\!1}  & \vec{0} & \dots & \vec{0} \\
+%% \vec{0} &  \ddots  & &  \vdots \\
+%% \vdots &    & & \\
+%%  \vec{0} & \dots   & & \text{diag}(\vec{\sigma}^2_\xi) \odot \vec{V}_{\!N_t}\\
+%%\end{pmatrix} 
+%%\end{equation}
+%\begin{equation}\label{eqn:fine-scale_cov_mat_fs_by_spatial_BAU}
+%\vec{\Sigma}_\xi \equiv \text{diag}(\text{vec}(\underbrace{\vec{\sigma}^2_\xi, \dots, \vec{\sigma}^2_\xi}_{N_t \; \text{times}})) \odot \vec{V},
+%\end{equation}
+%$\vec{\sigma}^2_\xi \equiv (\sigma^2_{\xi, 1}, \dots, \sigma^2_{\xi, N_s})^\tp$, 
+%$\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\cdot)$ returns a diagonal matrix from a vector argument, and $\odot$ denotes element-wise multiplication. 
+% As in the spatial-only case, 
+%% $\{\vec{V}_{N_1}, \dots, \vec{V}_{\!N_t}\}$ 
+% $\vec{V}$
+% can 
+%% each 
+% be set to $\vec{I}$ in the absence of problem specific fine-scale information.
+% The model (\ref{eqn:fine-scale_cov_mat_fs_by_spatial_BAU}) for $\vec{\Sigma}_\xi$ is flagged by setting \mbox{\code{fs\_by\_spatial\_BAU = TRUE}} in the \fct{SRE} function. 
+% It is particularly useful when the number of spatial BAUs (and hence the number of variance parameters to estimate) is relatively low, and when we have observations from each spatial BAU at many time-points; see, for instance, the example presented in Section \ref{sec:ST_example}. 
+
+
+ Recall from the spatial-only case that \pkg{FRK} v2 assumes \mbox{$\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{V})$}, where $\vec{V}$ is a known, positive-definite diagonal matrix that can be set to $\vec{I}$ in the absence of problem specific fine-scale information. 
  In a spatio-temporal setting, it is possible that each spatial BAU is observed multiple times. 
- In these situations, \pkg{FRK} v2 allows each spatial BAU to be associated with its own fine-scale variance parameter. 
- This model may be advantageous when the variance of the fine-scale component is spatially varying. 
+ In these situations, \pkg{FRK} v2 also allows each spatial BAU to be associated with its own fine-scale variance parameter. 
  Specifically, let $N_s$ and $N_t$ denote the number of spatial and temporal BAUs, respectively (so that $N = N_sN_t$).
- Then, in addition to modelling \mbox{$\vec{\xi} \sim \Gau(\vec{0}, \sigma^2_\xi \vec{V})$},
- where $\vec{V}$ is a known, positive-definite diagonal matrix, \pkg{FRK} v2 also allows the model
-$\vec{\xi} \sim \Gau(\vec{0}, \vec{\Sigma}_\xi)$ where, assuming that the BAUs are ordered such that space runs faster than time,    
+ Then, \pkg{FRK} v2 also allows the model $\vec{\xi} \sim \Gau(\vec{0}, \vec{\Sigma}_\xi)$ where, assuming that the BAUs are ordered such that space runs faster than time,    
 %\begin{equation}\label{eqn:fine-scale_cov_mat_fs_by_spatial_BAU}
 %    \vec{\Sigma}_\xi \equiv
 %\begin{pmatrix}
@@ -1276,17 +1305,10 @@ $\vec{\xi} \sim \Gau(\vec{0}, \vec{\Sigma}_\xi)$ where, assuming that the BAUs a
 \begin{equation}\label{eqn:fine-scale_cov_mat_fs_by_spatial_BAU}
 \vec{\Sigma}_\xi \equiv \text{diag}(\text{vec}(\underbrace{\vec{\sigma}^2_\xi, \dots, \vec{\sigma}^2_\xi}_{N_t \; \text{times}})) \odot \vec{V},
 \end{equation}
-%is an $N \times N$ matrix, 
 $\vec{\sigma}^2_\xi \equiv (\sigma^2_{\xi, 1}, \dots, \sigma^2_{\xi, N_s})^\tp$, 
-%$\odot$ denotes element-wise multiplication, and $\{\vec{V}_{\!1}, \dots, \vec{V}_{\!N_t}\}$ are known, positive-definite diagonal matrices of size $N_s \times N_s$.  
 $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\cdot)$ returns a diagonal matrix from a vector argument, and $\odot$ denotes element-wise multiplication. 
- As in the spatial-only case, 
-% $\{\vec{V}_{N_1}, \dots, \vec{V}_{\!N_t}\}$ 
- $\vec{V}$
- can 
-% each 
- be set to $\vec{I}$ in the absence of problem specific fine-scale information.
- The model (\ref{eqn:fine-scale_cov_mat_fs_by_spatial_BAU}) for $\vec{\Sigma}_\xi$ is flagged by setting \mbox{\code{fs\_by\_spatial\_BAU = TRUE}} in the \fct{SRE} function. It is particularly useful when the number of spatial BAUs (and hence the number of variance parameters to estimate) is relatively low, and when we have observations from each spatial BAU at many time-points; see, for instance, the example presented in Section \ref{sec:ST_example}. 
+ This model is flagged by setting \mbox{\code{fs\_by\_spatial\_BAU = TRUE}} in the \fct{SRE} function. 
+  This model may be advantageous when the variance of the fine-scale component is spatially varying, and it is particularly useful when the number of spatial BAUs (and hence the number of variance parameters to estimate) is relatively low, and when we have observations from each spatial BAU at many time-points; see, for instance, the Chicago example presented in Section \ref{sec:ST_example}. 
 
 
 
@@ -2132,8 +2154,8 @@ Matthew Sainsbury-Dale's research was supported by an Australian Government Rese
 Andrew Zammit-Mangion's and Noel Cressie's research was supported by an Australian Research Council (ARC) Discovery Project, DP190100180. Andrew Zammit-Mangion's research was also supported by an ARC Discovery Early Career Research Award, DE180100203.  
 The authors would like to thank Rajib Paul for providing the Americium data analysed in Section \ref{sec:block_prediction}, 
 %Matt Moores for discussion on the ethics of modelling crime in the city of Chicago, 
-Michael Bertolacci for discussions surrounding the MODIS comparison study, 
-and Yi Cao for technical assistance during the project. 
+Michael Bertolacci for his discussion surrounding the MODIS comparison study, 
+and Yi Cao for his technical assistance during the project and for his assistance in reviewing reproducibility aspects of the scripts associated with the paper.  
 
 
 %% -- Bibliography -------------------------------------------------------------

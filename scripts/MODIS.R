@@ -57,10 +57,14 @@ if (quick) {
   ARGS <- list(max.edge.interior = 4, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 20^2)
 }
 
+quiet_source <- function(...) suppressMessages(source(...))
+
 ## Load the model fitting and prediction functions
-suppressMessages(
-  mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
-)
+mapply(quiet_source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
+
+# suppressMessages(
+#   mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
+# )
 
 ## Load user defined functions 
 ## These include functions to compute diagnostics, convert data frames from wide

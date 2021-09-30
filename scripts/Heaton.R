@@ -51,7 +51,12 @@ runtime <- system.time({
     rmidx <- which(basis_df$loc2 > 36.5 &
                      basis_df$loc1 > -94.5 &
                      basis_df$res == 3)
-    basis <- remove_basis(basis, rmidx)
+    
+    capture.output( # suppress the output 
+      basis <- remove_basis(basis, rmidx),
+      file = 'NUL'
+    )
+    
   }
   
   ## Construct SRE object
@@ -70,16 +75,16 @@ runtime <- system.time({
 ## Extract the dataframe from the Spatial object
 pred_df <- pred$newdata@data
 
-## Sanity Check: prediction and validation dataframes in same order
-all(pred_df$Lon == df$Lon)
-all(pred_df$Lat == df$Lat)
+## Sanity Check (unit test): prediction and validation dataframes in same order
+# all(pred_df$Lon == df$Lon)
+# all(pred_df$Lat == df$Lat)
 
 pred_df$TrueTemp <- df$TrueTemp
 pred_df$id <- 1:nrow(pred_df)
 validx <- which(!(pred_df$id %in% obs_idx) & !is.na(pred_df$TrueTemp))
 
-## Sanity check:
-nrow(na.omit(pred_df[-obs_idx, ])) == length(validx)
+## Sanity check (unit test):
+# nrow(na.omit(pred_df[-obs_idx, ])) == length(validx)
 
 intervalScore <- function(Z, l, u, a = 0.05) {
   (u - l) + (2 / a) * (l - Z) * (Z < l) + (2 / a) * (Z - u) * (Z > u) 

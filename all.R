@@ -1,12 +1,8 @@
-## FIXME: Yi received an error:
-"For georob, I had to change to v 0.3.14 to avoid an instlaling error. The error
-was 'package maps is not installed for arch = i386'"
-
 ## Facilitates user input regardless of how this script was invoked
-user_decision <- function(prompt) {
+user_decision <- function(prompt, allowed_answers = c("y", "n")) {
   
   if (interactive()) {
-    answer <- readline(prompt)
+    answer <- readline(paste0(prompt, "\n"))
   } else {
     cat(prompt)
     answer <- readLines("stdin", n = 1)
@@ -14,22 +10,38 @@ user_decision <- function(prompt) {
   
   answer <- tolower(answer)
   
-  if (answer != "y" && answer != "n") {
-    cat("Please enter y or n.\n")
-    answer <- user_decision(prompt)
+  if (!(answer %in% allowed_answers)) {
+    tmp <- paste(allowed_answers, collapse = " or ")
+    cat(paste0("Please enter ", tmp, ".\n"))
+    answer <- user_decision(prompt, allowed_answers = allowed_answers)
   }
   
   return(answer)
 }
 
 ## Should we use "quick", very-low-dimensional representations of the models?
-quick <- user_decision("Do you wish to use very-low-dimensional representations of the models to quickly establish that the code is working (note that the generated results and plots will not exactly match those in the manuscript if you reply 'y', and you will need at least 32GB of RAM and/or swap space if you reply 'n')? (y/n)\n")
+quick <- user_decision("Do you wish to use very-low-dimensional representations of the models to quickly establish that the code is working? Note that the generated results and plots will not exactly match those in the manuscript if you reply 'y', and you will need at least 32GB of RAM and/or swap space if you reply 'n'. (y/n)")
 quick <- quick == "y" # Convert to Boolean
 
+if (!quick) {
+  Chicago_nres <- user_decision("Do you want to use nres = 2 or nres = 3 in the Chicago section (Section 4.4 in the paper)? The paper used nres = 3, but it is computationally demanding and requires at least 64 GB of RAM, and similar results can be obtained with nres = 2. (Please enter 2 or 3)", 
+                                allowed_answers = c(2, 3))
+  Chicago_nres <- as.numeric(Chicago_nres)
+  
+  } else {
+  Chicago_nres <- 1
+}
+
+if (Chicago_nres == 3) {
+  cat("You have chosen to use nres = 3 in the Chicago section. Depending on your hardware, the Chicago section may need a new R session to avoid memory problems: If you encounter memory problems during this section, please comment out all sections bar the Chicago section, and then re-run all.R.\n")
+}
+
+
+
 ## Install dependencies:
-install_depends <- user_decision("Do you want to automatically install package dependencies? (y/n)\n")
+install_depends <- user_decision("Do you want to automatically install package dependencies? (y/n)")
 if (install_depends == "y") {
-  install_exact_versions <- user_decision("Do you want to ensure that all package versions are as given in dependencies.txt? (y/n)\n")
+  install_exact_versions <- user_decision("Do you want to ensure that all package versions are as given in dependencies.txt? (y/n)")
   install_exact_versions <- install_exact_versions == "y" # Convert to Boolean
   
   if (install_exact_versions) {
@@ -67,25 +79,25 @@ print_start_msg <- function(section_name, section_number) {
 }
   
 print_run_time <- function(section_name, section_number, total_time) {
-  cat(paste("\nFINISHED", section_name, "OF SECTION", section_number, "IN", round(total_time["elapsed"] / 60, 4), "MINUTES.\n"))
+  cat(paste("\nFinished", tolower(section_name), "of Section", section_number, "in", round(total_time["elapsed"] / 60, 4), "minutes.\n"))
 }
   
-source_script <- function(script, section_name, section_number) {
+source_wrapper <- function(script, section_name, section_number) {
   print_start_msg(section_name, section_number)
   total_time <- system.time(source(paste0("scripts/", script)))
   print_run_time(section_name, section_number, total_time)
   rm(list = setdiff(ls(), c("quick", "print_start_msg", "print_run_time")))
-  gc()
+  invisible(gc())
 }
 
 
 ## Run the scripts: 
-source_script("Poisson_sim.R", "POISSON EXAMPLE", 3.1)
-source_script("Negbinom_sim.R", "NEGATIVE-BINOMIAL EXAMPLE", 3.1)
-source_script("Heaton.R", "HEATON COMPARISON", 3.3)
-source_script("MODIS.R", "MODIS COMPARISON", 4.1)
-source_script("Am.R", "AMERICIUM COMPARISON", 4.2)
-source_script("Sydney.R", "SYDNEY CHANGE-OF-SUPPORT EXAMPLE", 4.3)
-source_script("Chicago.R", "CHICAGO EXAMPLE", 4.4)
+source_wrapper("Poisson_sim.R", "POISSON EXAMPLE", 3.1)
+source_wrapper("Negbinom_sim.R", "NEGATIVE-BINOMIAL EXAMPLE", 3.2)
+source_wrapper("Heaton.R", "HEATON COMPARISON", 3.3)
+source_wrapper("MODIS.R", "MODIS COMPARISON", 4.1)
+source_wrapper("Am.R", "AMERICIUM COMPARISON", 4.2)
+source_wrapper("Sydney.R", "SYDNEY CHANGE-OF-SUPPORT EXAMPLE", 4.3)
+source_wrapper("Chicago.R", "CHICAGO EXAMPLE", 4.4)
 
 

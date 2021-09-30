@@ -4,9 +4,7 @@
 ## First compute observed indices.
 ## The way we sample the observed indices depends on whether the sampling scheme
 ## is missing at random, or "missing at block".
-if(!exists("seed")) {
-  seed <- 1
-}
+if(!exists("seed")) seed <- 1 
 RNGversion("3.6.0")
 set.seed(seed)
 
@@ -44,13 +42,23 @@ missing_fwk_informative <- if(missing_fwk == "MAR") {
   "missing block (MB)"
 }
 
-cat(paste("\n---- Starting the MODIS comparison using the"), missing_fwk_informative, "sampling scheme ----\n")
+cat(paste("\n#### Starting the MODIS comparison using the"), missing_fwk_informative, "sampling scheme ####\n")
 
-print_start_msg <- function(pkg) cat(paste("\nStarting", pkg, "analysis...\n"))
-print_run_time <- function(pkg, times) {
+print_start_msg <- function(pkg) cat(paste("\n---- Running", pkg, "on", missing_fwk_informative, "MODIS data ----\n\n"))
+print_run_time_MODIS <- function(pkg, times) {
   cat(paste("Finished", pkg, "analysis in", round(times[[pkg]]["elapsed"] / 60, 4), "minutes.\n"))
 }
 
+
+if("FRK" %in% PACKAGES) {
+  pkg <- "FRK"
+  print_start_msg(pkg)
+  times$FRK <- system.time({
+    fitted_model_objects$FRK <- MODIS_FRK_fit(df_train, nres = ARGS$nres)
+    df_test$pred_FRK <- MODIS_FRK_pred(df_test, fitted_model_objects$FRK)
+  })
+  print_run_time_MODIS(pkg, times)
+}
 
 ## NB: MODIS_INLA() also assigns the fitted values (i.e., predictions at
 ## training locations) of the INLA to the parent environment (the environment
@@ -61,19 +69,9 @@ if("INLA" %in% PACKAGES) {
     times$INLA <- system.time(
     df_test$pred_INLA <- MODIS_INLA(pred_locs = df_test, df_train = df_train, max.edge.interior = ARGS$max.edge.interior)
   )
-  print_run_time(pkg, times)
+  print_run_time_MODIS(pkg, times)
 }
 
-
-if("FRK" %in% PACKAGES) {
-  pkg <- "FRK"
-  print_start_msg(pkg)
-    times$FRK <- system.time({
-    fitted_model_objects$FRK <- MODIS_FRK_fit(df_train, nres = ARGS$nres)
-    df_test$pred_FRK <- MODIS_FRK_pred(df_test, fitted_model_objects$FRK)
-  })
-  print_run_time(pkg, times)
-}
 
 
 if("mgcv" %in% PACKAGES) {
@@ -83,7 +81,7 @@ if("mgcv" %in% PACKAGES) {
     fitted_model_objects$mgcv <- MODIS_mgcv_fit(df_train, k = ARGS$k)
     df_test$pred_mgcv <- MODIS_mgcv_pred(df_test, fitted_model_objects$mgcv)
   })
-  print_run_time(pkg, times)
+  print_run_time_MODIS(pkg, times)
 }
 
 
@@ -94,7 +92,7 @@ if("spNNGP" %in% PACKAGES) {
     fitted_model_objects$spNNGP <- MODIS_spNNGP_fit(df_train, n.neighbours = ARGS$n.neighbours)
     df_test$pred_spNNGP <- MODIS_spNNGP_pred(df_test, fitted_model_objects$spNNGP)
   })
-  print_run_time(pkg, times)
+  print_run_time_MODIS(pkg, times)
 }
 
 
@@ -105,7 +103,7 @@ if("spBayes" %in% PACKAGES) {
     fitted_model_objects$spBayes <- MODIS_spBayes_fit(df_train, knots_squared = ARGS$knots_squared)
     df_test$pred_spBayes <- MODIS_spBayes_pred(df_test, fitted_model_objects$spBayes)
   })
-  print_run_time(pkg, times)
+  print_run_time_MODIS(pkg, times)
 }
 
 
