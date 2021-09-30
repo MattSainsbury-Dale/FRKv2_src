@@ -185,9 +185,8 @@ plot_list$Z <- plot_list$Z +  labs(title = bquote(bold("Z")))
 figure <- ggarrange(plot_list$mu_true, plot_list$Z, 
                     nrow = 1, common.legend = TRUE, legend = "right", align = "hv")
 
-ggsave(figure,
-       filename = "3_1_Poisson_sim_true_process_and_data.png", 
-       path = "./results", device = "png", width = 10, height = 4) 
+ggsave("3_1_Poisson_sim_true_process_and_data.png", plot = figure, 
+       path = "./results", device = "png", width = 10, height = 4, units = "in") 
 
 ## Remove y-axis labels/ticks for all but the left-most panel
 interior_plot <- function(gg) {
@@ -208,8 +207,8 @@ figure <- ggarrange(plot_list$p_Y %>% exterior_plot,
                   bottom = text_grob(bquote(s[1]), size = 20, vjust = -1, hjust = -0.5))
 
 
-ggsave(figure, filename = "3_1_Poisson_sim.png", 
-       path = "./results", device = "png", width = 14, height = 5.2)
+ggsave("3_1_Poisson_sim.png", plot = figure, 
+       path = "./results", device = "png", width = 14, height = 5.2, units = "in")
 
 
 ## Diagnostic functions

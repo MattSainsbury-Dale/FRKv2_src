@@ -252,9 +252,9 @@ Sydney_analysis <- function(fitting = "mixed") {
   )
 }
 
-cat("Conducting Sydney analysis: Using a mixture of SA1 and SA2 regions as training data.\n")
+cat("\nStarting FRK analysis: Using a mixture of SA1 and SA2 regions as training data.\n")
 Sydney_analysis(fitting = "mixed")
 
 ## This is only used for presentations, and not at all in the paper:
-# cat("Conducting Sydney analysis: Using only SA2 regions as training data.\n")
+# cat("\nStarting FRK analysis: Using only SA2 regions as training data.\n")
 # Sydney_analysis(fitting = "SA2s")
