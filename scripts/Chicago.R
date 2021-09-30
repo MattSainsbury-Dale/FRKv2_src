@@ -17,24 +17,26 @@ source("./scripts/Utility_fns.R")
 ## Use very-low-dimensional representations of the models to establish that the code works? 
 quick <- check_quick()
 
-
-if (!exists("Chicago_nres")) {
-  warning("Chicago_nres not specified: Using nres = 1.")
-  Chicago_nres <- 1
-} 
-
-nres <- Chicago_nres # Chicago_nres set in all.R
-
 if(quick) {
-  fs_by_spatial_BAU <- FALSE
+  nres <- 1
 } else {
-  fs_by_spatial_BAU <- TRUE
-  # nres <- 2
-  # fs_by_spatial_BAU <- TRUE
-  # link <- "sqrt"
+  
+  ## all.R allows the user to choose nres = 2 or nres = 3, and this choice is 
+  ## stored in Chicago_nres variable. If it doesn't exist (i.e., this script 
+  ## was invoked using all.sh or by some other method, default to the nres 
+  ## value used in the paper, nres = 3). 
+  nres <- if (exists("Chicago_nres")) Chicago_nres else 3
 }
 
-link <- "log"
+fs_by_spatial_BAU <- TRUE
+
+# When we have very few basis functions, it is typically more stable to use log 
+if (nres  < 3) {
+  link <- "sqrt"
+} else {
+  link <- "log"
+}
+
 
 cat(paste("Chicago example: Using", nres, "resolution(s) of spatial basis functions.\n"))
 

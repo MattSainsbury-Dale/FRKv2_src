@@ -51,12 +51,7 @@ runtime <- system.time({
     rmidx <- which(basis_df$loc2 > 36.5 &
                      basis_df$loc1 > -94.5 &
                      basis_df$res == 3)
-    
-    capture.output( # suppress the output 
-      basis <- remove_basis(basis, rmidx),
-      file = 'NUL'
-    )
-    
+    basis <- remove_basis(basis, rmidx)
   }
   
   ## Construct SRE object

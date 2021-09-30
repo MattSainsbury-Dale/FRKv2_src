@@ -1,5 +1,7 @@
 ## Toy example for spatial COS.
 
+source("scripts/Utility_fns.R")
+
 suppressMessages({
 library("FRK")
 library("sp")
@@ -223,8 +225,7 @@ figure <- create_figure_one_row_of_plots(data_plots)
 ggsave(figure,
        filename = "3_2_Negbinom_sim_data.png", device = "png", 
        width = 14, height = 5.1,
-       path = "./results"
-)
+       path = "./results")
 
 
 # ---- Prep BAUs and obs for FRK ----
@@ -294,12 +295,11 @@ figure <- create_figure_one_row_of_plots(list(plot_list$p_prob,
 
 
 
-ggsave( 
-  figure,
-  filename = "3_2_Negbinom_sim_BAU_predictions.png", device = "png", 
-  width = 14, height = 5.2,
-  path = "./results"
-)
+ggsave(figure,
+       filename = "3_2_Negbinom_sim_BAU_predictions.png", device = "png", 
+       width = 14, height = 5.2,
+       path = "./results") 
+
 
 # ---- Assess prediction and UQ at BAU level ----
 
@@ -377,10 +377,8 @@ figure <- create_figure_one_row_of_plots(list(plot_list$p_prob,
                                               plot_list$p_mu, 
                                               plot_list$interval90_mu))
 
-ggsave( 
-  figure,
-  filename = "3_2_Negbinom_sim_arbitrary_polygon_predictions.png", device = "png", 
-  width = 14, height = 5.2,
-  path = "./results"
-)
+ggsave(figure,
+       filename = "3_2_Negbinom_sim_arbitrary_polygon_predictions.png", device = "png", 
+       width = 14, height = 5.2,
+       path = "./results") 
 

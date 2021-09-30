@@ -1,9 +1,26 @@
 suppressMessages({
 library("htmlTable")
 library("stringr")
-## Package used for reading command line argument
 library("R.utils")
 })
+
+## Helper functions for running the scripts and providing informative output
+print_start_msg <- function(section_name, section_number) {
+  cat(paste("\n\n######## STARTING", section_name, "OF SECTION", section_number, "#############\n\n"))
+}
+
+print_run_time <- function(section_name, section_number, total_time) {
+  cat(paste("\nFinished", tolower(section_name), "of Section", section_number, "in", round(total_time["elapsed"] / 60, 4), "minutes.\n"))
+}
+
+source_wrapper <- function(script, section_name, section_number) {
+  print_start_msg(section_name, section_number)
+  total_time <- system.time(source(paste0("scripts/", script)))
+  print_run_time(section_name, section_number, total_time)
+  rm(list = setdiff(ls(), c("quick", "print_start_msg", "print_run_time")))
+  invisible(gc())
+}
+
 save_html_table <- function(df, col_sep = 3, decimals = 3, file = NULL, ...) {
   
   # Round to decimals
@@ -17,29 +34,29 @@ save_html_table <- function(df, col_sep = 3, decimals = 3, file = NULL, ...) {
   white_space <- paste0(rep("&nbsp;", col_sep), collapse = "")
   names(df) <- paste(white_space, names(df), white_space)
   
-  df %>% htmlTable(...) %>% 
+  df %>% htmlTable::htmlTable(...) %>% 
     as.character %>% 
-    str_remove_all('\n') %>% 
+    stringr::str_remove_all('\n') %>% 
     noquote() %>% 
     cat(file = file)
 }
 
 
-
-
-
-## Use very-low-dimensional representations of the models to quickly establish that the code works? 
+## Checks if the argument 'quick' is set, either as a variable in the current 
+## workspace or provided from the command line. 
 check_quick <- function() {
+  
   if (!exists("quick")) {
+
     ## Read in quick from the command line (i.e., from the makefile)
     args <- R.utils::commandArgs(trailingOnly = TRUE, asValue = TRUE)
     if (length(args) == 0) {
       cat("You have not specified whether or not you want to use quick, very-low-dimensional representations of the models: Setting quick = TRUE.\n")
       quick <- TRUE
     } else if (length(args)==1) {
-      quick <- as.logical(args[1])
+      quick <- as.integer(args[1])
     } else {
-      stop("Too many arguments to deal with!")
+      stop("check_quick() assumes that at most one command line argument is provided.")
     }  
   }
   
@@ -51,3 +68,5 @@ check_quick <- function() {
   
   return(quick)
 }
+
+

@@ -1,3 +1,6 @@
+#!/bin/bash
+
+
 filenames=results/*
 currentsecnum=0
 for file in $filenames; do 
