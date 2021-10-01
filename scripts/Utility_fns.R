@@ -10,7 +10,7 @@ print_start_msg <- function(section_name, section_number) {
 }
 
 print_run_time <- function(section_name, section_number, total_time) {
-  cat(paste("\nFinished", tolower(section_name), "of Section", section_number, "in", round(total_time["elapsed"] / 60, 4), "minutes.\n"))
+  cat(paste("\nFinished", tolower(section_name), "of Section", section_number, "in", round(total_time["elapsed"] / 60, 3), "minutes.\n"))
 }
 
 source_wrapper <- function(script, section_name, section_number) {

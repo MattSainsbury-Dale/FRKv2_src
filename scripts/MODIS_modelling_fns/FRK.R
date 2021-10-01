@@ -8,6 +8,8 @@ MODIS_FRK_fit <- function(df_train, nres = 4) {
   ## Construct Basis functions
   B <- auto_basis(data = zspdf, nres = nres)
   
+  cat("FRK using", nres, "resolution(s) of basis functions,", nbasis(B), "basis functions in total.\n")
+  
   ## BAUs (just use a grid over the spatial domain of interest)
   BAUs    <- SpatialPixelsDataFrame(points = expand.grid(x = 1:225, y = 1:150), 
                                     data = expand.grid(x = 1:225, y = 1:150))

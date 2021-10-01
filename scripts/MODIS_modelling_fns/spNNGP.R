@@ -1,6 +1,8 @@
 ## NB: If I can get n.omp.threads > 1 working, I can optimise the number of cores 
 MODIS_spNNGP_fit <- function(df_train, n.neighbours = 15) {
   
+  cat("spNNGP using", n.neighbours, "nearest neighbours.\n")
+  
   # ---- Fitting ----
 
   starting  <- list("phi" = 3/50, "sigma.sq" = 5)

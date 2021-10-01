@@ -26,7 +26,7 @@ MODIS_INLA <- function(pred_locs, df_train, max.edge.interior = 5,
                        max.edge = c(max.edge.interior, max.edge.exterior), 
                        cutoff = cutoff)
   
-  cat("INLA using a triangular mesh with", mesh$n, "vertices (and hence basis functions)\n")
+  cat("INLA using a triangular mesh with", mesh$n, "vertices (and hence",  mesh$n,"basis functions)\n")
   
   ## Construct the SPDE on the mesh
   ## NB: I keep the probability associated with each prior (i.e., Psigma and 

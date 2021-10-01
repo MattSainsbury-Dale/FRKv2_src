@@ -50,11 +50,11 @@ options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 ## nres              : FRK
 ## k                 : mgcv
 ## n.neighbours      : spNNGP
-## knots_squared     : spBayes
+## knots             : spBayes (should be a square number)
 if (quick) {
-  ARGS <- list(max.edge.interior = 50, nres = 1, k = 20, n.neighbours = 2, knots_squared = 9) 
+  ARGS <- list(max.edge.interior = 50, nres = 1, k = 20, n.neighbours = 2, knots = 3^2) 
 } else {
-  ARGS <- list(max.edge.interior = 4, nres = 4, k = 2250, n.neighbours = 15, knots_squared = 20^2)
+  ARGS <- list(max.edge.interior = 4, nres = 4, k = 2250, n.neighbours = 15, knots = 17^2)
 }
 
 

@@ -1596,9 +1596,9 @@ The training and test sets under the two sampling schemes are shown in Figure \r
  For the methods requiring specification of a link function, we used the standard logit link function, $f(\pi) = \log(\frac{\pi}{1 - \pi})$.
  
  For \pkg{FRK} v2, we used four resolutions of basis functions, giving a total of 11,130 basis functions. 
- For \pkg{INLA}, we discretised the domain into 8,671 elements.
- For \pkg{mgcv}, we used the \fct{bam} function, which is similar to the generalised-additive-model function \fct{gam} but optimised for large data sets, with 3,000 knots. 
-For \pkg{spBayes}, we used 400 knots; increasing the number of knots further was computationally prohibitive. 
+ For \pkg{INLA}, we discretised the domain into 13,494 elements.
+ For \pkg{mgcv}, we used the \fct{bam} function, which is similar to the generalised-additive-model function \fct{gam} but optimised for large data sets, with 2,250 knots. 
+For \pkg{spBayes}, we used 289 knots; increasing the number of knots further was computationally prohibitive. 
  When using \pkg{spNNGP}, we found that the default option of considering 15 neighbours at a time was appropriate. 
  The packages \pkg{spNNGP} and \pkg{spBayes} use Markov chain Monte Carlo (MCMC). With these packages, we used 10,000 MCMC samples in total, with a burn-in of 6,000 samples and a thinning factor of 10. 
 The number of cores used for \pkg{spNNGP} can be controlled through the argument \code{n.omp.threads}. 

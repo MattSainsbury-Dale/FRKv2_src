@@ -100,7 +100,7 @@ if("spBayes" %in% PACKAGES) {
   pkg <- "spBayes"
   print_start_msg(pkg)
     times$spBayes <- system.time({
-    fitted_model_objects$spBayes <- MODIS_spBayes_fit(df_train, knots_squared = ARGS$knots_squared)
+    fitted_model_objects$spBayes <- MODIS_spBayes_fit(df_train, knots = ARGS$knots)
     df_test$pred_spBayes <- MODIS_spBayes_pred(df_test, fitted_model_objects$spBayes)
   })
   print_run_time_MODIS(pkg, times)

@@ -1,9 +1,12 @@
 ## NB: unlike spNNGP, the returned fitted values for y are on the probability
 ## scale, and so we do not need to apply the logistic transformation.
-MODIS_spBayes_fit <- function(df_train, knots_squared = 20^2) {
+MODIS_spBayes_fit <- function(df_train, knots = 20^2) {
   
-  if(sqrt(knots_squared) != round(sqrt(knots_squared)))
-    stop("Number of knots_squared must be a square number")
+  if(sqrt(knots) != round(sqrt(knots)))
+    stop("Number of knots must be a square number")
+  
+  cat("spBayes using", knots, "knots.\n")
+  
   
   # ---- Fitting ----
   
@@ -13,14 +16,14 @@ MODIS_spBayes_fit <- function(df_train, knots_squared = 20^2) {
   beta.tuning   <- t(chol(vcov(fit)))
   
   ## Parameters we can change to make the model faster
-  n.batch      <- 200 # Original: 200
-  batch.length <- 50  # Original: 50
+  n.batch      <- 200 
+  batch.length <- 50  
 
   ## knots greatly impacts fitting time - 
   ## prod(knots) is the total number of knots
   ## (note that the spNNGP paper compared the performance of spNNGP against 
   ## spGLM with only 25 knots! I think that may be too low and not fair to spGLM).
-  knots   <- sqrt(c(knots_squared, knots_squared))
+  knots   <- sqrt(c(knots, knots))
   
   ## Fit the model
   M <- spBayes::spGLM(z ~ 1, family = "binomial", data = df_train, 

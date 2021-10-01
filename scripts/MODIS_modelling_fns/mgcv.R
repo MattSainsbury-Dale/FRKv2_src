@@ -1,4 +1,6 @@
-MODIS_mgcv_fit <- function(df_train, k = 3000) { # k = 2250
+MODIS_mgcv_fit <- function(df_train, k = 2250) { 
+  
+  cat("mgcv using", k, "knots.\n")
 
   f <- z ~ te(x, y,            # inputs over which to smooth
               bs = "tp",       # type of bases
