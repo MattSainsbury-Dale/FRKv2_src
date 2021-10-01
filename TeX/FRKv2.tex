@@ -1113,15 +1113,12 @@ where $f(\cdot)$ is one of the aforementioned functions whose inverse has a rang
 
 
  When model fitting, the BAU-level size parameters $\vec{k}$ are needed to compute the BAU-level mean process in (\ref{eqn:h_mu_equals_pi}). 
- If each observation is associated with exactly one BAU, the user need only provide the data-level size parameters $\vec{k}_Z$, which are used to infer the BAU-level size parameters; in particular, $k_i = \sum_{j \in a_i} k_{Z_j}$, $i = 1, \dots, N$, where $a_i$ denotes the indices of the observations associated with BAU $A_i \in D^G$. 
- In the case where one or more observations encompass multiple BAUs, $\vec{k}$ must be provided with the BAUs, as there is no way to determine how $k_{Z_j}$ should be distributed over $\{k_i : i \in c_j\}$ when $c_j$ contains more than one element. 
+ The simplest case is when each observation is associated with a single BAU only \textit{and} each BAU is associated with at most one observation support; then, it is straightforward to assign elements from $\vec{k}_Z$ to elements of $\vec{k}$ and vice-versa, and so the user may provide either $\vec{k}$ or $\vec{k}_Z$. 
+ If each observation is associated with exactly one BAU, but some BAUs are associated with multiple observations, the user must provide $\vec{k}_Z$, which is used to infer $\vec{k}$; in particular, $k_i = \sum_{j \in a_i} k_{Z_j}$, $i = 1, \dots, N$, where $a_i$ denotes the indices of the observations associated with BAU $A_i \in D^G$. 
+ If one or more observations encompass multiple BAUs, $\vec{k}$ must be provided with the BAUs, as we cannot meaningfully distribute $k_{Z_j}$ over $\{k_i : i \in c_j\}$ when $|c_j| > 1$.  
+ In this case, we infer $\vec{k}_Z$ using $k_{Z_j} = \sum_{i \in c_j} k_i$, $j = 1, \dots, m$. 
    
-   
-% To facilitate the use of conventional notation when describing these response distributions, it is convenient to define the probability process over the observation supports in $D^O$ as \mbox{$\vec{\pi}_Z \equiv (\pi_{Z_j} : j = 1, \dots, m)^\tp$}, where
-%\begin{equation}
-%	\pi_{Z_j} = h(\mu_{Z_j}; k_{Z_j}), \quad j = 1, \dots, m.
-%\end{equation}
- 
+
  
  
   %% Element-wise version: 

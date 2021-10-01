@@ -114,29 +114,38 @@ Sydney_analysis <- function(fitting = "mixed") {
   # ---- FRK ----
   
   BAUs <- SA1s
+
   
-  ## Assign the size parameter of each BAU
-  BAUs$k_BAU <- BAUs$number_of_families
+  ## For binomial or negative-binomial data, the known constant parameter k must
+  ## be provided for each observation. In this case, it is simply the total number
+  ## of families of interest. However, where we declare it depends on whether 
+  ## the observation supports are all contained within BAUs, or if some observation
+  ## supports comprise multiple BAUs.
+  
+  if (fitting == "SA1s") {
+    ## Estimate fine-scale variance using TMB (known_sigma2fs = NULL)
+    known_sigma2fs <- NULL
+    poly_fit$k_Z <- poly_fit$number_of_families
+    
+    ## Could also provide the size parameter like this: 
+    # BAUs$k_BAU <- BAUs$number_of_families
+
+  } else if (fitting == "SA2s") {
+    ## A reliable estimate of the fine-scale variance can be obtained by first 
+    ## fitting the model using SA1 data (in practice, one may use past census data).
+    known_sigma2fs <- 0.2127 
+    BAUs$k_BAU <- BAUs$number_of_families
+  }  else if (fitting == "mixed") {
+    ## Estimate fine-scale variance using TMB (known_sigma2fs = NULL)
+    known_sigma2fs <- NULL
+    BAUs$k_BAU <- BAUs$number_of_families
+  }
   
   ## Remove overlapping columns from the BAUs and the data:
   ## (i.e., number_of_families_in_poverty, number_of_families, etc.).
   BAUs@data[, which(names(BAUs) %in% names(poly_fit))] <- NULL
   BAUs$fs <- 1 # homoscedastic fine-scale variation
-  
-  ## For binomial or negative-binomial data, the known constant parameter k must
-  ## be provided for each observation. In this case, it is simply the total number
-  ## of families of interest
-  poly_fit$k_Z <- poly_fit$number_of_families
-  
-  if (fitting == "SA2s") {
-    ## A reliable estimate of the fine-scale variance can be obtained by first 
-    ## fitting the model using SA1 data (in practice, one may use past census data).
-    known_sigma2fs <- 0.2127 
-  } else {
-    ## Estimate fine-scale variance using TMB (known_sigma2fs = NULL)
-    known_sigma2fs <- NULL
-  }
-  
+
   ## Construct and fit the SRE object
   S <- FRK(f = number_of_families_in_poverty ~ 1,
            nres = nres,
@@ -149,7 +158,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   # ---- Prediction over the SA1s ----
   
   RNGversion("3.6.0"); set.seed(1)
-  pred <- predict(S, type = c("mean", "response"))
+  pred <- predict(S, type = c("mean", "response"), k = BAUs$number_of_families)
   
   # ---- Model validation using SA1 level data ----
   
@@ -255,6 +264,11 @@ Sydney_analysis <- function(fitting = "mixed") {
 cat("\nStarting FRK analysis: Using a mixture of SA1 and SA2 regions as training data.\n")
 Sydney_analysis(fitting = "mixed")
 
-## This is only used for presentations, and not at all in the paper:
+# ## This is only used for presentations, and not at all in the paper:
 # cat("\nStarting FRK analysis: Using only SA2 regions as training data.\n")
 # Sydney_analysis(fitting = "SA2s")
+# 
+# ## This serves a test for the case of binomial data with areal observation
+# ## supports, where the osbervation supports and BAUs coincide:
+# cat("\nStarting FRK analysis: Using only SA1 regions as training data.\n")
+# Sydney_analysis(fitting = "SA1s")
