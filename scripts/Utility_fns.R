@@ -54,7 +54,8 @@ check_quick <- function() {
       cat("You have not specified whether or not you want to use quick, very-low-dimensional representations of the models: Setting quick = TRUE.\n")
       quick <- TRUE
     } else if (length(args)==1) {
-      quick <- as.integer(args[1])
+      # quick <- as.integer(args[1])
+      quick <- as.logical(as.numeric(args[1]))
     } else {
       stop("check_quick() assumes that at most one command line argument is provided.")
     }  
