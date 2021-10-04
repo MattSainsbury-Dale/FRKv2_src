@@ -35,7 +35,7 @@
 \begin{document}
 %\hspace{-0.5cm}
 \thispagestyle{empty}
-23 February 2021
+04 October 2021
 
 \vspace{0.5in}
 
@@ -45,19 +45,37 @@ Dear Editor,
 
 %\hspace{-0.5cm}
 
-We would like to submit our manuscript, ``WOMBAT: A fully Bayesian global flux-inversion framework,'' for consideration by the \emph{Journal of the American Statistical Association -- Applications \& Case Studies}. The manuscript focuses on the important and difficult problem of estimating the sources and sinks of greenhouse gases (in our case CO$_2$) from remote-sensing instruments, and is the result of a long-standing collaboration between statisticians and atmospheric chemists. We develop the statistical machinery we believe is required to tackle a problem of this complexity, and also show that our estimates of carbon dioxide sources and sinks are often an improvement on those obtained by leading groups across the world.  As a result of the sophisticated inter-disciplinary nature of this work, we envisage it to have a lasting impact in both the applied statistics and the atmospheric chemistry communities worldwide.
+We would like to submit our manuscript, ``Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK'', for consideration by the \emph{Journal of Statistical Software} (JSS). The manuscript presents a major upgrade to \textbf{FRK}, an \texttt{R}  package for spatial/spatio-temporal modelling and prediction with large data sets, that allows it to model non-Gaussian data with an order of magnitude more basis functions than was previously possible. This upgrade is the result of popular demand and feedback from many of our users since the first upload to CRAN in 2017.  This new version of \textbf{FRK} addresses a large gap in the currently available software and, as our extensive case studies show, we envisage it to play an important role in spatial and spatio-temporal statistics in a variety of new application domains. 
 
-The submission consists of the main manuscript (blinded and unblinded) and supplementary material (blinded by default). We also provide scripts that reproduce the results shown in the manuscript. However, for practical reasons, the raw data from the numerical atmospheric transport model have not been made available due to their sheer size (terabytes); instructions on how to generate these data are provided in  \texttt{README.md} in the supplementary code package. We have also stored the data offline, and the data are available to the reviewers on request. Intermediary data files, which are sufficient to reproduce the results shown in the manuscript, are a few gigabytes in size, and are available for download as detailed in \texttt{README.md} in the supplementary code package; a link to the data on our servers will be provided once there is no need to remain anonymous. More details on our data and code are given in the accompanying Author Contributions Checklist form.
+An article on the first version of \textbf{FRK} was first submitted to JSS in June 2017, was conditionally accepted in 2018, and was published in 2021. Although the first article on \textbf{FRK} was published  recently, work on this upgrade has been ongoing for three years now, and this paper represents the culmination of the work. 
 
-%Since JASA adopts a double-blind peer-review process we have refrained from uploading our manuscript to \emph{arXiv}, but may do so in the future if and when it becomes critical that the work becomes public.
+The submission consists of the main manuscript and the scripts that reproduce the results shown in the manuscript. Instructions on how to generate these results are provided in the file \texttt{README.md}. Where possible, we have strived to follow the guidelines provided by JSS, and have made every effort to ensure that the experience for reviewers is as smooth as possible. For example, we do not require high performance computing for reproducing the results, and we also provide a ``quick''  option for reviewers to be able to generate (inexact) figures and tables quickly.
+
 
 Please let me know if there is anything more you need from us to complete the submission.
+
+
+
+
+%\textbf{FRK} is an \texttt{R} package for spatial/spatio-temporal modelling and prediction with very large data sets. 
+ %Key features of the package include its ability to handle both point-referenced and areal data simultaneously, and its solution to spatial change-of-support problems (whereby one wishes to make inference over supports that are different to the supports of observed data). 
+% The main purpose of our new manuscript is to describe a major upgrade to \textbf{FRK} that allows it to model non-Gaussian spatial and spatio-temporal data. 
+ %These data are ubiquitous in real-world applications, arising whenever counts are taken (e.g., Poisson, binomial, or negative-binomial data), the response is binary (e.g., Bernoulli data), or the domain of the response is restricted to the positive real line (e.g., gamma or inverse-Gaussian data).   
+ %This new version of \textbf{FRK} addresses a large gap in the currently available software, and we envisage it to play an important role in spatial and spatio-temporal statistics moving forward. 
+
+
+
+
+%Finally, we would like to acknowledge that this manuscript comes quite recently after the manuscript describing the first version of \textbf{FRK} was published. That manuscript was submitted in June 2017 and, although it was first conditionally accepted by JSS in September 2018, work on the second version began before then. Hence, this current manuscript is several years in the making. 
+
+
+%Please let me know if there is anything more you need from us to complete the submission.
 
  With my best wishes,
 
  \vspace{0.2in}
 
-Andrew Zammit-Mangion
+Matthew Sainsbury-Dale
 
 \vspace{-0.1in}
 
@@ -73,11 +91,8 @@ University of Wollongong NSW 2522, Australia
 
 \vspace{-0.1in}
 
-e-mail: azm@uow.edu.au
+e-mail: msdale@uow.edu.au
 
-\vspace{-0.1in}
-
-tel.: +61 2 4221 5112
 
 
 \end{document}

@@ -310,7 +310,7 @@
 
 
 \Abstract{
- Non-Gaussian spatial and spatial-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of disciplines, such as those involving small-area demographics or global satellite remote sensing. 
+ Non-Gaussian spatial and spatio-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of disciplines, such as those involving small-area demographics or global satellite remote sensing. 
   \pkg{FRK} is an \proglang{R} package for spatial/spatio-temporal modelling and prediction with very large data sets that, to date, has only supported linear process models and Gaussian data models. 
  In this paper, we describe a major upgrade to \pkg{FRK} that allows for non-Gaussian data to be analysed in a generalised linear mixed model framework. 
   These vastly more general spatial and spatio-temporal models are fitted using the Laplace approximation via the software \pkg{TMB}. 
@@ -1104,7 +1104,6 @@ where $f(\cdot)$ is one of the aforementioned functions whose inverse has a rang
  When modelling negative-binomial data, other popular link functions include the log and square-root functions. 
  In these cases, we use the model \mbox{$\mu_i = k_ig^{-1}(Y_i)$}, $i = 1, \dots, N$, and the elements of $\vec{\pi}$ are obtained using (\ref{eqn:h_mu_equals_pi}). 
 %  To facilitate the use of conventional notation when describing these response distributions, it is convenient to 
-% Equation (\ref{eqn:h_mu_equals_pi}) yields the probability process over the BAUs; similarly, we
  Irrespective of the chosen link function, we 
   define the probability process over the observation supports in $D^O$ as \mbox{$\vec{\pi}_Z \equiv (\pi_{Z_j} : j = 1, \dots, m)^\tp$}, where
 \begin{equation}
@@ -1113,10 +1112,13 @@ where $f(\cdot)$ is one of the aforementioned functions whose inverse has a rang
 
 
  When model fitting, the BAU-level size parameters $\vec{k}$ are needed to compute the BAU-level mean process in (\ref{eqn:h_mu_equals_pi}). 
- The simplest case is when each observation is associated with a single BAU only \textit{and} each BAU is associated with at most one observation support; then, it is straightforward to assign elements from $\vec{k}_Z$ to elements of $\vec{k}$ and vice-versa, and so the user may provide either $\vec{k}$ or $\vec{k}_Z$. 
- If each observation is associated with exactly one BAU, but some BAUs are associated with multiple observations, the user must provide $\vec{k}_Z$, which is used to infer $\vec{k}$; in particular, $k_i = \sum_{j \in a_i} k_{Z_j}$, $i = 1, \dots, N$, where $a_i$ denotes the indices of the observations associated with BAU $A_i \in D^G$. 
- If one or more observations encompass multiple BAUs, $\vec{k}$ must be provided with the BAUs, as we cannot meaningfully distribute $k_{Z_j}$ over $\{k_i : i \in c_j\}$ when $|c_j| > 1$.  
- In this case, we infer $\vec{k}_Z$ using $k_{Z_j} = \sum_{i \in c_j} k_i$, $j = 1, \dots, m$. 
+ %%%% Too verbose; refer the readers to the package manual:
+% The simplest case is when each observation is associated with a single BAU only \textit{and} each BAU is associated with at most one observation support; then, it is straightforward to assign elements from $\vec{k}_Z$ to elements of $\vec{k}$ and vice-versa, and so the user may provide either $\vec{k}$ or $\vec{k}_Z$. 
+% If each observation is associated with exactly one BAU, but some BAUs are associated with multiple observations, the user must provide $\vec{k}_Z$, which is used to infer $\vec{k}$; in particular, $k_i = \sum_{j \in a_i} k_{Z_j}$, $i = 1, \dots, N$, where $a_i$ denotes the indices of the observations associated with BAU $A_i \in D^G$. 
+% If one or more observations encompass multiple BAUs, $\vec{k}$ must be provided with the BAUs, as we cannot meaningfully distribute $k_{Z_j}$ over $\{k_i : i \in c_j\}$ when $|c_j| > 1$.  
+% In this case, we infer $\vec{k}_Z$ using $k_{Z_j} = \sum_{i \in c_j} k_i$, $j = 1, \dots, m$. 
+ %%%%
+ The user must supply these size parameters either through the data or though the BAUs. How this is done depends on whether the data are areal or point-referenced, and whether they overlap common BAUs or not; details are provided in the package manual.
    
 
  
