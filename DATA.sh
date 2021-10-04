@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ## NB: Comments are the commands I used when I was using Dropbox to store the data sets, retained just in case I need them. 
 
 if [ -e  data/chicago_crime_df.Rda ] 

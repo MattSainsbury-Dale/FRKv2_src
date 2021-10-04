@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir -p ./arXiv_submission
+
+cp jss.cls arXiv_submission/jss.cls
+cp jss.bst arXiv_submission/jss.bst
+cp FRKv2.tex arXiv_submission/FRKv2.tex
+cp FRKv2.bib arXiv_submission/FRKv2.bib
+cp FRKv2.bbl arXiv_submission/FRKv2.bbl
+cp -r results arXiv_submission/results
+
+zip -r arXiv_submission ./arXiv_submission
+
