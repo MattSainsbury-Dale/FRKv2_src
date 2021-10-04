@@ -1,9 +1,4 @@
 \documentclass[article]{jss}
-%\documentclass[nojss]{jss}
-
-% Just for editing
-%\usepackage{setspace}
-%\doublespacing
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
@@ -17,10 +12,7 @@
 %\usepackage[nobottomtitles]{titlesec} % doesn't work: breaks the code
 %\usepackage[all]{nowidow}
 % Couldn't find a solution... Just use \newpage at problematic headings, for now.
-% These include:
-% - 2.6: Spatio-temporal framework
-% - 3.2: Example: Non-Gaussian, areally-referenced spatial data and change-of-support
-% - 3.3: Increased numbers of basis functions in FRK v2
+
 
 % Same indentation over multiple lines in algorithm environment: use tabularx to figure out the width of a box that would fit until the end of the line:
 \usepackage{tabularx}
@@ -1351,7 +1343,7 @@ The point-like nature of this reduction in uncertainty arises from the fine-scal
   \label{fig:Poisson_nres3}
 \end{figure}
 
-\newpage
+
 \subsection{Example: Non-Gaussian, areally-referenced spatial data and change-of-support}\label{sec:03-03:negative-binomial}
 
 In this section, we illustrate \pkg{FRK} v2 on simulated negative-binomial, areally-referenced, spatial data, as well as its use in predicting over areas with large spatial supports. 
@@ -1459,7 +1451,6 @@ Figure \ref{fig:03-02-negative-binomial_polygons} shows the predictions and pred
     \label{fig:03-02-negative-binomial_polygons}
 \end{figure}
 
-\newpage
 \subsection[Increased numbers of basis functions in FRK v2]{Increased numbers of basis functions in \pkg{FRK} v2}\label{sec:3:increased_resolution}
 
 

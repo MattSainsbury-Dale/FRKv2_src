@@ -9,5 +9,8 @@ cp FRKv2.bib arXiv_submission/FRKv2.bib
 cp FRKv2.bbl arXiv_submission/FRKv2.bbl
 cp -r results arXiv_submission/results
 
+var="\documentclass[nojss]{jss}"
+sed -i '' "1s/.*/$var/" arXiv_submission/FRKv2.tex
+
 zip -r arXiv_submission ./arXiv_submission
 
