@@ -31,11 +31,11 @@ When running the replication script, the user will be asked if they wish to inst
 
 ### Results
 
-The replication script is `all.sh`, invoked using `bash all.sh`. Alternatively, Windows users may run `all.bat`. Running the replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. 
+The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. 
 
 #### Hardware requirements
 
-You will need at least 64GB of RAM + swap space to run the full models. 
+You will need at least 64GB of RAM + swap to run the full models. FIXME: Provide hardware requirements for "quick" version.
 
 #### A note on long run times
 
