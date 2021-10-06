@@ -1,4 +1,4 @@
-# Source code for FRK v2 paper
+git # Source code for FRK v2 paper
 
 This repository contains the source code for reproducing the results in "Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK". We give instructions subsequently.  
 
@@ -35,7 +35,7 @@ The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alterna
 
 #### Hardware requirements
 
-You will need at least 64GB of RAM + swap to run the full models. FIXME: Provide hardware requirements for "quick" version.
+You will need at least 32GB of RAM + swap to run the very-low-dimensional representations of the models, and you will need at least 64GB of RAM + swap to run the full models. 
 
 #### A note on long run times
 
