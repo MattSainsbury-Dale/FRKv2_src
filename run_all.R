@@ -2,7 +2,7 @@
 source("setup.R")
 
 ## Should we use "quick", very-low-dimensional representations of the models?
-quick <- user_decision("Do you wish to use very-low-dimensional representations of the models to quickly establish that the code is working? Note that the generated results and plots will not exactly match those in the manuscript if you reply 'y', and you will need at least 32GB of RAM and/or swap space if you reply 'n'. (y/n)")
+quick <- user_decision("Do you wish to use very-low-dimensional representations of the models to quickly establish that the code is working? Note that the generated results and plots will not exactly match those in the manuscript if you reply 'y', and you will need at least 64GB of RAM and/or swap space if you reply 'n'. (y/n)")
 quick <- quick == "y" # Convert to Boolean
 
 if (!quick) {
