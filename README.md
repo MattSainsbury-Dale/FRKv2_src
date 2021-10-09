@@ -35,7 +35,7 @@ The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alterna
 
 #### Hardware requirements
 
-You will need at least 32GB of RAM + swap to run the very-low-dimensional representations of the models, and you will need at least 64GB of RAM + swap to run the full models. 
+You will need at least 32GB of RAM (or RAM + swap) to run the very-low-dimensional representations of the models, and you will need at least 64GB of RAM (or RAM + swap) to run the full models. 
 
 #### A note on long run times
 
