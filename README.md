@@ -27,7 +27,7 @@ Note that we have included checks at the beginning of the replication script to 
 
 ### Dependencies
 
-When running the replication script, the user will be asked if they wish to install package dependencies; if they choose to do so, they will then be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt`. 
+When running the replication script, the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages).
 
 ### Results
 

@@ -22,7 +22,7 @@ user_decision <- function(prompt, allowed_answers = c("y", "n")) {
 ## Install dependencies:
 install_depends <- user_decision("Do you want to automatically install package dependencies? (y/n)")
 if (install_depends == "y") {
-  install_exact_versions <- user_decision("Do you want to ensure that all package versions are as given in dependencies.txt? (y/n)")
+  install_exact_versions <- user_decision("Do you want to ensure that all package versions are as given in dependencies.txt (this option is only recommended for use if there is a problem with the latest version of the packages)? (y/n)")
   install_exact_versions <- install_exact_versions == "y" # Convert to Boolean
   
   if (install_exact_versions) {
