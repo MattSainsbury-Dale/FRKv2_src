@@ -62,14 +62,14 @@ if (!("FRK" %in% new_packages) && packageVersion("FRK") < '2.0.1')
 if(length(new_packages)) {
   cat("Package dependencies are being installed automatically using scripts/Dependencies_install.R\n")
   for (pkg in new_packages) {
-    devtools::install_version(pkg, version = pkg_versions[pkg], repos = CRANMIRROR)
+    devtools::install_version(pkg, version = pkg_versions[pkg], repos = CRANMIRROR, upgrade = "never")
   }
 }
 
 ## Change the already installed packages to the correct versions IF we have been told to do so
 if(exists("install_exact_versions") && install_exact_versions && length(already_installed_pkgs_different_versions)) {
     for (pkg in already_installed_pkgs_different_versions) {
-      devtools::install_version(pkg, version = pkg_versions[pkg], repos = CRANMIRROR)
+      devtools::install_version(pkg, version = pkg_versions[pkg], repos = CRANMIRROR, upgrade = "never")
   } 
 } 
 
