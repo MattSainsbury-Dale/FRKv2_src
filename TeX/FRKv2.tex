@@ -24,6 +24,14 @@
 }
 \makeatother
 
+%@misc{MIAESR_poverty_guidelines_2011,
+%  title = {Poverty Lines: {Australia}, {March} Quarter 2011},
+%  howpublished = {URL \url{https://melbourneinstitute.unimelb.edu.au/assets/documents/poverty-lines/2017/Poverty-Lines-Australia-March-Quarter-2011.pdf}},
+%  year = {2011},
+%  author = {{Melbourne Institute of Applied Economic and Social Research}},
+%  note = {Accessed: 2021-08-10}
+%}
+
 %% algorithm environments
 \usepackage{algpseudocode,algorithm,algorithmicx}
 \newcommand*\Let[2]{\State #1 $\gets$ #2}
@@ -295,9 +303,8 @@
 %% - \title{} in title case
 %% - \Plaintitle{} without LaTeX markup (if any)
 %% - \Shorttitle{} with LaTeX markup (if any), used as running title
-\title{Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using % \pkg{TMB} and 
-\pkg{FRK}}
-\Plaintitle{Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using TMB and FRK}
+\title{Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using \pkg{FRK}}
+\Plaintitle{Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK}
 \Shorttitle{Non-Gaussian Spatial and Spatio-Temporal Data using \pkg{FRK}}
 
 
@@ -394,7 +401,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
  \pkg{FRK} v2 provides a unifying framework that handles large, spatial and spatio-temporal non-Gaussian (and Gaussian) data, and it can seamlessly ingest point-referenced and area-referenced data to solve spatial change-of-support problems. %facilitates change-of-support over target supports that may be smaller or larger than the source supports (i.e., it caters for statistical down-scaling and up-scaling). 
   User-friendliness is a central focus of the package: Challenging statistical analyses may be tackled with only a few lines of intuitive, readable code. Optimal spatial prediction proceeds through the use of an empirical hierarchical statistical model (where likelihood-based estimates are substituted in place of unknown parameters) and a Monte Carlo (MC) algorithm, where a minimal number of user-level decisions is required.
  \pkg{FRK} v2 also accommodates the modelling of non-Gaussian spatial and spatio-temporal data on the surface of a sphere, a feature not offered by many other packages. 
- Finally, although the primary motivation for this major upgrade is the modelling of non-Gaussian data, \pkg{FRK} v2 also allows for Gaussian data and the use of substantially more basis functions than \pkg{FRK} v1 when modelling the spatial process. Therefore, in a Gaussian setting, it is often able to achieve more accurate predictions than \pkg{FRK} v1. 
+ Finally, although the primary motivation for this major upgrade is the modelling of non-Gaussian data, \pkg{FRK} v2 also allows for the use of substantially more basis functions than \pkg{FRK} v1 when modelling the spatial process. Therefore, in a Gaussian setting, it is often able to achieve more accurate predictions than \pkg{FRK} v1. 
 
 
 The remainder of the paper is organised as follows. 
@@ -551,14 +558,70 @@ Therefore, the mean process evaluated over the BAUs is $\vec{\mu} \equiv (\mu_i:
 \end{tikzpicture}
 \caption{
 An illustration of how the continuous spatial domain, $D$, is discretised into the set $D^G$ of BAUs, and how the observation domain, $D^O$, is derived from the observation supports.
-(Left panel) The continuous spatial domain, $D$.
-(Centre-left panel) The spatial domain discretised into $N = 12$ BAUs, $D^G \equiv \{A_i: i = 1, \dots, 12\}$.
-(Centre-right panel) $D^G$ superimposed with $m = 3$ observations, two of which are areally-referenced ($R_1$ and $R_3$), and one that is point-referenced ($R_2$).  
-(Right panel) 
-%The observation domain, $D^O$: The observation supports that comprise $D^O$ are $B_1 \equiv A_1 \cup A_4$,  $B_2 \equiv A_6$, and $B_3 \equiv A_{10} \cup A_{11}$.
+(Left) The continuous spatial domain, $D$.
+(Centre left) The spatial domain discretised into $N = 12$ BAUs, $D^G \equiv \{A_i: i = 1, \dots, 12\}$.
+(Centre right) $D^G$ superimposed with $m = 3$ observations, two of which are areally-referenced ($R_1$ and $R_3$), and one that is point-referenced ($R_2$).  
+(Right) 
 The observation domain, \mbox{$D^O \equiv \{B_j : j = 1, \dots, m\}$}, where $B_1 \equiv A_1 \cup A_4$,  $B_2 \equiv A_6$, and $B_3 \equiv A_{10} \cup A_{11}$. 
 }\label{fig:BAU_intuition}
 \end{figure}
+
+
+%%%% Smaller version:
+
+%\def\BAUgrid{
+%\draw[step=1cm] (0,0) grid (2,3);
+%\node at (0.25,2.75) {\scriptsize $A_1$};
+%\node at (1.25,2.75) {\scriptsize $A_2$};
+%\node at (0.25,1.75) {\scriptsize $A_3$};
+%\node at (1.25,1.75) {\scriptsize $A_4$};
+%\node at (0.25,0.75) {\scriptsize $A_5$};
+%\node at (1.25,0.75) {\scriptsize $A_6$};
+%}
+%
+%\begin{figure}[t!]
+%\centering
+%\begin{tikzpicture}[scale = 1, every node/.style={scale=1}]
+%% Continuous domain D
+%\begin{scope}
+%\node at (1,3.5) {$D$};
+%\draw (0, 0) rectangle (2, 3);
+%\end{scope}
+%% Discretised domain, D^G
+%\begin{scope}[xshift = 2.5cm]
+%\node at (1,3.5) {$D^G$};
+%\BAUgrid
+%\end{scope}
+%% Discretised domain, D^G, with observations
+%\begin{scope}[xshift = 5cm]
+%\BAUgrid
+%\filldraw[red, opacity = 0.7] (0.75,2.75) circle (0.08cm);
+%\node at (0.75,2.5) {\scriptsize $R_1$};
+%\filldraw[color=red, fill=red, opacity = 0.7] (0.15, 0.15) rectangle (1.15, 0.9);
+%\node at (0.75,0.5) {\scriptsize \textcolor{white}{$R_2$}};
+%\end{scope}
+%% observation supports
+%\begin{scope}[xshift = 7.5cm]
+%\node at (1,3.5) {$D^O$};
+%\draw[step=1cm] (0,3) grid (1,2);
+%\draw[step=1cm] (0,0) grid (2,1);
+%\node at (1.2,2.5) {\scriptsize $B_1$};
+%\node at (0.25,2.75) {\scriptsize $A_1$};
+%\node at (1,1.2) {\scriptsize $B_2$};
+%\node at (0.25,0.75) {\scriptsize $A_5$};
+%\node at (1.25,0.75) {\scriptsize $A_6$};
+%\end{scope}
+%\end{tikzpicture}
+%\caption{
+%An illustration of how the continuous spatial domain, $D$, is discretised into the set $D^G$ of BAUs, and how the observation domain, $D^O$, is derived from the observation supports.
+%(Left) The continuous spatial domain, $D$.
+%(Centre-left) The spatial domain discretised into $N = 6$ BAUs, $D^G \equiv \{A_i: i = 1, \dots, 6\}$. 
+%(Centre-right) $D^G$ superimposed with $m = 2$ observations, one that is point-referenced ($R_1$) and one that is areally-referenced ($R_2$). 
+%(Right) 
+%The observation domain, \mbox{$D^O \equiv \{B_1, B_2\}$}, where $B_1 \equiv A_1$ and $B_2 \equiv A_{5} \cup A_{6}$. 
+%}\label{fig:BAU_intuition}
+%\end{figure}
+
 
 Define the conditional mean of the data as $\vec{\mu}_Z \equiv \left(\E{Z_1 \mid \vec{\mu}}, \dots, \E{Z_m \mid \vec{\mu}}\right)^\tp$, where henceforth we treat the supports of $Z_1, \dots, Z_m$ as $B_1, \dots, B_m$, respectively. 
  Since each $B_j \in D^O$ is either a BAU or a union of BAUs, one can construct an $m\times N$ matrix 
@@ -855,7 +918,7 @@ $\vec{Y}$ and mean process $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), and data 
 %For each quantity, we use the posterior expectation as our predictor. % ; a decision theoretic justification for this choice is provided by \citet*[ch.~3]{Cressie_1993_stats_for_spatial_data}.
 Recall that the Laplace approximation implies that the conditional distribution of $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$ is, approximately, $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$; since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $\vec{Y}$ can be carried out using well-known formulas. 
 %  However, the posterior distribution of a non-linear function of $Y(\cdot)$ (e.g., the mean $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y})) is typically not available in closed form, and some approximation is required.
-  However, the posterior distribution of a non-linear function of $\vec{Y}$ (e.g., the mean $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)})) is typically not available in closed form, and some approximation is required.
+  However, the posterior distribution of a non-linear function of $\vec{Y}$, for example, the mean $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), is typically not available in closed form, and some approximation is required.
 %  In \pkg{FRK} v2, we use a Monte Carlo (MC) approach to inference on $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.
  In \pkg{FRK} v2, we therefore use a Monte Carlo (MC) approach to inference on non-linear functions of $\vec{Y}$, by first drawing a sample from the approximate conditional distribution of $\vec{u}$ and then transforming the sample accordingly. 
   
@@ -1132,7 +1195,7 @@ where $f(\cdot)$ is one of the aforementioned functions whose inverse has a rang
   \end{equation} 
   where $h(\cdot\,; \cdot)$ is applied element-wise. 
  When predicting, BAU-level size parameters are needed to compute the predictive distribution of $\vec{\mu}$, $\vec{\pi}_P$, and $\vec{\mu}_P$. 
- If these size parameters are not available at unobserved BAUs, the user can still obtain predictions of $\vec{\pi}$ if a logit, probit, or complementary log-log functions is used, as in these cases $\vec{\pi}$ is linked directly to $\vec{Y}$ in (\ref{eqn:pi_i_equals_f_Y_i}). 
+ If these size parameters are not available at unobserved BAUs, the user can still obtain predictions of $\vec{\pi}$ if the user chooses to use a logit, probit, or complementary log-log link function, since then $\vec{\pi}$ is linked directly to $\vec{Y}$ in (\ref{eqn:pi_i_equals_f_Y_i}). 
 
 
  In most applications that consider binomial or negative-binomial data models, 
@@ -1217,7 +1280,6 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 \begin{table}
     \centering
     \setlength{\tabcolsep}{4pt}
- \caption{Important new or augmented function arguments in \pkg{FRK} v2.}\label{tab:new_arguments_in_functions} 
     \begin{tabular}{ccp{9cm}}
     \hline
     Function & Argument & Use\\
@@ -1259,6 +1321,8 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 \fct{plot} & - & A method for visualising the data, predictions, and uncertainty quantification of the predictions given an \class{SRE} object and the \class{Spatial*DataFrame} or \class{STFDF} object  resulting from a call to \fct{predict} on the \class{SRE} object.\\
         \hline
     \end{tabular}
+     \caption{Important new or augmented function arguments in \pkg{FRK} v2.}
+ \label{tab:new_arguments_in_functions} 
 \end{table}
 
 
@@ -1266,8 +1330,6 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 \setlength{\tabcolsep}{6pt}
 \renewcommand{\arraystretch}{1.5}
     \begin{center}
-    \caption{Combinations of exponential-family-member response distributions and link functions available in \pkg{FRK} v2. A `\checkmark' indicates a combination is supported. A `$\bullet$' indicates a combination is allowed; however, due to the implied range of $\mu$, the values that the data may take, and the form of probability density function of that family, nonsensical results are possible. If one of these problematic combinations is chosen, a warning is given to the user. Finally, blank entries indicate that the combination is not allowed.}
-    \label{table:response_and_links}
     \begin{tabular}{cc|*{5}{c}|}
     \multicolumn{2}{c}{} & \multicolumn{5}{c}{\textbf{Link Function}} \\
     % Use multicolumn to remove vertical bars
@@ -1275,15 +1337,28 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 %     \multicolumn{1}{c}{\pbox{4cm}{logit/\\probit/\\cloglog}}  
 \multicolumn{1}{c}{logit/probit/cloglog} 
      \\\cline{3-7} 
-     \multirow{7}{*}{\rotatebox{90}{\textbf{Family}}} & Gaussian & \checkmark & \checkmark & $\bullet$ & $\bullet$ &  \\
-      & Poisson & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
-      & gamma & $\bullet$ & $\bullet$ & \checkmark & \checkmark &  \\
-      & inverse-Gaussian & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
+%     \multirow{7}{*}{\rotatebox{90}{\textbf{Family}}} & Gaussian & \checkmark & \checkmark & $\bullet$ & $\bullet$ &  \\
+%      & Poisson & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
+%      & gamma & $\bullet$ & $\bullet$ & \checkmark & \checkmark &  \\
+%      & inverse-Gaussian & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
+%      & negative-binomial &  &  &   \checkmark & \checkmark & \checkmark \\
+%      & binomial &  &  &  &  &   \checkmark \\\cline{3-7}
+      \multirow{7}{*}{\rotatebox{90}{\textbf{Family}}} & Gaussian & \checkmark & \checkmark & \checkmark & \checkmark &  \\
+      & Poisson & $\checkmark$ & $\checkmark$ &  \checkmark & \checkmark &  \\
+      & gamma & $\checkmark$ & $\checkmark$ & \checkmark & \checkmark &  \\
+      & inverse-Gaussian & $\checkmark$ & $\checkmark$ &  \checkmark & \checkmark &  \\
       & negative-binomial &  &  &   \checkmark & \checkmark & \checkmark \\
-      & binomial &  &  &  &  &   \checkmark \\\cline{3-7}
+       & binomial &  &  &  &  &   \checkmark \\\cline{3-7}
     \end{tabular}
     \end{center}
+        \caption{Combinations of exponential-family-member response distributions and link functions available in \pkg{FRK} v2. A `\checkmark' indicates a combination is supported. 
+%        A `$\bullet$' indicates a combination is allowed; however, due to the implied range of $\mu$, the values that the data may take, and the form of probability density function of that family, nonsensical results are possible. If one of these problematic combinations is chosen, a warning is given to the user. 
+%        Finally, blank
+        Blank 
+        entries indicate that the combination is not allowed.}\label{table:response_and_links}
 \end{table}
+
+
 
 
 
@@ -1301,7 +1376,7 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
     \centering
     \includegraphics[width = 0.8\linewidth]{results/3_1_Poisson_sim_true_process_and_data.png}
     \vspace{-10pt}    
-    \caption{Simulated, point-referenced, Poisson data set used in the illustrative example of Section \ref{sec:03-01:Poisson}. (Left panel) True mean process evaluated over the BAUs, $\vec{\mu}$. (Right panel) Simulated Poisson data set, $\vec{Z}$.}
+    \caption{Simulated, point-referenced, Poisson data set used in the illustrative example of Section \ref{sec:03-01:Poisson}. (Left) True mean process evaluated over the BAUs, $\vec{\mu}$. (Right) Simulated Poisson data set, $\vec{Z}$.}
   \label{fig:Poisson_true_and_Z}
 \end{figure}
 
@@ -1339,7 +1414,7 @@ The point-like nature of this reduction in uncertainty arises from the fine-scal
     \centering
     \includegraphics[width = \linewidth]{results/3_1_Poisson_sim.png}
     \vspace{-20pt}  
-    \caption{Predictions and prediction-interval widths returned by \pkg{FRK} v2 when applied to the simulated Poisson data shown in the right panel of Figure \ref{fig:Poisson_true_and_Z}. (Left panel) Prediction of $\vec{Y}$, the latent process over the BAUs. (Centre-left panel) Width of the 90\% prediction interval for each element of $\vec{Y}$. (Centre-right panel) Prediction of $\vec{\mu} = g^{-1}(\vec{Y})$, the mean process over the BAUs. (Right panel) Width of the 90\% prediction interval for each element of $\vec{\mu}$.}
+    \caption{Predictions and prediction-interval widths returned by \pkg{FRK} v2 when applied to the simulated Poisson data shown in the right panel of Figure \ref{fig:Poisson_true_and_Z}. (Left) Prediction of $\vec{Y}$, the latent process over the BAUs. (Centre left) Width of the 90\% prediction interval for each element of $\vec{Y}$. (Centre right) Prediction of $\vec{\mu} = g^{-1}(\vec{Y})$, the mean process over the BAUs. (Right) Width of the 90\% prediction interval for each element of $\vec{\mu}$.}
   \label{fig:Poisson_nres3}
 \end{figure}
 
@@ -1367,10 +1442,10 @@ We then construct the mean process, $\vec{\mu}$, evaluated over the BAUs, which 
     \includegraphics[width = \linewidth]{results/3_2_Negbinom_sim_data.png}
     \vspace{-20pt}
     \caption{The simulated, areal, negative-binomial data set used in the illustrative example of Section \ref{sec:03-03:negative-binomial}. 
-    (Left panel) True probability process evaluated over the BAUs, $\vec{\pi}$. 
-    (Centre-left panel) True mean process evaluated over the BAUs, $\vec{\mu}$. 
-    (Centre-right panel) True mean, $\vec{\mu}_Z$, at the data-support level. 
-    (Right panel) Simulated data, $\vec{Z}$, used for model fitting.  
+    (Left) True probability process evaluated over the BAUs, $\vec{\pi}$. 
+    (Centre left) True mean process evaluated over the BAUs, $\vec{\mu}$. 
+    (Centre right) True mean, $\vec{\mu}_Z$, at the data-support level. 
+    (Right) Simulated data, $\vec{Z}$, used for model fitting.  
     The centre-right and right panels also show the data supports, some at the finest (BAU) resolution and some at the coarser-grid resolution. 
     Shown in white are spatial supports 
 %    (at the finest and coarser-grid resolutions) 
@@ -1412,10 +1487,10 @@ R> pred <- predict(S)
     \vspace{-20pt}
     \caption{
     Prediction and prediction-interval widths returned by \pkg{FRK} v2 when applied to the simulated negative-binomial areal data set shown in the right panel of Figure \ref{fig:03-02-negative-binomial_data}. 
-    (Left panel) Prediction of the probability process, $\vec{\pi}$, over the BAUs. 
-    (Centre-left panel) Width of the 90\% prediction interval for each element of $\vec{\pi}$. 
-    (Centre-right panel) Prediction of the mean process, $\vec{\mu}$, over the BAUs. 
-    (Right panel) Width of the 90\% prediction interval for each element of $\vec{\mu}$.
+    (Left) Prediction of the probability process, $\vec{\pi}$, over the BAUs. 
+    (Centre left) Width of the 90\% prediction interval for each element of $\vec{\pi}$. 
+    (Centre right) Prediction of the mean process, $\vec{\mu}$, over the BAUs. 
+    (Right) Width of the 90\% prediction interval for each element of $\vec{\mu}$.
     } 
   \label{fig:03-02-negative-binomial}
 \end{figure}
@@ -1443,10 +1518,10 @@ Figure \ref{fig:03-02-negative-binomial_polygons} shows the predictions and pred
 	\vspace{-20pt}    
     \caption{Predictions and prediction-interval widths for the probability process, $\vec{\pi}_P$, and the mean process, $\vec{\mu}_P$, when predicting over arbitrary prediction regions in the negative-binomial example of Section \ref{sec:03-03:negative-binomial}. 
     Note that these polygons have equal area. 
-    (Left panel) Prediction of the probability process, $\vec{\pi}_P$, over the prediction regions. 
-    (Centre-left panel) Width of the 90\% prediction interval for each element of $\vec{\pi}_P$. 
-    (Centre-right panel) Prediction of the mean process, $\vec{\mu}_P$, over the prediction regions. 
-    (Right panel) Width of the 90\% prediction interval for each element of $\vec{\mu}_P$.    
+    (Left) Prediction of the probability process, $\vec{\pi}_P$, over the prediction regions. 
+    (Centre left) Width of the 90\% prediction interval for each element of $\vec{\pi}_P$. 
+    (Centre right) Prediction of the mean process, $\vec{\mu}_P$, over the prediction regions. 
+    (Right) Width of the 90\% prediction interval for each element of $\vec{\mu}_P$.    
     }
     \label{fig:03-02-negative-binomial_polygons}
 \end{figure}
@@ -1467,15 +1542,9 @@ In our first experiment, we repeated the analysis in Section \ref{sec:03-01:Pois
  
 \begin{table}[t!]
     \centering
-    \caption{
-    Diagnostics comparing the predictive performance when using a range of basis-function resolutions with point-referenced count data. The diagnostics are the root-mean-squared prediction error (RMPSE), the continuous ranked probability score (CRPS), and the empirical coverage (Cvg90) and interval score (IS90) resulting from a prediction interval with a nominal coverage of 90\% (see Appendix \ref{app:ScoringRules} for further details). 
-    The diagnostics are with regard to prediction of $\vec{\mu}$ and they are averaged over all unobserved BAUs. 
-    }
-    \vspace{10pt}
-    \label{tab:03-02:PoissonScoringRules}
     \begin{tabular}{cccccc}
     \hline
-    Resolutions (basis functions) & RMSPE  & CRPS & Cvg90 & IS90 & Run Time (Min.) \\
+    Resolutions (basis functions) & RMSPE  & CRPS & Cvg90 & IS90 & Run time (min.) \\
     \hline
     % trig field:
     1 (9)    & 84.71    & 47.58 & 0.901  & 390.05 &  0.07  \\
@@ -1488,6 +1557,11 @@ In our first experiment, we repeated the analysis in Section \ref{sec:03-01:Pois
 %    3 (819)  & 8.87     & 4.85   & 0.903  & 35.84  &  0.521 \\
     \hline
     \end{tabular}
+        \caption{
+    Diagnostics comparing the predictive performance when using a range of basis-function resolutions with point-referenced count data. The diagnostics are the root-mean-squared prediction error (RMPSE), the continuous ranked probability score (CRPS), and the empirical coverage (Cvg90) and interval score (IS90) resulting from a prediction interval with a nominal coverage of 90\% (see Appendix \ref{app:ScoringRules} for further details). 
+    The diagnostics are with regard to prediction of $\vec{\mu}$ and they are averaged over all unobserved BAUs. 
+    }
+    \label{tab:03-02:PoissonScoringRules}
 \end{table}
 
 
@@ -1501,13 +1575,11 @@ In our first experiment, we repeated the analysis in Section \ref{sec:03-01:Pois
 \begin{table}[t!]
     \begin{center}
     \setlength{\tabcolsep}{5pt}
-    \caption{Scores for each method in the comparative study presented in \cite{Heaton_2019_comparative_study}.}
-    \label{tab:Heaton_comparison}
     \begin{tabular}{lcccccrr}
     \hline
-    Method & MAE  & RMSPE & CRPS & IS95 & Cvg95 & Run Time (Min.) & Cores Used \\[0pt]
+    Method & MAE  & RMSPE & CRPS & IS95 & Cvg95 & Run time (min.) & Cores \\[0pt]
     \hline
-    \pkg{FRK} v2 & 1.37  & 1.81 & 0.98  & 8.97 & 0.89 & $22.41^{*}$ & 8    \\[0pt]
+    \pkg{FRK} v2 & 1.37  & 1.81 & 0.98  & 8.97 & 0.89 & 22.41 & 8    \\[0pt]
     \pkg{FRK} v1 & 1.96   & 2.44 & 1.44  & 14.08 & 0.79 & 2.32 & 1\\[0pt]
     Gapfill & 1.33   & 1.86 & 1.17  & 34.78 & 0.36 & 1.39 & 40\\[0pt]
     Lattice Krig & 1.22   & 1.68 & 0.87  & 7.55 & 0.96 & 27.92 & 1\\[0pt]
@@ -1524,9 +1596,8 @@ In our first experiment, we repeated the analysis in Section \ref{sec:03-01:Pois
     \hline
     \end{tabular}
     \end{center}
-    \begin{tabnote}
-$^{*}$\pkg{FRK} v2 was implemented in a different computing environment than the other models, and so its run time is not directly comparable. \pkg{FRK} v2 was implemented using a machine with 16 GB of RAM and an Intel i7-9700 3.00GHz CPU with 8 cores. The other models were implemented using the powerful Becker computing environment (256 GB of RAM and 2 Intel Xeon E5-2680 v4 2.40GHz CPUs with 14 cores each and 2 threads per core) located at Brigham Young University \citep{Heaton_2019_comparative_study}.  
-\end{tabnote}
+    \caption{Scores for each method in the comparative study presented in \cite{Heaton_2019_comparative_study}. Note that \pkg{FRK} v2 was implemented in a different computing environment than the other models, and so its run time is not directly comparable. \pkg{FRK} v2 was implemented using a machine with 16 GB of RAM and an Intel i7-9700 3.00GHz CPU with 8 cores. The other models were implemented using the powerful Becker computing environment (256 GB of RAM and 2 Intel Xeon E5-2680 v4 2.40GHz CPUs with 14 cores each and 2 threads per core) located at Brigham Young University \citep{Heaton_2019_comparative_study}.}
+    \label{tab:Heaton_comparison}
 \end{table}
 
 
@@ -1547,15 +1618,16 @@ $^{*}$\pkg{FRK} v2 was implemented in a different computing environment than the
 We now provide several application and comparison studies using \pkg{FRK} v2.
 In Section \ref{sec:04-01:MODIS}, we present a comparison study between \pkg{FRK} v2 and other packages that cater for non-Gaussian data models. 
 In Section \ref{sec:block_prediction}, we demonstrate block prediction using contaminated soil data and compare our results to that from the package \pkg{georob}. 
-In Section \ref{sec:spatialCOS}, we use data on poverty figures in Sydney, Australia, to demonstrate the spatial change-of-support functionality of \pkg{FRK} v2 in a non-Gaussian setting.
-In Section \ref{sec:ST_example}, we provide a non-Gaussian spatio-temporal example through modelling crime counts in the city of Chicago during the first two decades of the 21st century.
+In Section \ref{sec:spatialCOS}, we use data on poverty figures in Sydney, Australia, to demonstrate the spatial change-of-support functionality of \pkg{FRK} v2 in a non-Gaussian setting.  
+In Section \ref{sec:ST_example}, we provide a non-Gaussian spatio-temporal example through modelling crime counts in the city of Chicago during the first two decades of the 21st century. 
+For readers wishing to `try out' \pkg{FRK} v2 on a real-world example, we suggest Section \ref{sec:spatialCOS}.  
 
 \subsection{Comparative study: MODIS cloud data}\label{sec:04-01:MODIS}
 
 
 In this section, we compare out-of-sample predictions from \pkg{FRK} version 2.0.1 to those from the \proglang{R} packages \pkg{INLA} version 20.03.17 \citep{Lindgren_2015_R-INLA},  \pkg{spNNGP} version 0.1.4 \citep{Finley_2020_spNNGP}, \pkg{spBayes} version 0.4.3 \citep{Finley_2015_spBayes}, and \pkg{mgcv} version 1.8.33 \citep{Wood_2017_GAM:R} from a spatial binary data set. 
 The data form an image of a cloud taken by the Moderate Resolution Imaging Spectroradiometer (MODIS) instrument aboard the Aqua satellite \citep{MODIS_satelitte} on 05 December 2018 01:00 UTC, over the South Pacific, just east of New Zealand. 
-Data collected from the MODIS instrument have been used in several related works; see, for instance, \cite{Sengupta_2016_MODIS} and  \cite{ZammitMangion_2021_Deep_compositional_spatial_model}.
+%Data collected from the MODIS instrument have been used in several related works; see, for instance, \cite{Sengupta_2016_MODIS} and \cite{ZammitMangion_2021_Deep_compositional_spatial_model}.
 For this comparative study, we pre-processed the data as follows. First, we coarsened the image from over 10 million pixels to a more manageable 33,750 pixels, by creating a 150 $\times$ 225 grid and computing the average value of the response within each grid cell. 
  Second, since the data provided by the MODIS instrument is continuous (namely spectral radiances in units of $\text{W/m}^2/\si{\um}/\text{st}$), we applied a reasonable threshold to obtain a binary version of the data: Specifically, pixels with spectral radiance greater than 7,000 $\text{W/m}^2/\si{\um}/\text{st}$ were labelled `Cloud', and the remaining pixels were labelled `No-cloud'.  
 
@@ -1573,7 +1645,7 @@ The training and test sets under the two sampling schemes are shown in Figure \r
     \includegraphics[width = \linewidth]{results/4_1_MODIS_data.png}
     \vspace{-25pt}
      \caption{
-     MODIS data used in the comparative study of Section \ref{sec:04-01:MODIS}; a white background is used to denote removed data. (Left panel) The missing-at-random (MR) sample used for training.  (Centre-left panel) The MR test data. (Centre-right panel) The `missing-in-a-block' (MB) sample used for training. (Right panel) The MB test data. 
+     MODIS data used in the comparative study of Section \ref{sec:04-01:MODIS}; a white background is used to denote removed data. (Left) The missing-at-random (MR) sample used for training.  (Centre left) The MR test data. (Centre right) The `missing-in-a-block' (MB) sample used for training. (Right) The MB test data. 
      }\label{fig:03-04-Modis1}
 \end{figure}
 
@@ -1629,19 +1701,16 @@ The predictions from \pkg{FRK} v2, \pkg{INLA}, and \pkg{spNNGP} are similar,
     \centering
     \includegraphics[width = \linewidth]{results/4_1_MODIS_ROC.png}
         \vspace{-25pt}
-    \caption{ROC curves for the training/test sets displayed in Figure \ref{fig:03-04-Modis1}. (Left panel) ROC curves generated in the `missing-at-random' experiment. Note that there is a large degree of overlap between \pkg{FRK} v2, \pkg{INLA}, \pkg{mgcv}, and \pkg{spNNGP}. (Right panel) ROC curves generated in the `missing-in-a-block' experiment. } 
+    \caption{ROC curves for the training/test sets displayed in Figure \ref{fig:03-04-Modis1}. (Left) ROC curves generated in the `missing-at-random' experiment. Note that there is a large degree of overlap between \pkg{FRK} v2, \pkg{INLA}, \pkg{mgcv}, and \pkg{spNNGP}. (Right) ROC curves generated in the `missing-in-a-block' experiment. } 
   \label{fig:MODIS:ROC}
 \end{figure}
 
 
 \begin{table}
     \centering
-    \caption{Diagnostic results for the MODIS comparison study. Best performers for a given diagnostic are boldfaced.}
-        \vspace{10pt}
-    \label{tab:summary_of_analyses}
     \begin{tabular}{lcccc}
     \hline
-   Scheme &  Method  & Brier score & AUC &  Run Time (Min.) \\
+   Scheme &  Method  & Brier score & AUC &  Run time (min.) \\
    \hline
   MR & FRK v2 & 0.09 & \textbf{0.96} & 9.78 \\ 
    & INLA & 0.09 & 0.95 & \textbf{6.48} \\ 
@@ -1656,6 +1725,8 @@ MB & FRK v2 & \textbf{0.19} & \textbf{0.77} & 31.74 \\
    & spNNGP & 0.20 & 0.75 & 65.30 \\     
    \hline    
   \end{tabular}
+      \caption{Diagnostic results for the MODIS comparison study. Best performers for a given diagnostic are boldfaced.}
+    \label{tab:summary_of_analyses}
 \end{table}
  
 
@@ -1701,7 +1772,7 @@ Hence, %soil remediation for
     \centering
     \includegraphics[width = \linewidth]{results/4_2_Am_data_and_blocks.png}
         \vspace{-20pt}
-    \caption{Americium (Am) soil data. The `$\times$' denotes Ground Zero (GZ), where the devices were detonated. (Left panel) Am concentrations on the original scale. (Centre panel) Am concentrations on the log scale. (Right panel) Blocking schemes: Scheme 1 (solid lines), centred away from GZ, and Scheme 2 (dashed lines), centred on GZ.}   
+    \caption{Americium (Am) soil data. The `$\times$' denotes Ground Zero (GZ), where the devices were detonated. (Left) Am concentrations on the original scale. (Centre) Am concentrations on the log scale. (Right) Blocking schemes: Scheme 1 (solid lines), centred away from GZ, and Scheme 2 (dashed lines), centred on GZ.}   
   \label{fig:Am_data}
 \end{figure}
 
@@ -1741,7 +1812,7 @@ R> S <- FRK(f = Am ~ -1 + x1 + x2 + x3 + x4,
     \centering
     \includegraphics[width = \linewidth]{results/4_2_Am_comparison.png}
         \vspace{-20pt} 
-    \caption{Plots of block-predictions (left panel) and RMSPE (right panel) of Am concentrations against block size, $|B|^{1/2}$. Both quantities are in units of $10^3$ counts per minute. In both panels, the solid line corresponds to Scheme 1, and the dashed line corresponds to Scheme 2; the red line corresponds to \pkg{FRK} v2, and the blue line corresponds to \pkg{georob}.}   
+    \caption{Plots of block-predictions (left) and RMSPE (right) of Am concentrations against block size, $|B|^{1/2}$. Both quantities are in units of $10^3$ counts per minute. In both panels, the solid line corresponds to Scheme 1, and the dashed line corresponds to Scheme 2; the red line corresponds to \pkg{FRK} v2, and the blue line corresponds to \pkg{georob}.}   
   \label{fig:Americium_block_preds_by_size}
 \end{figure} 
 
@@ -1815,8 +1886,8 @@ It can be clearly seen that the results are very similar despite the use of dime
     \vspace{-20pt}    
     \caption{
     Training data on SA1/SA2 regions used for modelling the proportion of families `in poverty' (see Appendix \ref{Appendix:Sydney_data_description} for how we define `in poverty'). 
-    (Left panel) The number of families, $\vec{k}_Z$. 
-    (Right panel) The observed proportion of families in poverty computed by dividing the number of families in poverty by the total number of families, that is, $Z_j / k_{Z_j}$, for $j = 1, \dots, m$. 
+    (Left) The number of families, $\vec{k}_Z$. 
+    (Right) The observed proportion of families in poverty computed by dividing the number of families in poverty by the total number of families, that is, $Z_j / k_{Z_j}$, for $j = 1, \dots, m$. 
     Solid-grey regions correspond to SA1/SA2 regions in which the total number of families is zero. The data are overlayed on a Stamen base map, where the textured grey areas correspond to bushland, large black areas correspond to ocean or large bodies of water, and solid-black lines correspond to major arterial roads. Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.}   
   \label{fig:SA2_level_data}
 \end{figure}
@@ -1859,7 +1930,12 @@ R> SA1_predictions <- predict(S)
     \centering
     \includegraphics[width = \linewidth]{results/4_3_Sydney_SA1_predictions_mixed.png}
         \vspace{-15pt}
-    \caption{SA1-level predictions. (Left panel) Prediction of the probability process, $\vec{\pi}$, over the SA1 regions, representing the proportion of families in each region. (Right panel) 90\% prediction-interval width for each element of $\vec{\pi}$.
+    \caption{
+    SA1-level predictions. 
+    (Left) Prediction of the probability process, $\vec{\pi}$, 
+%    over the SA1 regions, 
+    representing the proportion of families in poverty in each SA1 region. 
+    (Right) The 90\% prediction-interval width for each element of $\vec{\pi}$.
     Solid-grey regions correspond to SA2 regions in which the total number of families is zero, and hence they are omitted from the study. 
     For details on the underlying Stamen base map, refer to the caption of Figure \ref{fig:SA2_level_data}. 
 }   
@@ -1879,8 +1955,12 @@ R> SA3_predictions <- predict(S, newdata = SA3s)
     \centering
     \includegraphics[width = \linewidth]{results/4_3_Sydney_SA3_predictions_probability_mixed.png}
         \vspace{-15pt}
-    \caption{SA3-level predictions. (Left panel) Prediction of the probability process, $\vec{\pi}_P$, over the SA3 regions, representing the proportion of families in poverty in each region. 
-    (Right panel) The 90\% prediction-interval width for each element of $\vec{\pi}_P$. 
+    \caption{
+        SA3-level predictions. 
+    (Left) Prediction of the probability process, $\vec{\pi}_P$, 
+%    over the SA3 regions, 
+	representing the proportion of families in poverty in each SA3 region. 
+    (Right) The 90\% prediction-interval width for each element of $\vec{\pi}_P$. 
     For details on the underlying Stamen base map, refer to the caption of Figure \ref{fig:SA2_level_data}.
 }   
   \label{fig:SA3_predictions}
@@ -1907,7 +1987,8 @@ An attractive property of CAs is their relative consistency, with
 boundaries that have changed little since their inception in the 1920s \citep{Chicago_library_census_data_info}. 
  %Shapefiles for the CAs are available for download from the open data source website, Plenario (\url{http://plenar.io/explore/discover}), or directly from the city of Chicago website (\url{https://data.cityofchicago.org/}). 
 In this study, we model the number of crimes in each CA between the years 2001 and 2019 inclusive.
-A full list of crimes committed in Chicago during this period is provided by the Chicago Police Department; the data were originally downloaded from the open-data-source website Plenario \citep{Plenario_open_source_website} and are now available at \mbox{\url{https://hpc.niasra.uow.edu.au/ckan/en_AU/dataset/chicago_crime_dataset}}. 
+A full list of crimes committed in Chicago during this period is provided by the Chicago Police Department; the data %were originally downloaded from the open-data-source website Plenario \citep{Plenario_open_source_website} and 
+ are available at \mbox{\url{https://hpc.niasra.uow.edu.au/ckan/en_AU/dataset/chicago_crime_dataset}}. 
 %The full data set has over 7 million crimes; however, here we consider only violent, non-sexual crimes, which we define as crimes labelled as assault or battery. 
 %We considered only violent, non-sexual crimes, which we defined as crimes labelled as assault or battery 
 %%(we excluded homicide, which is comparatively rare, with 10,324 recorded instances in our data set).
@@ -1991,16 +2072,16 @@ Finally, we generate predictive data over the spatio-temporal BAUs using \fct{pr
   \label{fig:chicago_time_series}
 \end{figure}
 
-\begin{figure}[t!]
-    \centering
-    \includegraphics[width = \linewidth]{results/4_4_Chicago_focused_CAs_predictive_distributions.png}
-    \vspace{-15pt}    
-    \caption{Predictive distributions in the prediction (2010) and forecast (2019) years for three randomly-selected CAs (Archer Heights, Ashburn, and Roseland). 
- In each panel, the red line corresponds to the observed (withheld) number of crimes and the blue line corresponds to the predicted number of crimes. 
-    The first row corresponds to the year 2010 and the second row corresponds to the year 2019. 
-    The first, second, and third columns correspond to Archer Heights, Ashburn, and Roseland, respectively.}   
-  \label{fig:chicago_predictive_distributions}
-\end{figure}
+%\begin{figure}[t!]
+%    \centering
+%    \includegraphics[width = \linewidth]{results/4_4_Chicago_focused_CAs_predictive_distributions.png}
+%    \vspace{-15pt}    
+%    \caption{Predictive distributions in the prediction (2010) and forecast (2019) years for three randomly-selected CAs (Archer Heights, Ashburn, and Roseland). 
+% In each panel, the red line corresponds to the observed (withheld) number of crimes and the blue line corresponds to the predicted number of crimes. 
+%    The first row corresponds to the year 2010 and the second row corresponds to the year 2019. 
+%    The first, second, and third columns correspond to Archer Heights, Ashburn, and Roseland, respectively.}   
+%  \label{fig:chicago_predictive_distributions}
+%\end{figure}
 
 The observed (withheld) number of crimes, predicted number of crimes, and prediction uncertainty for the prediction (2010) and forecast (2019) years are shown in Figure \ref{fig:chicago_validation_predictions}. 
 For both years, Figure \ref{fig:chicago_validation_predictions} shows agreement between the predicted and observed number of crimes. Furthermore, the prediction uncertainty is roughly proportional to the predicted value, as expected when counts are modelled.
@@ -2014,8 +2095,8 @@ Next, we next focus on three randomly-selected CAs: Archer heights, Ashburn, and
 %The prediction intervals are slightly wider in validation years (2010 and 2019) than in observed years. 
 % The observed (withheld) number of crimes is contained within the prediction interval for all time points for these CAs.
 The prediction intervals are slightly wider in validation years (2010 and 2019) than in observed years, and the observed (withheld) number of crimes is contained within the prediction interval for all time points for these CAs.
-The predictive distributions in the validation years for the three CAs of interest are shown in Figure \ref{fig:chicago_predictive_distributions}.
-The forecasts for Ashburn and Roseland in the year 2019 are particularly accurate, with the forecasted number of crimes very close to the observed (withheld) number of crimes. 
+%The predictive distributions in the validation years for the three CAs of interest are shown in Figure \ref{fig:chicago_predictive_distributions}.
+%The forecasts for Ashburn and Roseland in the year 2019 are particularly accurate, with the forecasted number of crimes very close to the observed (withheld) number of crimes. 
 
 \section{Conclusion}\label{SEC:Conclusion}
 
@@ -2093,19 +2174,19 @@ The authors would like to thank Rajib Paul for providing the Americium data anal
 %     \begin{subfigure}[b]{\linewidth}
 %         \centering
 %         \includegraphics[width=\linewidth]{results/03-02-Poisson_plots2a.png}
-%         \caption{(Left panel) True conditional mean of the data, $\mu(\cdot)$. (Right panel) Observed data.}\label{fig:03-02-PoissonResA}
+%         \caption{(Left) True conditional mean of the data, $\mu(\cdot)$. (Right) Observed data.}\label{fig:03-02-PoissonResA}
 %         \vspace{2\baselineskip}
 %     \end{subfigure}
 %     \begin{subfigure}[b]{\linewidth}
 %         \centering
 %         \includegraphics[width=\linewidth]{results/03-02-Poisson_plots2b.png}
-%         \caption{Prediction maps using basis functions of one resolution (left panel), two resolutions (centre panel), and three resolutions (right panel).}\label{fig:03-02-PoissonResB}
+%         \caption{Prediction maps using basis functions of one resolution (left), two resolutions (centre), and three resolutions (right).}\label{fig:03-02-PoissonResB}
 %         \vspace{2\baselineskip}
 %     \end{subfigure}
 %         \begin{subfigure}[b]{\linewidth}
 %         \centering
 %         \includegraphics[width=\linewidth]{results/03-02-Poisson_plots2c.png}
-%         \caption{Prediction uncertainty maps using basis functions of one resolution (left panel), two resolutions (centre panel), and three resolutions (right panel).}\label{fig:03-02-PoissonResC}
+%         \caption{Prediction uncertainty maps using basis functions of one resolution (left), two resolutions (centre), and three resolutions (right).}\label{fig:03-02-PoissonResC}
 %         \vspace{2\baselineskip}
 %     \end{subfigure}
 %     \caption{Several panels summarising the analysis of a Poisson data set using one, two, and three resolutions of basis functions. Clearly, detail of our predictions increases with an increasing number of resolutions used; this is apparent by comparing the smooth, relatively uniform prediction and uncertainty maps created using one resolution, to the more intricate maps generated using three resolutions. The prediction uncertainty also decreases as we use more basis functions.}
@@ -2154,7 +2235,7 @@ Recall from Section \ref{subsection:04-01:ProcessLayer} that \pkg{FRK} v2 allows
 \begin{equation}\label{eqn:02-01:K_covariance_function}
     K_k(\vec{s}, \vec{s}^*)  = \sigma^2_k \exp \left\{\frac{-d(\vec{s},\vec{s}^*)}{\tau_k}\right\}, 
 \end{equation}
-where $d(\vec{s},\vec{s}^*)$ is the distance between two basis-function centroids $\vec{s}, \vec{s}^* \in D$, $\sigma^2_k$ is a variance parameter, and $\tau_k$ is a length-scale parameter.  The $k$th sub-block of $\vec{K}$ is formed by evaluating \ref{eqn:02-01:K_covariance_function} for all pairs of basis-function centroids at the $k$th resolution.
+where $d(\vec{s},\vec{s}^*)$ is the distance between two basis-function centroids $\vec{s}, \vec{s}^* \in D$, $\sigma^2_k$ is a variance parameter, and $\tau_k$ is a length-scale parameter.  The $k$th sub-block of $\vec{K}$ is formed by evaluating (\ref{eqn:02-01:K_covariance_function}) for all pairs of basis-function centroids at the $k$th resolution.
 
 
 Clearly (\ref{eqn:02-01:K_covariance_function}) is always non-zero for $\sigma^2_k > 0$, however 
@@ -2574,7 +2655,7 @@ Recall from Section \ref{subsection:Prediction} that $\vec{C}_P$ aggregates the 
  h(\mu; k) = \frac{k}{\mu + k},
  \end{equation}
  when the response distribution is negative-binomial. 
- By construction, using $h(\cdot\,; \cdot)$ to link the probability process to the mean process as described in Section \ref{sec:Distributions with size parameters}, ensures that the range of the mean process is appropriate for modelling the expectation of a binomial distributed random variable, 
+ By construction, using $h(\cdot\,; \cdot)$ to link the probability process to the mean process in (\ref{eqn:h_mu_equals_pi}), ensures that the range of the mean process is appropriate for modelling the expectation of a binomial distributed random variable, 
  where the mean must lie in the range $(0, k)$, %%% PREVENT ORPHAN/WIDOW
  or a negative-binomial distributed random variable,  
   where the mean must lie in the range $(0, \infty)$. %%% PREVENT ORPHAN/WIDOW

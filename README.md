@@ -31,15 +31,29 @@ When running the replication script, the user will be asked if they wish to inst
 
 ### Results
 
-The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. Note that some of the results will look very different when using these low-dimensional representations (particularly the results for Section 4.1).
+The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. Note that some of the results will look very different when using these low-dimensional representations (particularly the results for Section 4.1). 
+
+Please note that the replication material for Table 4 reproduce the results for FRK v2 only; the other results shown shown in Table 4 are taken from Table 3 in Heaton et al. (2019). 
 
 #### Hardware requirements
 
 You will need at least 32GB of RAM (or RAM + swap) to run the very-low-dimensional representations of the models, and you will need at least 64GB of RAM (or RAM + swap) to run the full models. 
 
-#### A note on long run times
+#### Run times
 
-The MODIS comparison study takes several hours to obtain the exact results of the manuscript. This was unavoidable due to the nature of the study and the necessity to give each package every opportunity to perform well. In addition to the option of using low-dimensional representations as described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. You may also wish to comment out some sections in the replication script, as you see fit. 
+The following are estimates of the expected run time needed to reproduce the full results of the manuscript: 
+
+- Section 3.1: ~5 minutes
+- Section 3.2: ~5 minutes
+- Section 3.3: ~30 minutes
+- Section 4.1: ~15 hours
+- Section 4.2: ~5 minutes
+- Section 4.3: ~5 minutes
+- Section 4.3: ~30 minutes
+
+Please note that the lengthy run-time for Section 4.1, the MODIS comparison study, was unavoidable due to the nature of the study and the necessity to provide each package with every opportunity to perform well. In addition to the option of using low-dimensional representations as described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. We thank reviewers for their understanding and patience. 
+
+Note that the replication script is very clearly presented and commented; hence, one may easily "comment out" some sections to produce a subset of the results. For reviewers wishing to easily try out the package on a real-world example, we suggest the Sydney spatial change-of-support example presented in Section 4.3.  
 
 <!---
 ### Note to Windows users

@@ -1643,17 +1643,17 @@ The predictions from \pkg{FRK} v2, \pkg{INLA}, and \pkg{spNNGP} are similar,
     \hline
    Scheme &  Method  & Brier score & AUC &  Run Time (Min.) \\
    \hline
-  MR & FRK v2 & 0.09 & \textbf{0.96} & \textbf{9.78} \\ 
-   & INLA & 0.09 & 0.95 & 54.44 \\ 
-   & mgcv & 0.09 & 0.95 & 45.77 \\ 
-   & spBayes & 0.11 & 0.93 & 68.01 \\ 
+  MR & FRK v2 & 0.09 & \textbf{0.96} & 9.78 \\ 
+   & INLA & 0.09 & 0.95 & \textbf{6.48} \\ 
+   & mgcv & 0.09 & 0.95 & 26.53 \\ 
+   & spBayes & 0.11 & 0.93 & 73.01 \\ 
    & spNNGP & \textbf{0.08} & \textbf{0.96} & 12.35 \\  
    \hline 
-MB & FRK v2 & \textbf{0.19} & \textbf{0.77} & \textbf{17.74} \\ 
-   & INLA & 0.20 & 0.76 & 141.85 \\ 
-   & mgcv & 0.23 & 0.69 & 186.67 \\ 
-   & spBayes & 0.25 & 0.63 & 489.41 \\ 
-   & spNNGP & 0.20 & 0.75 & 59.30 \\     
+MB & FRK v2 & \textbf{0.19} & \textbf{0.77} & 31.74 \\ 
+   & INLA & 0.20 & 0.76 & \textbf{12.19} \\ 
+   & mgcv & 0.23 & 0.69 & 125.67 \\ 
+   & spBayes & 0.25 & 0.63 & 504.41 \\ 
+   & spNNGP & 0.20 & 0.75 & 65.30 \\     
    \hline    
   \end{tabular}
 \end{table}
@@ -1671,8 +1671,8 @@ MB & FRK v2 & \textbf{0.19} & \textbf{0.77} & \textbf{17.74} \\
  
  The task of prediction over a completely unobserved region is challenging, and so it is no surprise that the diagnostics for the MB sampling scheme are worse than for the MR sampling scheme. 
  In this case, we see \pkg{FRK} v2, \pkg{INLA}, and \pkg{spNNGP} performing slightly better than \pkg{mgcv}, which in turn performs better than \pkg{spBayes}. 
- Note that all run times increased under the MB scheme; however, \pkg{FRK} v2 increased by a factor of less than 2, while increases in the run times for other packages were between a factor of 3 and 10. 
- Given that the training sample size is significantly larger in the MB scheme than under the MR scheme (32,850 pixels compared to 6,000 pixels), this suggests that \pkg{FRK} v2 is well suited to fitting and predicting with large sample sizes.  
+% Note that all run times increased under the MB scheme; however, \pkg{FRK} v2 increased by a factor of less than 2, while increases in the run times for other packages were between a factor of 3 and 10. 
+% Given that the training sample size is significantly larger in the MB scheme than under the MR scheme (32,850 pixels compared to 6,000 pixels), this suggests that \pkg{FRK} v2 is well suited to fitting and predicting with large sample sizes.  
  Overall, these results suggest that \pkg{FRK} v2 is comparable to, or favourable to, other packages in this application. 
  However, the main advantages of \pkg{FRK} v2 lie in the ease with which it does more elaborate analyses with spatial or spatio-temporal non-Gaussian data of differing support, as shown in the next sections. 
  

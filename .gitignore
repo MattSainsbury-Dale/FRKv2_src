@@ -8,6 +8,9 @@ Rplots.pdf
 # The src code for the FRK presentation
 FRK_presentation
 
+# The student competition containing the 6-page manuscript
+ASA
+
 # Files that are too large to store on Github
 data/chicago_crime_df.Rda
 data/chicagocrimedf.rda
