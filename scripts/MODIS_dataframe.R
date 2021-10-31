@@ -45,7 +45,7 @@ rm(.Random.seed)
 ## the R version which FRK currently depends (3.2.0). The default version used
 ## by save() is version 3, which is only supported by R 3.5.0 and
 ## above. Using this version adds a dependency to R version >= 3.5.0.
-## If FRK ever explicitly depends on R >= 3.5.0, we are free to use the defult 
+## If FRK ever explicitly depends on R >= 3.5.0, we are free to use the default 
 ## version 3 in these save functions. 
 # save(MODIS_cloud_df, file="MODIS_cloud_df.rda", version = 2)
 save(MODIS_cloud_df, file="MODIS_cloud_df.rda")

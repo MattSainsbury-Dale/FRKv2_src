@@ -65,13 +65,91 @@ dummy <- mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R")
 
 
 
-## Load user defined functions 
+# ---- Helper functions ----
+
 ## These include functions to compute diagnostics, convert data frames from wide
-## to long format in a convenient way for this study, and some other 
-## miscellaneous functions to make the comparison study script easier to read.
-source("./scripts/MODIS_diagnostic_and_misc_fns.R")
-source("./scripts/Plotting_helpers/Plotting_helpers.R")
-source("./scripts/Plotting_helpers/MODIS_plotting_fns.R")
+## to long format in a convenient way for this study, and some plotting 
+## helper functions.
+
+## Define the functions we will use for comparing across methods
+BrierScore <- function(Z, pred) mean((Z - pred)^2)
+AUC <- function(Z, pred) suppressMessages(as.numeric(pROC::auc(Z, pred)))
+
+compute_diagnostics_MODIS <- function(df) {
+  summarise(df, Brier = BrierScore(z, pred), AUC = AUC(z, pred))
+}
+
+## Creates long form dataframe, useful for diagnostics and plotting
+long_prediction_data_frame <- function(df) {
+  data.frame(
+    Method = rep(PACKAGES, each = nrow(df)),
+    x    = rep(df$x, times = length(PACKAGES)),
+    y    = rep(df$y, times = length(PACKAGES)),
+    pred   = c(as.matrix(df[, paste0("pred_", PACKAGES)]))
+  )
+}
+
+## Define a function needed for the missing-block sampling scheme.
+## Samples a rectangular Block of width w and height h from a rectangular spatial 
+## region defined by the coordinates x and y in df. 
+## It randomly samples a point within D which acts as a 
+## lower-left vertex for the Block. The sample region for this vertex depends on 
+## the size of the Block; we cannot have it too close to the right- or top-edge of 
+## D, otherwise the Block will extend beyond the considered boundaries of D. 
+sampleBlock <- function(df, w, h) {
+  ## Retain only those coordinates which would result in the entire Block being inside D
+  df <- df %>% subset(x < (max(x) - w) & y < (max(y) - h))
+  
+  ## Sample a point from the valid domain which will act as the lower-left vertex
+  v1 <- df[sample(1:nrow(df), 1), c("x", "y")]
+  
+  ## Now create the upper-right vertex
+  v2 <- v1 + c(w, h)
+  
+  return(c(xmin = v1[, 1], 
+           ymin = v1[, 2], 
+           xmax = v2[, 1], 
+           ymax = v2[, 2]))
+}
+
+
+cloud_colour    = "orange"  # "white"
+no_cloud_colour = "blue"    # "black"
+missing_colour  = "white"   # "#BFD5E3"
+midpoint_colour = "gray" 
+
+change_font_size <- function(gg) {
+  gg + theme(axis.text = element_text(size = 10),
+             axis.title = element_text(size = 13), 
+             legend.text = element_text(size = 10), 
+             strip.text = element_text(size = 12))
+}
+
+training_data_background <- theme(
+  panel.background = element_rect(fill = "white", colour = "white"), # "#6D9EC1"),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank()
+)
+
+discrete_cloud_theme <- theme(legend.key=element_rect(
+  # fill = "gray", colour = "gray", # use this if you colour the clouds white
+  fill = "white", colour = "white", 
+  size = 2))
+
+
+discrete_cloud_scale <- scale_fill_gradient(low = no_cloud_colour, 
+                                            high = cloud_colour,
+                                            breaks = c(0, 1),
+                                            guide = "legend",
+                                            labels = c("No Cloud", "Cloud"),
+                                            name = "")
+
+
+common_layers <- ggplot() + theme_bw() + coord_fixed() +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) + 
+  labs(x = bquote(s[1]), y = bquote(s[2]))
+
 
 
 # ---- Load MODIS data  ----
