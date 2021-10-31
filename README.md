@@ -41,7 +41,7 @@ As described above, to reproduce the results of the manuscript, users need only 
 
 1. The fitting and prediction functions for each package in Section 4.1 (MODIS comparison) are stored in separate files, in the folder `scripts/MODIS_modelling_fns`. This was done so that the authors of these packages could quickly look to see how their package was used. 
 2. The file `Utility_fns.R` contains some basic helper functions used throughout the repo. 
-3. `setup.R` deals with the installation of dependencies listed in `dependcies.txt`, and checks that the data has been downloaded correctly. 
+3. `setup.R` deals with the installation of dependencies listed in `dependencies.txt`, and checks that the data has been downloaded correctly. 
 
 We deviate from the standard of a single "standalone replication script" in part because of practical neccessity; calling the `R` scripts individually from terminal means that each section is run independently of the other sections. This independence is important in order to keep the hardware requirements to a minimum; if the scripts are run in a single `R` session, garbage can accrue, leading to potential memory issues.   
 
