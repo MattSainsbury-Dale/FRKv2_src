@@ -43,23 +43,9 @@ $(Negbinom_sim_OBJECTS): scripts/Negbinom_sim.R
 scripts/Negbinom_sim.R: scripts/Negbinom_SpatialPolygon_fns.R 
 
 
-Am: results/Am_data_and_blocks.png results/Am_comparison.png
-results/Am_comparison.png: scripts/Am_comparison_plot.R intermediates/Am_FRK.csv intermediates/Am_georob.csv
-	Rscript scripts/Am_comparison_plot.R
-intermediates/Am_FRK.csv: scripts/Am_FRK.R intermediates/Am_data.csv intermediates/Am_BAUs.rds intermediates/Am_blocks.rds
-	Rscript scripts/Am_FRK.R
-intermediates/Am_georob.csv: scripts/Am_georob.R intermediates/Am_data.csv intermediates/Am_BAUs.rds intermediates/Am_blocks.rds
-	Rscript scripts/Am_georob.R
-results/Am_data_and_blocks.png: scripts/Am_data_blocks_plot.R intermediates/Am_blocks.rds intermediates/Am_GZ.csv intermediates/Am_data.csv
-	Rscript scripts/Am_data_blocks_plot.R
-intermediates/Am_BAUs.rds: scripts/Am_BAUs.R intermediates/Am_data.csv intermediates/Am_GZ.csv
-	Rscript scripts/Am_BAUs.R
-intermediates/Am_blocks.rds: scripts/Am_blocks.R intermediates/Am_GZ.csv
-	Rscript scripts/Am_blocks.R
-intermediates/Am_data.csv: scripts/Am_data.R data/Am_data.csv intermediates/Am_GZ.csv
-	Rscript scripts/Am_data.R
-intermediates/Am_GZ.csv: scripts/Am_GZ.R
-	Rscript scripts/Am_GZ.R
+Am: results/Am_comparison.png
+results/Am_comparison.png: scripts/Am.R 
+	Rscript scripts/Am.R
 
 
 Sydney_OBJECTS = results/Sydney_training_data.png results/Sydney_SA1_predictions.png results/Sydney_SA3_predictions.png results/Sydney_SA1_coverage.csv
