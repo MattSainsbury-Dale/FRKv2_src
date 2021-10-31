@@ -37,5 +37,10 @@ MODIS_FRK_pred <- function(pred_locs, FRK_object) {
                   percentiles = NULL)  
   ))
   
+  
+  ## Assign fitted values to the parent environment:
+  FRK_fitted_values <- predict(FRK_object, FRK_object@data[[1]])$newdata$p_prob
+  assign("FRK_fitted_values", FRK_fitted_values, env = parent.frame()) 
+  
   return(pred$newdata$p_mu)
 }

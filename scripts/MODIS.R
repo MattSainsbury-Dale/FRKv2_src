@@ -154,10 +154,152 @@ common_layers <- ggplot() + theme_bw() + coord_fixed() +
 
 # ---- Load MODIS data  ----
 
+# FIXME: Just keep MODIS_cloud_df name
 data("MODIS_cloud_df") 
 df <- MODIS_cloud_df 
 rm(MODIS_cloud_df)
 
+
+# ---- Analysis function ----
+
+MODIS_analysis <- function(df,  Sampling_scheme, PACKAGES, ARGS) {
+  
+  # ---- Create training and test sets: df_train and df_test ----
+  
+  ## First compute observed indices.
+  ## The way we sample the observed indices depends on whether the sampling scheme
+  ## is missing at random, or "missing at block".
+  if(!exists("seed")) seed <- 1 
+  RNGversion("3.6.0")
+  set.seed(seed)
+  
+  if(!exists("Sampling_scheme")) {
+    Sampling_scheme <- "MAR"
+  }
+  if(Sampling_scheme == "MAR") {
+    n <- 6000
+    obs.id <- sample(1:nrow(df), n, replace = FALSE) 
+  } else if (Sampling_scheme == "block") {
+    block  <- sampleBlock(df, w = 30, h = 30)
+    obs.id <- which(!with(df, (x > block["xmin"] & x <= block["xmax"]) & (y > block["ymin"] & y <= block["ymax"])))
+  }
+  
+  ## Based on the observed indices, construct the unobserved indices, 
+  ## training set, and test set.
+  unobs.id <- (1:nrow(df))[-obs.id] 
+  df_train <- df[obs.id, ]   
+  df_test  <- df[unobs.id, ]
+  
+  # ---- Run the models ----
+  
+  times         <- list()         ## store fitting times
+  model_objects <- list()  ## store model objects (which may be of use later)
+  
+  ## More informative information about the sampling framework
+  if(Sampling_scheme == "MAR") {
+    msg <- "missing at random (MAR)"
+  } else if (Sampling_scheme == "block") {
+    msg <- "missing block (MB)"
+  }
+  
+  cat(paste("\n#### Starting the MODIS comparison using the"), msg, "sampling scheme ####\n")
+  
+  print_start_msg <- function(pkg) cat(paste("\n---- Running", pkg, "on", msg, "MODIS data ----\n\n"))
+  
+  print_run_time_MODIS <- function(pkg, times) {
+    cat(paste("Finished", pkg, "analysis in", round(times[[pkg]]["elapsed"] / 60, 4), "minutes.\n"))
+  }
+  
+  if("FRK" %in% PACKAGES) {
+    pkg <- "FRK"
+    print_start_msg(pkg)
+    times$FRK <- system.time({
+      model_objects$FRK <- MODIS_FRK_fit(df_train, nres = ARGS$nres)
+      df_test$pred_FRK  <- MODIS_FRK_pred(df_test, model_objects$FRK)
+    })
+    print_run_time_MODIS(pkg, times)
+  }
+  
+  
+  if("INLA" %in% PACKAGES) {
+    pkg <- "INLA"
+    print_start_msg(pkg)
+    times$INLA <- system.time(
+      df_test$pred_INLA <- MODIS_INLA(pred_locs = df_test, df_train = df_train, 
+                                      max.edge.interior = ARGS$max.edge.interior)
+    )
+    print_run_time_MODIS(pkg, times)
+  }
+  
+  if("mgcv" %in% PACKAGES) {
+    pkg <- "mgcv"
+    print_start_msg(pkg)
+    times$mgcv <- system.time({
+      model_objects$mgcv <- MODIS_mgcv_fit(df_train, k = ARGS$k)
+      df_test$pred_mgcv  <- MODIS_mgcv_pred(df_test, model_objects$mgcv)
+    })
+    print_run_time_MODIS(pkg, times)
+  }
+  
+  
+  if("spNNGP" %in% PACKAGES) {
+    pkg <- "spNNGP"
+    print_start_msg(pkg)
+    times$spNNGP <- system.time({
+      model_objects$spNNGP <- MODIS_spNNGP_fit(df_train, n.neighbours = ARGS$n.neighbours)
+      df_test$pred_spNNGP  <- MODIS_spNNGP_pred(df_test, model_objects$spNNGP)
+    })
+    print_run_time_MODIS(pkg, times)
+  }
+  
+  
+  if("spBayes" %in% PACKAGES) {
+    pkg <- "spBayes"
+    print_start_msg(pkg)
+    times$spBayes <- system.time({
+      model_objects$spBayes <- MODIS_spBayes_fit(df_train, knots = ARGS$knots)
+      df_test$pred_spBayes <- MODIS_spBayes_pred(df_test, model_objects$spBayes)
+    })
+    print_run_time_MODIS(pkg, times)
+  }
+  
+  
+  times <- sapply(times, function(x) unname(x["elapsed"]))
+  times <- times[PACKAGES] 
+  
+  
+  # ---- Fitted values ----
+  
+  ## Compute fitted values so that we can predict over D
+  
+  if("INLA" %in% PACKAGES)
+    df_train$pred_INLA <- INLA_fitted_values # NB: INLA_fitted_values computed within MODIS_INLA()
+  
+  if("FRK" %in% PACKAGES)
+    df_train$pred_FRK <- FRK_fitted_values # NB: FRK_fitted_values computed within MODIS_FRK_pred()
+  
+  if("mgcv" %in% PACKAGES)
+    df_train$pred_mgcv <- model_objects$mgcv$fitted.values
+  
+  if("spNNGP" %in% PACKAGES)
+    df_train$pred_spNNGP <- rowMeans(plogis(model_objects$spNNGP$y.hat.samples))
+  
+  if("spBayes" %in% PACKAGES)
+    df_train$pred_spBayes <- fitted_values_spBayes(model_objects$spBayes)
+  
+  
+  # ---- Output ----
+  
+  ## The controlling script now uses df_train and df_test, which now also contains
+  ## fitted values and predictions, to compute diagnostics and ROC curves (using 
+  ## df_test) and prediction maps over D (using rbind(df_train, df_test))
+  
+  results <- list(df_test = df_test, df_train = df_train, times = times)
+  
+  if (Sampling_scheme == "block") results$blocks <- blocks
+  
+  return(results)
+}
 
 # ---- Run comparison study and save results ----
 
@@ -174,42 +316,44 @@ rm(MODIS_cloud_df)
 number_of_runs_MAR <- 1
 number_of_runs_block <- 1
 
+
+
 ## Missing at random
 MAR_df_train_list <- MAR_df_test_list <- list()
 MAR_times <- data.frame(matrix(ncol = length(PACKAGES) + 2, nrow = 0))
 colnames(MAR_times) <- c(PACKAGES, "Sampling_scheme", "Run")
-missing_fwk <- "MAR"
+Sampling_scheme <- "MAR"
 for (i in 1:number_of_runs_MAR) {
   seed <- i # Controls the training set
   source("./scripts/MODIS_analysis.R")
   
   df_train$Run <- i
   df_test$Run <- i
-  df_train$Sampling_scheme <- "MAR"
-  df_test$Sampling_scheme <- "MAR"
+  df_train$Sampling_scheme <- Sampling_scheme
+  df_test$Sampling_scheme <- Sampling_scheme
   
   MAR_df_train_list[[i]] <- df_train
   MAR_df_test_list[[i]] <- df_test
-  MAR_times[i, ] <- c(times[PACKAGES], "MAR", i)
+  MAR_times[i, ] <- c(times[PACKAGES], Sampling_scheme, i)
 }
 
 ## "Missing at block"
 block_list <- block_df_train_list <- block_df_test_list <- list()
 block_times <- data.frame(matrix(ncol = length(PACKAGES) + 2, nrow = 0))
 colnames(block_times) <- c(PACKAGES, "Sampling_scheme", "Run")
-missing_fwk <- "block"
+Sampling_scheme <- "block"
 for (i in 1:number_of_runs_block) {
   seed <- i + 1 # NB: i + 1 gives an interesting block position when number_of_runs_block == 1
   source("./scripts/MODIS_analysis.R")
   
   df_train$Run <- i
   df_test$Run <- i
-  df_train$Sampling_scheme <- "block"
-  df_test$Sampling_scheme <- "block"
+  df_train$Sampling_scheme <- Sampling_scheme
+  df_test$Sampling_scheme <- Sampling_scheme
   
   block_df_train_list[[i]] <- df_train
   block_df_test_list[[i]] <- df_test
-  block_times[i, ] <- c(times[PACKAGES], "block", i)
+  block_times[i, ] <- c(times[PACKAGES], Sampling_scheme, i)
   block_list[[i]] <- block # record the block for plotting purposes
 }
 
