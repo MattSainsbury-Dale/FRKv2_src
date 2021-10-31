@@ -40,7 +40,6 @@ Negbinom_sim_OBJECTS = results/Negbinom_sim_data.png results/Negbinom_sim_BAU_pr
 Negbinom_sim: $(Negbinom_sim_OBJECTS)
 $(Negbinom_sim_OBJECTS): scripts/Negbinom_sim.R 
 	Rscript scripts/Negbinom_sim.R
-scripts/Negbinom_sim.R: scripts/Negbinom_SpatialPolygon_fns.R 
 
 
 Am: results/Am_comparison.png

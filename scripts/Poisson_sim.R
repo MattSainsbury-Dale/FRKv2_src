@@ -22,8 +22,6 @@ library("sp")
 library("dplyr")
 library("ggpubr")
 library("RandomFields")
-
-source("./scripts/Plotting_helpers/Plotting_helpers.R")
 source("./scripts/Utility_fns.R")
 })
 
