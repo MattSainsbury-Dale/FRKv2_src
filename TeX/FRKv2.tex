@@ -1337,24 +1337,24 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 %     \multicolumn{1}{c}{\pbox{4cm}{logit/\\probit/\\cloglog}}  
 \multicolumn{1}{c}{logit/probit/cloglog} 
      \\\cline{3-7} 
-%     \multirow{7}{*}{\rotatebox{90}{\textbf{Family}}} & Gaussian & \checkmark & \checkmark & $\bullet$ & $\bullet$ &  \\
-%      & Poisson & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
-%      & gamma & $\bullet$ & $\bullet$ & \checkmark & \checkmark &  \\
-%      & inverse-Gaussian & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
-%      & negative-binomial &  &  &   \checkmark & \checkmark & \checkmark \\
-%      & binomial &  &  &  &  &   \checkmark \\\cline{3-7}
-      \multirow{7}{*}{\rotatebox{90}{\textbf{Family}}} & Gaussian & \checkmark & \checkmark & \checkmark & \checkmark &  \\
-      & Poisson & $\checkmark$ & $\checkmark$ &  \checkmark & \checkmark &  \\
-      & gamma & $\checkmark$ & $\checkmark$ & \checkmark & \checkmark &  \\
-      & inverse-Gaussian & $\checkmark$ & $\checkmark$ &  \checkmark & \checkmark &  \\
+     \multirow{7}{*}{\rotatebox{90}{\textbf{Family}}} & Gaussian & \checkmark & \checkmark & $\bullet$ & $\bullet$ &  \\
+      & Poisson & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
+      & gamma & $\bullet$ & $\bullet$ & \checkmark & \checkmark &  \\
+      & inverse-Gaussian & $\bullet$ & $\bullet$ &  \checkmark & \checkmark &  \\
       & negative-binomial &  &  &   \checkmark & \checkmark & \checkmark \\
-       & binomial &  &  &  &  &   \checkmark \\\cline{3-7}
+      & binomial &  &  &  &  &   \checkmark \\\cline{3-7}
+%      \multirow{7}{*}{\rotatebox{90}{\textbf{Family}}} & Gaussian & \checkmark & \checkmark & \checkmark & \checkmark &  \\
+%      & Poisson & $\checkmark$ & $\checkmark$ &  \checkmark & \checkmark &  \\
+%      & gamma & $\checkmark$ & $\checkmark$ & \checkmark & \checkmark &  \\
+%      & inverse-Gaussian & $\checkmark$ & $\checkmark$ &  \checkmark & \checkmark &  \\
+%      & negative-binomial &  &  &   \checkmark & \checkmark & \checkmark \\
+%       & binomial &  &  &  &  &   \checkmark \\\cline{3-7}
     \end{tabular}
     \end{center}
         \caption{Combinations of exponential-family-member response distributions and link functions available in \pkg{FRK} v2. A `\checkmark' indicates a combination is supported. 
-%        A `$\bullet$' indicates a combination is allowed; however, due to the implied range of $\mu$, the values that the data may take, and the form of probability density function of that family, nonsensical results are possible. If one of these problematic combinations is chosen, a warning is given to the user. 
-%        Finally, blank
-        Blank 
+        A `$\bullet$' indicates a combination is allowed; however, due to the implied range of $\mu$, the values that the data may take, and the form of probability density function of that family, nonsensical results are possible. If one of these problematic combinations is chosen, a warning is given to the user. 
+        Finally, blank
+%        Blank 
         entries indicate that the combination is not allowed.}\label{table:response_and_links}
 \end{table}
 
