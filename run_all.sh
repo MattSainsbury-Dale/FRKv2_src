@@ -23,7 +23,7 @@ else
 fi
 ## echo quick = $quick
 
-Rscript setup.R
+Rscript scripts/setup.R
 
 echo ""
 echo "######## STARTING POISSON EXAMPLE OF SECTION 3.1 ############"
