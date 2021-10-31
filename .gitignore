@@ -4,6 +4,9 @@ test.R
 .Rhistory
 Rplots.pdf
 
+# Replication script that is useful and up-to-date, but I don't want to include 
+# with the JSS submission
+run_all.R
 
 # The src code for the FRK presentation
 FRK_presentation

@@ -20,7 +20,7 @@ echo "Not run with very-low-dimensional representations of the models, quick =%q
 goto :callRscript
 
 :callRscript
-Rscript setup.R
+Rscript scripts\setup.R
 
 echo "######## STARTING POISSON EXAMPLE OF SECTION 3.1 ############"
 Rscript scripts\Poisson_sim.R %quick%
