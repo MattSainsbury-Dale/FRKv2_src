@@ -1,15 +1,15 @@
 suppressMessages({
-  library("FRK")
-  library("sp")
-  library("ggplot2")
-  library("ggpubr")
-  library("dplyr")
-  library("georob")
-  library("reshape2")
-  
-  # This package is required by georob, and it doesn't always install if
-  # we don't explicitly add it to dependencies.txt.
-  library("maps")
+library("FRK")
+library("sp")
+library("ggplot2")
+library("ggpubr")
+library("dplyr")
+library("georob")
+library("reshape2")
+
+# This package is required by georob, and it doesn't always install if
+# we don't explicitly add it to dependencies.txt.
+library("maps")
 })
 
 # ---- Load and pre-process the Americium data ----
