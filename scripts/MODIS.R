@@ -7,17 +7,17 @@ quick <- check_quick()
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
   "FRK",
-  "INLA",
-  "mgcv",
-  "spNNGP",
-  "spBayes"
+  "INLA"#,
+  # "mgcv",
+  # "spNNGP",
+  # "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----
 
 
 suppressMessages({
-## Packages used for scoring rules and plotting
+## Packages used for data manipulation, scoring rules and plotting
 library("pROC")
 library("ggplot2")
 library("ggpubr")
@@ -25,6 +25,7 @@ library("dplyr")
 library("sp")
 library("stringr")
 library("tidyr")
+library("tibble")
   
 ## Packages required by INLA
 library("foreach")
@@ -156,13 +157,13 @@ common_layers <- ggplot() + theme_bw() + coord_fixed() +
 
 # FIXME: Just keep MODIS_cloud_df name
 data("MODIS_cloud_df") 
-df <- MODIS_cloud_df 
-rm(MODIS_cloud_df)
+# df <- MODIS_cloud_df 
+# rm(MODIS_cloud_df)
 
 
 # ---- Analysis function ----
 
-MODIS_analysis <- function(df,  Sampling_scheme, PACKAGES, ARGS) {
+MODIS_analysis <- function(df, Sampling_scheme, seed = 1) {
   
   # ---- Create training and test sets: df_train and df_test ----
   
@@ -294,103 +295,60 @@ MODIS_analysis <- function(df,  Sampling_scheme, PACKAGES, ARGS) {
   ## fitted values and predictions, to compute diagnostics and ROC curves (using 
   ## df_test) and prediction maps over D (using rbind(df_train, df_test))
   
+  df_train$Sampling_scheme <- Sampling_scheme
+  df_test$Sampling_scheme  <- Sampling_scheme
+  
   results <- list(df_test = df_test, df_train = df_train, times = times)
   
-  if (Sampling_scheme == "block") results$blocks <- blocks
+  if (Sampling_scheme == "block") results$block <- block
   
   return(results)
 }
 
+
 # ---- Run comparison study and save results ----
-
-## Run the study with multiple training data sets. We source MODIS_anlaysis.R in a loop, 
-## changing the seed with which the training data is defined in each iteration. 
-## A list of diagnostic scores and plots are recorded at each iteration.
-## In the paper, we only did one run for each sampling scheme because 
-## i) the results didn't change very much between runs, 
-## ii) the run-time is already very large even with only 1 run, and
-## iii) the exposition is complicated by multiple runs.
-## We keep the code here for future reference, and if anyone wants to test the 
-## results using multiple runs. 
-
-number_of_runs_MAR <- 1
-number_of_runs_block <- 1
-
 
 
 ## Missing at random
-MAR_df_train_list <- MAR_df_test_list <- list()
-MAR_times <- data.frame(matrix(ncol = length(PACKAGES) + 2, nrow = 0))
-colnames(MAR_times) <- c(PACKAGES, "Sampling_scheme", "Run")
-Sampling_scheme <- "MAR"
-for (i in 1:number_of_runs_MAR) {
-  seed <- i # Controls the training set
-  source("./scripts/MODIS_analysis.R")
-  
-  df_train$Run <- i
-  df_test$Run <- i
-  df_train$Sampling_scheme <- Sampling_scheme
-  df_test$Sampling_scheme <- Sampling_scheme
-  
-  MAR_df_train_list[[i]] <- df_train
-  MAR_df_test_list[[i]] <- df_test
-  MAR_times[i, ] <- c(times[PACKAGES], Sampling_scheme, i)
-}
+MAR_results  <- MODIS_analysis(df = MODIS_cloud_df, Sampling_scheme = "MAR")
+MAR_df_train <- MAR_results$df_train
+MAR_df_test  <- MAR_results$df_test
+MAR_times    <- MAR_results$times
 
-## "Missing at block"
-block_list <- block_df_train_list <- block_df_test_list <- list()
-block_times <- data.frame(matrix(ncol = length(PACKAGES) + 2, nrow = 0))
-colnames(block_times) <- c(PACKAGES, "Sampling_scheme", "Run")
-Sampling_scheme <- "block"
-for (i in 1:number_of_runs_block) {
-  seed <- i + 1 # NB: i + 1 gives an interesting block position when number_of_runs_block == 1
-  source("./scripts/MODIS_analysis.R")
-  
-  df_train$Run <- i
-  df_test$Run <- i
-  df_train$Sampling_scheme <- Sampling_scheme
-  df_test$Sampling_scheme <- Sampling_scheme
-  
-  block_df_train_list[[i]] <- df_train
-  block_df_test_list[[i]] <- df_test
-  block_times[i, ] <- c(times[PACKAGES], Sampling_scheme, i)
-  block_list[[i]] <- block # record the block for plotting purposes
-}
 
-blocks <- do.call("rbind", block_list) %>% 
-  as.data.frame()  %>%
-  mutate(Run = 1:length(block_list))
-write.csv(blocks,
-          file = "./intermediates/MODIS_blocks.csv",
+## Missing block (seed = 2 results in an interesting block position)
+block_results  <- MODIS_analysis(df = MODIS_cloud_df, Sampling_scheme = "block", seed = 2)
+block_df_train <- block_results$df_train
+block_df_test  <- block_results$df_test
+block_times    <- block_results$times
+block          <- block_results$block
+
+
+## Save all objects needed to produce the plots later
+write.csv(block %>% as.data.frame(), 
+          file = "./intermediates/MODIS_block.csv", 
           row.names = FALSE)
 
 ## Combine data frames, and save as a .csv
-tmp1 <- do.call("rbind", MAR_df_train_list)
-tmp2 <- do.call("rbind", block_df_train_list)
-all_df_train <- rbind(tmp1, tmp2)
-write.csv(all_df_train,
-          file = "./intermediates/MODIS_all_df_train.csv",
-          row.names = FALSE)
+all_df_train <- rbind(MAR_df_train, block_df_train)
+write.csv(all_df_train, file = "./intermediates/MODIS_all_df_train.csv", row.names = FALSE)
 
-tmp1 <- do.call("rbind", MAR_df_test_list)
-tmp2 <- do.call("rbind", block_df_test_list)
-all_df_test <- rbind(tmp1, tmp2)
-write.csv(all_df_test,
-          file = "./intermediates/MODIS_all_df_test.csv",
-          row.names = FALSE)
+all_df_test <- rbind(MAR_df_test, block_df_test)
+write.csv(all_df_test, file = "./intermediates/MODIS_all_df_test.csv", row.names = FALSE)
 
-times <- rbind(MAR_times, block_times)
-times <- times %>% gather(Method, time, all_of(PACKAGES))
-times$Run <- as.integer(times$Run)
-times$time <- as.numeric(times$time)
-times$time <- times$time/60 # convert to minutes
-write.csv(times,
-          file = "./intermediates/times.csv",
-          row.names = FALSE)
+times <- rbind(MAR_times, block_times) %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column(var = "Sampling_scheme") %>% 
+  mutate(Sampling_scheme = str_remove(Sampling_scheme, "_times")) %>% 
+  reshape2::melt(id.vars = "Sampling_scheme", variable.name = "Method", value.name = "time") %>% 
+  mutate(time = time / 60)
+
+write.csv(times, file = "./intermediates/times.csv", row.names = FALSE)
+
 
 ## ---- Re-load results (useful to change plots without running models) ----
 
-blocks <- read.csv("./intermediates/MODIS_blocks.csv")
+block <- read.csv("./intermediates/MODIS_block.csv")
 all_df_train <- read.csv("./intermediates/MODIS_all_df_train.csv")
 all_df_test <- read.csv(file = "./intermediates/MODIS_all_df_test.csv")
 times <- read.csv(file = "./intermediates/times.csv")
@@ -423,8 +381,7 @@ tmp <- rbind(tmp1, tmp2) %>%
     facet_var, 
     levels = c("MAR training", "MAR test", "block training", "block test"),
     labels = c("MR: training set", "MR: test set", "MB: training set", "MB: test set")
-    )) %>%
-  filter(Run == 1)
+    )) 
 
 figure <- (common_layers +
   geom_raster(data = tmp, aes(x = x, y = y, fill = z))  +
@@ -442,11 +399,11 @@ ggsave(figure,
 all_df_test <- all_df_test %>% 
   gather(Method, pred, paste0("pred_", PACKAGES)) %>%
   mutate(Method = str_remove(Method, "pred_")) %>% 
-  left_join(times, by = c("Run", "Sampling_scheme", "Method"))
+  left_join(times, by = c("Sampling_scheme", "Method"))
 
 ## Compute diagnostics, split by run, method, and sampling scheme
 diagnostics <- all_df_test %>%
-  dplyr::group_by(Sampling_scheme, Run, Method) %>%
+  dplyr::group_by(Sampling_scheme, Method) %>%
   dplyr::summarise(Brier = BrierScore(z, pred),
             AUC = AUC(z, pred), 
             time = time[1])
@@ -498,7 +455,7 @@ plot_predictions <- function(df, scheme) {
     facet_type <- facet_wrap( ~ Method, nrow = 2)
   }
 
-  gg <- common_layers %+% filter(df, Sampling_scheme == scheme, Run == 1)
+  gg <- common_layers %+% filter(df, Sampling_scheme == scheme)
   
   gg <- gg + geom_raster(aes(x, y, fill = pred)) +
     facet_type +
@@ -523,12 +480,12 @@ ggsave(plot_predictions(all_df_test, "block"),
 
 # ---- ROC curves ----
 
-compute_ROC_objects <- function(df, scheme, run = 1) {
+compute_ROC_objects <- function(df, scheme) {
   ROC_list <- list()
   for (method in unique(all_df_test$Method)) {
     ROC_list[[method]] <- all_df_test %>%
       filter(Method == method) %>% 
-      filter(Sampling_scheme == scheme, Run == run) %>% 
+      filter(Sampling_scheme == scheme) %>% 
       pROC::roc(z, pred, quiet = TRUE, auc = FALSE)
   }
   return(ROC_list)
