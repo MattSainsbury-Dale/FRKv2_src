@@ -51,7 +51,7 @@ You will need at least 32GB of RAM (or RAM + swap) to run the very-low-dimension
 
 #### Run times
 
-The following are estimates of the expected run time needed to reproduce the full results of the manuscript: 
+It takes approximately 30 minutes in total to run the quick versions of the models. The following are estimates of the expected run time needed to reproduce the full results of the manuscript: 
 
 - Section 3.1: ~5 minutes
 - Section 3.2: ~5 minutes
