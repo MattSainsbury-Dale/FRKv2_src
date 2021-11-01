@@ -51,7 +51,7 @@ You will need at least 32GB of RAM (or RAM + swap) to run the very-low-dimension
 
 #### Run times
 
-It takes approximately 30 minutes in total to run the quick versions of the models. The following are estimates of the expected run time needed to reproduce the full results of the manuscript: 
+It takes a total of ~30 minutes to run the quick versions of the models. The following are estimates of the expected run time needed to reproduce the full results of the manuscript: 
 
 - Section 3.1: ~5 minutes
 - Section 3.2: ~5 minutes
@@ -61,7 +61,7 @@ It takes approximately 30 minutes in total to run the quick versions of the mode
 - Section 4.3: ~5 minutes
 - Section 4.4: ~30 minutes
 
-Please note that the long run-time for Section 4.1 (MODIS comparison study) was unavoidable due to the nature of the study and the necessity to provide each package with every opportunity to perform well. In addition to the option of using low-dimensional representations as described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. We thank reviewers for their patience and understanding. 
+We note that the only problematic section is Section 4.1, the MODIS comparison study. This long run-time was unavoidable due to the nature of the study and the necessity to provide each package with every opportunity to perform well. In addition to the option of using low-dimensional representations as described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. We thank reviewers for their patience and understanding. 
 
 Note that the replication script is clearly presented and commented; hence, one may easily "comment out" sections to produce a subset of the results. (Comments in `.sh` files are made with `##`, and comments in `.bat` files are made using `::`.)
 
