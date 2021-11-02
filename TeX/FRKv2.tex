@@ -916,7 +916,8 @@ There are three principal quantities that could be of interest to the user, name
 $\vec{Y}$ and mean process $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), and data at unobserved locations. 
 % To produce predictions and associated uncertainties, we need to determine the posterior distribution of these quantities.
 %For each quantity, we use the posterior expectation as our predictor. % ; a decision theoretic justification for this choice is provided by \citet*[ch.~3]{Cressie_1993_stats_for_spatial_data}.
-Recall that the Laplace approximation implies that the conditional distribution of $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$ is, approximately, $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$; since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $\vec{Y}$ can be carried out using well-known formulas. 
+Recall that the Laplace approximation assumes that the conditional distribution of $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$ can be well approximated as $\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$;
+since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $\vec{Y}$ can be carried out using well-known formulas. 
 %  However, the posterior distribution of a non-linear function of $Y(\cdot)$ (e.g., the mean $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y})) is typically not available in closed form, and some approximation is required.
   However, the posterior distribution of a non-linear function of $\vec{Y}$, for example, the mean $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), is typically not available in closed form, and some approximation is required.
 %  In \pkg{FRK} v2, we use a Monte Carlo (MC) approach to inference on $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.
@@ -1352,7 +1353,7 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
     \end{tabular}
     \end{center}
         \caption{Combinations of exponential-family-member response distributions and link functions available in \pkg{FRK} v2. A `\checkmark' indicates a combination is supported. 
-        A `$\bullet$' indicates a combination is allowed; however, due to the implied range of $\mu$, the values that the data may take, and the form of probability density function of that family, nonsensical results are possible. If one of these problematic combinations is chosen, a warning is given to the user. 
+        A `$\bullet$' indicates a combination is allowed; however, due to the implied range of $\mu(\cdot)$, the values that the data may take, and the form of probability density function of that family, nonsensical results are possible. If one of these problematic combinations is chosen, a warning is given to the user. 
         Finally, blank
 %        Blank 
         entries indicate that the combination is not allowed.}\label{table:response_and_links}
