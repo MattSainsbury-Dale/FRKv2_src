@@ -197,6 +197,7 @@ ST_BAUs$fs <- 1 # scalar fine-scale variance matrix
 ## Create population covariate
 ST_BAUs$population <- community_areas$population
 
+
 ## Add covariates that can be used to make a piecewise-linear temporal trend.
 ## As the inclusion of the trend did not significantly affect the results, it 
 ## was omitted from the paper to simplify the exposition.
@@ -241,6 +242,7 @@ M <- FRK(f = number_of_crimes ~ link_fn(population),
 #          response = "poisson",
 #          link     = "log",
 #          data     = chicago_crimes,
+#          spatial_BAUs  = community_areas, 
 #          sum_variables = "number_of_crimes")
 
 # ---- Prediction ----

@@ -367,7 +367,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
 
 
 
- Reduced-rank variants of trans-Gaussian kriging are relatively under-developed (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~4.1, for a discussion), however many modellers have used reduced-rank variants of the spatial GLMM.  
+ Reduced-rank variants of trans-Gaussian kriging are relatively under-developed (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~3.2.1, for a discussion), however many modellers have used reduced-rank variants of the spatial GLMM.  
   A popular reduced-rank model for $Y(\cdot)$ is the so-called spatial random effects (SRE) model, where $Y(\cdot)$ is modelled as a linear combination of a fixed number of spatial basis functions with spatially correlated random coefficients \citep{Cressie_Johannesson_2008_FRK}: For example, \cite{Sengupta_Cressie_2013_spatial_GLMM_FRK} and \citet{Bradley_2016_Bayesian_spatial_COS_lattice_data} use it in the spatial GLMM context. 
 %  They obtained parameter estimates using a Laplace approximation in an expectation maximisation (EM) algorithm, and the empirical predictive distribution was generated using an MCMC algorithm.  
 % A latent SRE model was also employed by \citet{Bradley_2016_Bayesian_spatial_COS_lattice_data} to facilitate spatial change-of-support for count-valued survey data. % (in particular, up-scaling to larger target supports).  
@@ -2288,7 +2288,7 @@ where $\kappa_k$ and $\rho_k$ are parameters that are estimated.
 We note that $\vec{Q}_k$ is diagonally dominant, and hence it is positive-definite. 
  This formulation implies that the coefficient of a given basis function is conditionally independent of all other basis-function coefficients given the coefficients of its first-order vertical and horizontal neighbours. 
 % Note that \cite{Leroux_2000_two_parameter_autoregressive_model} used a model that is closely related to (\ref{eqn:Q_k}), and that \pkg{LatticeKrig} uses $\vec{Q}_k^\tp\vec{Q}_k$ as the precision matrix blocks, whereas \pkg{FRK} v2 uses $\vec{Q}_k$.  
-Note that \pkg{LatticeKrig} uses $\vec{Q}_k^\tp\vec{Q}_k$ as the precision matrix blocks, whereas \pkg{FRK} v2 uses $\vec{Q}_k$.  
+Note that \pkg{LatticeKrig} \citep{Nychka_2016_LatticeKrig} uses $\vec{Q}_k^\tp\vec{Q}_k$ as the precision matrix blocks, whereas \pkg{FRK} v2 uses $\vec{Q}_k$.  
 
 
 
