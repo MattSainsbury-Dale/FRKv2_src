@@ -405,14 +405,14 @@ Several other approaches hinge on the use of a spatial version of the generalise
 
 
 The remainder of the paper is organised as follows. 
-In Section \ref{SEC:Methodology}, we establish the statistical framework for \pkg{FRK} v2, and we describe model fitting and prediction using the \proglang{R} package \pkg{TMB} \citep{Kristensen_2016_TMB}. 
-In Section \ref{SEC:IllustrativeExample}, we discuss the new functionalities in \pkg{FRK} v2, provide a variety of illustrative examples using simulated data, and demonstrate how using an increased number of basis functions can substantially improve predictive performance.  
-In Section \ref{SEC:ApplicationStudy}, we present a comparative study between \pkg{FRK} v2 and several related packages, as well as real-world applications of \pkg{FRK} v2. 
+In Section \ref{SEC:Methodology} we establish the statistical framework for \pkg{FRK} v2, and we describe model fitting and prediction using the \proglang{R} package \pkg{TMB} \citep{Kristensen_2016_TMB}. 
+In Section \ref{SEC:IllustrativeExample} we discuss the new functionalities in \pkg{FRK} v2, provide a variety of illustrative examples using simulated data, and demonstrate how using an increased number of basis functions can substantially improve predictive performance.  
+In Section \ref{SEC:ApplicationStudy} we present a comparative study between \pkg{FRK} v2 and several related packages, as well as real-world applications of \pkg{FRK} v2. 
  Section \ref{SEC:Conclusion} gives a discussion and conclusions. 
 
 \section{Methodology}\label{SEC:Methodology}
 
-The statistical model used in \pkg{FRK} v2 is a spatial or spatio-temporal GLMM; specifically, it is a hierarchical statistical model consisting of two conditional-probability layers.
+The statistical model used in \pkg{FRK} v2 is a spatial or spatio-temporal hierarchical statistical model consisting of two conditional-probability layers.
  In the \textit{process layer}, we model the conditional mean of the data as a transformation of a latent spatial process modelled as a low-rank SRE model; see Section  \ref{subsection:04-01:ProcessLayer}. 
  In the %first layer, which we refer to as the 
 \textit{data layer}, we use a conditionally independent exponential-family model for each element of the data vector; see Section \ref{subsection:DataLayer}. 
@@ -465,7 +465,7 @@ As in \pkg{FRK} v1, the elements of $\vec{\xi}$ are modelled as independent and 
  In \pkg{FRK} v2, $\cov{\vec{\eta}}{\vec{\eta}}$ is modelled either as $\vec{K}$ or as $\vec{Q}^{-1}$, where $\vec{Q}$ is a precision matrix. 
  Both formulations use block-diagonal matrices, so that basis-function coefficients between basis-function resolutions are independent; see Appendix \ref{Appendix:CovarianceTapering} for how the intra-resolution dependencies with $\vec{K}$ and $\vec{Q}$ are modelled. 
   Although both $\vec{K}$ and $\vec{Q}$ are generally sparse, use of $\vec{Q}$ instead of $\vec{K}$ is typically computationally advantageous. 
-  Irrespective, we assume that $\cov{\vec{\eta}}{\vec{\eta}}$ depends on a parameter vector $\vec{\vartheta}$, which needs to be estimated. 
+  Irrespective of the specific parameterisation, we assume that $\cov{\vec{\eta}}{\vec{\eta}}$ depends on a parameter vector $\vec{\vartheta}$, which needs to be estimated. 
 
  Following standard generalised-linear-model theory \citep{McCullagh_Nelder_1989_GLM}, \pkg{FRK} v2 uses an invertible link function, $g(\cdot)$, to model $Y(\cdot)$ as a transformation of a mean process, $\mu(\cdot)$ (that we consider in more detail in Section \ref{subsection:DataLayer}):
 \begin{equation}\label{eqn:mu_linked_to_Y}
@@ -919,9 +919,9 @@ $\vec{Y}$ and mean process $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), and data 
 Recall that the Laplace approximation approximates the conditional distribution of $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$ as \mbox{$\vec{u} \mid \vec{Z}, \vec{\theta} \sim \Gau(\hat{\vec{u}}, \vec{H})$};
 since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $\vec{Y}$ can be carried out using well-known formulas. 
 %  However, the posterior distribution of a non-linear function of $Y(\cdot)$ (e.g., the mean $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y})) is typically not available in closed form, and some approximation is required.
-  However, the posterior distribution of a non-linear function of $\vec{Y}$, for example, the mean $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), is typically not available in closed form, and some approximation is required.
+  However, the posterior distribution of a non-linear function of $\vec{Y}$, for example the mean $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), is typically not available in closed form, and some approximation is required.
 %  In \pkg{FRK} v2, we use a Monte Carlo (MC) approach to inference on $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.
- In \pkg{FRK} v2, we therefore use a Monte Carlo (MC) approach to inference on non-linear functions of $\vec{Y}$, by first drawing a sample from the approximate conditional distribution of $\vec{u}$ and then transforming the sample accordingly. 
+ In \pkg{FRK} v2 we therefore use a Monte Carlo (MC) approach to inference on non-linear functions of $\vec{Y}$, by first drawing a sample from the approximate conditional distribution of $\vec{u}$ and then transforming the sample accordingly. 
   
 
 

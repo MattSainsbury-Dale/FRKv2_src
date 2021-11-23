@@ -1,6 +1,7 @@
 # Source code for FRK v2 paper
 
 This repository contains the source code for reproducing the results in "Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK". 
+NB: The instructions for the *short (6-page) format of this paper* are exactly the same as the instructions for the full manuscript; however, instead of invoking `run_all.{sh/bat}` (see below), invoke `run_all_6page.{sh/bat}`.
 
 ## Instructions
 
@@ -53,13 +54,13 @@ You will need at least 32GB of RAM (or RAM + swap) to run the very-low-dimension
 
 It takes a total of ~30 minutes to run the quick versions of the models. The following are estimates of the expected run time needed to reproduce the full results of the manuscript: 
 
-- Section 3.1: ~5 minutes
-- Section 3.2: ~5 minutes
-- Section 3.3: ~30 minutes
-- Section 4.1: ~15 hours
-- Section 4.2: ~5 minutes
-- Section 4.3: ~5 minutes
-- Section 4.4: ~30 minutes
+- Section 3.1 (Poisson simulation study):           ~5 minutes
+- Section 3.2 (negative-binomial simulation study): ~5 minutes
+- Section 3.3 (Heaton comparison study):            ~30 minutes
+- Section 4.1 (MODIS comparison study):             ~15 hours
+- Section 4.2 (Americium):                          ~5 minutes
+- Section 4.3 (Sydney spatial change-of-support):   ~5 minutes
+- Section 4.4 (Chicago crime):                      ~30 minutes
 
 We note that the only problematic section is Section 4.1, the MODIS comparison study. This long run-time was unavoidable due to the nature of the study and the necessity to provide each package with every opportunity to perform well. In addition to the option of using low-dimensional representations as described above, one may easily reproduce the results from a subset of packages by editing the variable `PACKAGES` in `scripts/MODIS.R`. We thank reviewers for their patience and understanding. 
 
