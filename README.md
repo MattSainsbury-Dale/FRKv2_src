@@ -1,7 +1,7 @@
 # Source code for FRK v2 paper
 
 This repository contains the source code for reproducing the results in "Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK". 
-NB: The instructions for the *short (6-page) format of this paper* are exactly the same as the instructions for the full manuscript; however, instead of invoking `run_all.{sh/bat}` (see below), invoke `run_all_6page.{sh/bat}`.
+To reproduce the results of the short (6-page) format of this paper, please invoke `run_all_6page.{sh/bat}` rather than `run_all.{sh/bat}` (see below). 
 
 ## Instructions
 
