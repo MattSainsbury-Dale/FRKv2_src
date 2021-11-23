@@ -21,7 +21,6 @@ if [ $quick_str == "y" ] || [ $quick_str == "Y" ]; then
 else
     quick=0
 fi
-## echo quick = $quick
 
 Rscript scripts/setup.R
 
