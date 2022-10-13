@@ -11,7 +11,7 @@ library("stringr")
 library("htmltab")
 library("ggpubr")
 options(dplyr.summarise.inform = FALSE) # Suppress summarise info
-source("./scripts/Utility_fns.R")
+source("scripts/Utility_fns.R")
 })
 
 ## Use very-low-dimensional representations of the models to establish that the code works? 
@@ -30,7 +30,7 @@ if(quick) {
 
 fs_by_spatial_BAU <- TRUE
 
-# When we have very few basis functions, it is typically more stable to use log 
+# When we have very few basis functions, it is typically more stable to use sqrt
 if (nres  < 3) {
   link <- "sqrt"
 } else {
@@ -49,8 +49,8 @@ chicago_bbox = c(left = -87.9, bottom = 41.6, right = -87.5, top = 42.06)
 suppressMessages(
   chicago <- get_stamenmap(bbox = chicago_bbox, maptype = "toner-background", color = "bw") 
 )
-save(chicago, file = "./data/chicago_map.RData")
-save(chicago_bbox, file = "./data/chicago_bbox.RData")
+save(chicago, file = "data/chicago_map.RData")
+save(chicago_bbox, file = "data/chicago_bbox.RData")
 
 ## Create map layer to place under all plots
 chicago_map <- ggmap(chicago)
@@ -72,7 +72,7 @@ suppressMessages({
 
 # ---- Chicago crime dataset ----
 
-load("./data/chicago_crime_df.Rda")
+load("data/chicago_crime_df.Rda")
 
 ## We focus on violent, non-sexual crimes. These crimes include "ASSAULT", 
 ## "BATTERY" and "HOMICIDE". The frequency of Assult or Battery is much higher
@@ -87,7 +87,7 @@ df <- droplevels(df) # Drop unused levels
 # ---- Chicago community areas ----
 
 ## Load Shapefile of community areas, and name the coordinates
-suppressWarnings(community_areas <- readShapePoly("./data/Chicago_shapefiles/chicago_community_areas.shp"))
+suppressWarnings(community_areas <- readShapePoly("data/Chicago_shapefiles/chicago_community_areas.shp"))
 coordnames(community_areas) <- c("longitude", "latitude")
 
 ## The polygon IDs are labelled from 0 to 76, and are not even associated 
@@ -113,6 +113,7 @@ rownames(community_areas@data) <- NULL
 # ---- Population covariates (community area level) ----
 
 ## Read the HTML table on the community areas wikipedia page 
+## TODO need to store this, since this link WILL break at some point
 tab <- htmltab("https://en.wikipedia.org/w/index.php?title=Community_areas_in_Chicago&oldid=1012989271",1)
 rownames(tab) <- NULL
 
@@ -211,9 +212,9 @@ ST_BAUs$population <- community_areas$population
 
 # ---- Model fitting ----
 
-basis <- auto_basis(STplane(), 
-                    chicago_crimes_fit, 
-                    tunit = "years", 
+basis <- auto_basis(STplane(),
+                    chicago_crimes_fit,
+                    tunit = "years",
                     nres = nres)
 
 link_fn <- get(link) # convert from string to function, for use in formula below
@@ -222,9 +223,8 @@ suppressWarnings(
 # Suppress the warning "Removing data points that do not fall into any BAUs...":
 # It is fine in this example, as some small number of crimes may fall outside of 
 # the community area boundaries, and it is fine to omit these crimes. 
-# M <- FRK(f = number_of_crimes ~ log(population), 
 M <- FRK(f = number_of_crimes ~ link_fn(population), 
-         data = chicago_crimes_fit, basis = basis, BAUs = ST_BAUs,         
+         data = chicago_crimes_fit, BAUs = ST_BAUs, basis = basis, 
          response = "poisson", link = link, 
          sum_variables = "number_of_crimes", 
          fs_by_spatial_BAU = fs_by_spatial_BAU, 
@@ -234,7 +234,14 @@ M <- FRK(f = number_of_crimes ~ link_fn(population),
 
 # print(object.size(M), units = "Mb")
 # Chicago_SRE_object <- M
-# saveRDS(Chicago_SRE_object, file = "./intermediates/Chicago_SRE_object.rds")
+# saveRDS(Chicago_SRE_object, file = "intermediates/Chicago_SRE_object.rds")
+
+save_html_table(
+  as.data.frame(coef(M)),
+  file = "results/4_4_Chicago_estimated_coefficients.html", 
+  caption = "Chicago estimated coefficients"
+)
+
 
 # ---- Simplified, high-level version that I show in presentations ---- 
 
@@ -365,7 +372,7 @@ figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z,
                     align = "hv", nrow = 1, legend = "top")
 
 ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty.png", 
-       device = "png", width = 10, height = 8.5, path = "./results/")
+       device = "png", width = 10, height = 8.5, path = "results/")
 
 # ## Also save a version with only the forecast years (for presentations)
 # subset_time <- 19
@@ -373,7 +380,7 @@ ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty.png",
 # figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
 #                     align = "hv", nrow = 1, legend = "top")
 # ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty_2019_only.png", 
-#        device = "png", width = 10, height = 5.5, path = "./results/")
+#        device = "png", width = 10, height = 5.5, path = "results/")
 
 
 # ---- Time series plot ----
@@ -422,7 +429,7 @@ time_series_plot <- ggplot() +
   scale_y_continuous(n.breaks = 4)
 
 ggsave(time_series_plot,
-  path = "./results/", filename = "4_4_Chicago_focused_CAs_time_series.png", 
+  path = "results/", filename = "4_4_Chicago_focused_CAs_time_series.png", 
   device = "png", width = 9, height = 6)
 
 ## Select the MC samples corresponding to our chosen BAUs
@@ -455,7 +462,7 @@ predictive_distribution_plots <- ggplot() +
         legend.position = "top") 
 
 ggsave(predictive_distribution_plots,
-  path = "./results/", filename = "4_4_Chicago_focused_CAs_predictive_distributions.png", 
+  path = "results/", filename = "4_4_Chicago_focused_CAs_predictive_distributions.png", 
   device = "png", width = 9, height = 6)
 
 # ---- Coverage ----
@@ -498,7 +505,7 @@ Chicago_coverage_and_MAPE$average_coverage_difference <-
   rowMeans
 
 write.csv(Chicago_coverage_and_MAPE, 
-          "./results/4_4_Chicago_coverage_and_MAPE.csv", 
+          "results/4_4_Chicago_coverage_and_MAPE.csv", 
           row.names = FALSE)
 
 save_html_table(

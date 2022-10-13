@@ -15,7 +15,7 @@ library("maps")
 # ---- Load and pre-process the Americium data ----
 
 GZ_df   <- data.frame("Easting" = 219868.09, "Northing" = 285320.84)
-Am_data <- read.csv("./data/Am_data.csv")
+Am_data <- read.csv("data/Am_data.csv")
 
 ## Convert Easting and Northing from feet to metres, and rename Americium.
 Am_data$Easting   <- Am_data$Easting * 0.3048
@@ -32,7 +32,6 @@ Am_data$x1 <- as.numeric(d < d_cutoff)
 Am_data$x2 <- d * Am_data$x1
 Am_data$x3 <- as.numeric(d >= d_cutoff)
 Am_data$x4 <- d * Am_data$x3
-
 
 
 # ---- Construct the blocking schemes  ----
@@ -89,7 +88,6 @@ blocks <- construct_block_scheme()
 
 
 
-
 # ---- Plot the data and the blocks ---- 
 
 nasa_palette <- c(
@@ -136,15 +134,14 @@ p_Scheme_1_2 <- p_basic +
   labs(colour = "Blocking Scheme")
 
 ggsave( 
-  ggpubr::ggarrange(p_data + theme(legend.text=element_text(angle = 20)) + 
+  ggpubr::ggarrange(p_data +
+                      theme(legend.text=element_text(angle = 20)) + 
                       theme(text = element_text(size=17)), 
-                    p_data_log_scale+ 
-                      theme(text = element_text(size=17)), 
-                    p_Scheme_1_2+ 
-                      theme(text = element_text(size=17)), 
+                    p_data_log_scale + theme(text = element_text(size=17)), 
+                    p_Scheme_1_2 + theme(text = element_text(size=17)), 
                     nrow = 1, align = "hv", legend = "top"),
   filename = "4_2_Am_data_and_blocks.png", device = "png", width = 13.6, height = 4.5,
-  path = "./results/"
+  path = "results/"
 )
 
 
@@ -315,5 +312,5 @@ figure <- ggplot(data = combined_df,
 ggsave( 
   figure,
   filename = "4_2_Am_comparison.png", device = "png", width = 13.6, height = 4.5,
-  path = "./results/"
+  path = "results/"
 )

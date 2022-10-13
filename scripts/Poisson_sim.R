@@ -21,9 +21,12 @@ library("ggplot2")
 library("sp")
 library("dplyr")
 library("ggpubr")
-library("RandomFields")
-source("./scripts/Utility_fns.R")
+library("DHARMa")
+# library("RandomFields") # NB we can use GpGp instead
+source("scripts/Utility_fns.R")
 })
+
+# ---- set up ----
 
 # Define how we wish to simulate the latent process Y
 simulation_method <-  "trig_field" # "model" 
@@ -71,47 +74,82 @@ BAUs_df <- mutate(BAUs_df, mu = exp(Y))
 
 ## Subsample n of the BAUs to act as observation locations, and simulate data
 n <- 750
-Poisson_simulated <- sample_n(BAUs_df, n) %>% 
-  dplyr::mutate(Z = rpois(n, lambda = mu)) %>%
-  dplyr::select(x, y, Z)
-
-# save(Poisson_simulated, file = "~/FRK/data/Poisson_simulated.rda")
+# Poisson_data <- sample_n(BAUs_df, n) %>% 
+#   dplyr::mutate(Z = rpois(n, lambda = mu)) 
+obs_idx <- sample(1:length(BAUs), n)
+Poisson_data <- BAUs_df[obs_idx, ] %>% dplyr::mutate(Z = rpois(n, lambda = mu))
 
 ## scalar matrix for fine scale variation, and converts to SpatialPixelsDF
 BAUs$fs <- rep(1, length(BAUs)) 
 
-## Convert Poisson_simulated to Spatial* obejct
-coordinates(Poisson_simulated) <- ~ x + y
+## Convert Poisson_data to Spatial* obejct
+coordinates(Poisson_data) <- ~ x + y
 
 # ---- FRK ----
 
 ## Predictive performance with changing number of basis functions: Fit the SRE 
-## object using 1, 2, and 3 resolutions of basis functions.
-max_nres <- 3
+## object using 1, 2, 3, and 4 resolutions of basis functions.
+max_nres <- 4 
 pred_list <- S_list <- timings <- list()
 RNGversion("3.6.0"); set.seed(1)
-for (i in 1:max_nres) {
+for (i in 1:max_nres) { 
   
   cat(paste0("\nStarting analysis with nres = ", i, ".\n"))
   
   timings[[i]] <- system.time({
-    S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_simulated), 
-                          nres = i, BAUs = BAUs, 
-                          response = "poisson", 
-                          link = "log", 
+    S_list[[i]]    <- FRK(f = Z ~ 1, data = list(Poisson_data),
+                          nres = i, BAUs = BAUs,
+                          response = "poisson",
+                          link = "log",
                           # manually set these arguments to reduce console output:
-                          K_type = "precision", method = "TMB", est_error = FALSE) 
+                          K_type = "precision", method = "TMB", est_error = FALSE)
     pred_list[[i]] <- predict(S_list[[i]], type = c("link", "mean"))
   })
 }
 
+S <- S_list[[3]]
+
+
+# ---- Model validation and selection ----
+
+n_test <- 500
+unobs_idx <- (1:length(BAUs))[-obs_idx]
+unobs_idx <- sample(unobs_idx, n_test)
+Poisson_testing_data <- BAUs_df[unobs_idx, ] %>% dplyr::mutate(Z = rpois(n_test, lambda = mu))
+# Poisson_testing_data <- BAUs_df %>%
+#   sample_n(n_test) %>%
+#   dplyr::mutate(Z = rpois(n_test, lambda = mu))
+coordinates(Poisson_testing_data) <- ~ x + y
+
+dat <- Poisson_testing_data
+
+samples <- simulate(S, dat, n_MC = 50)
+
+DHARMa <- createDHARMa(
+  simulatedResponse = samples,
+  observedResponse  = dat$Z,
+  integerResponse = T
+)
+
+pdf("results/3_2_Poisson_sim_residuals.pdf", width = 8, height = 4)
+plot(DHARMa, title = "")
+dev.off()
+
+testSpatialAutocorrelation(
+  DHARMa,
+  x = coordinates(dat)[, 1],
+  y = coordinates(dat)[, 2]
+)
+
+# ---- Prediction ----
 
 ## Predictions, uncertainty, and data
 plot_list <- plot(S_list[[max_nres]], pred_list[[max_nres]]$newdata, 
                   labels_from_coordnames = FALSE)
-plot_list <- c(plot_spatial_or_ST(Poisson_simulated, "Z", 
+plot_list <- c(plot_spatial_or_ST(Poisson_data, "Z", 
                                   labels_from_coordnames = FALSE), 
                plot_list)
+
 
 ## True mean process
 plot_list$mu_true <-  ggplot(BAUs_df) + geom_tile(aes(x, y, fill = mu)) + 
@@ -137,7 +175,7 @@ plot_list <- lapply(
   })
 
 ## Increase legend width for plots that will have the legend on the side. 
-## Also shift the title further to the right, so it looks better centred. 
+## Also shift the title further to the right, so it's centred. 
 for (i in c("p_Y", "interval90_Y", "p_mu", "interval90_mu")) {
   plot_list[[i]] <- plot_list[[i]] + 
     theme(legend.key.width = unit(1.1, 'cm'), 
@@ -145,7 +183,7 @@ for (i in c("p_Y", "interval90_Y", "p_mu", "interval90_mu")) {
 }
 
 ## Increase legend height for plots that will have vertical legends. 
-## Also shift the title further to the right, so it looks better centred. 
+## Also shift the title further to the right, so it's centred. 
 for (i in c("Z", "mu_true")) {
   plot_list[[i]] <- plot_list[[i]] + 
     theme(legend.key.height = unit(0.8, 'cm'))
@@ -153,7 +191,7 @@ for (i in c("Z", "mu_true")) {
 
 
 ## Adjust the scale of the mean prediction, so it is the same as the data scale
-data_lims  <- range(pred_list[[max_nres]]$newdata$p_mu, Poisson_simulated$Z, BAUs_df$mu)
+data_lims  <- range(pred_list[[max_nres]]$newdata$p_mu, Poisson_data$Z, BAUs_df$mu)
 
 plot_list$p_mu    <- plot_list$p_mu %>% change_legend_limits(limits = data_lims) 
 plot_list$mu_true <- plot_list$mu_true %>% change_legend_limits(limits = data_lims) 
@@ -184,7 +222,8 @@ figure <- ggarrange(plot_list$mu_true, plot_list$Z,
                     nrow = 1, common.legend = TRUE, legend = "right", align = "hv")
 
 ggsave("3_1_Poisson_sim_true_process_and_data.png", plot = figure, 
-       path = "./results", device = "png", width = 10, height = 4, units = "in") 
+       path = "results", device = "png", width = 10, height = 4, units = "in") 
+
 
 ## Remove y-axis labels/ticks for all but the left-most panel
 interior_plot <- function(gg) {
@@ -194,7 +233,6 @@ interior_plot <- function(gg) {
 exterior_plot <- function(gg) {
   gg + rremove("ylab") + rremove("xlab")
 }
-
 
 figure <- ggarrange(plot_list$p_Y %>% exterior_plot,
                     plot_list$interval90_Y %>% interior_plot, 
@@ -206,7 +244,7 @@ figure <- ggarrange(plot_list$p_Y %>% exterior_plot,
 
 
 ggsave("3_1_Poisson_sim.png", plot = figure, 
-       path = "./results", device = "png", width = 14, height = 5.2, units = "in")
+       path = "results", device = "png", width = 14, height = 5.2, units = "in")
 
 
 ## Diagnostic functions
@@ -215,7 +253,7 @@ ggsave("3_1_Poisson_sim.png", plot = figure,
 .IS90 <- function(lower, upper, true, alpha = 0.1) {
   (upper - lower) + 2/alpha * (lower - true) * (true < lower) +
     2/alpha * (true - upper) * (true > upper)
-}
+}a
 .diagnostic_stats <- function(lower, upper, pred, samples, true) {
   data.frame(RMSPE = .RMSPE(true, pred),
              CRPS = mean(scoringRules::crps_sample(y = true, dat = samples)),
@@ -246,7 +284,7 @@ diagnostics <- cbind(
 
 rownames(diagnostics) <- paste0("nres", rownames(diagnostics))
 
-write.csv(diagnostics, file = "./results/3_3_Poisson_nres_comparison.csv")
+write.csv(diagnostics, file = "results/3_3_Poisson_nres_comparison.csv")
 
 save_html_table(
   diagnostics,

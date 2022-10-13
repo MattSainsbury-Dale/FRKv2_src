@@ -9,9 +9,7 @@ library("raster")   # bind()
 library("ggpubr")
 library("ggmap")    # Stamenmap
 
-source("./scripts/Utility_fns.R")
-  
-
+source("scripts/Utility_fns.R")
 })
 
 
@@ -46,8 +44,8 @@ change_font_size_and_axis <- function(gg) {
 # ---- Data preprocessing ----
 
 ## Load the census data
-census_SA1_df <- read.csv("./data/Sydney_SA1_data.csv")
-census_SA2_df <- read.csv("./data/Sydney_SA2_data.csv")
+census_SA1_df <- read.csv("data/Sydney_SA1_data.csv")
+census_SA2_df <- read.csv("data/Sydney_SA2_data.csv")
 
 ## Poverty lines as defined in Appendix E: "Sydney poverty lines"
 poverty_lines <- c("Couple_family_with_no_children" = round_any(594.6, 200), 
@@ -112,7 +110,7 @@ census_SA2_df <- censusDataPreprocess(census_SA2_df, "SA2")
 
 ## Deal with the SA3s first so that we can subset the SA1s based on the SA3s. 
 suppressWarnings(
-  SA3 <- readShapePoly("./data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp", delete_null_obj = TRUE)
+  SA3 <- readShapePoly("data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp", delete_null_obj = TRUE)
 )
 coordnames(SA3) <- c("lon", "lat")
 
@@ -124,7 +122,7 @@ SA3_NSW_sub <- SA3[idx,]
 cat("Number of SA3s:", length(SA3_NSW_sub), "\n")
 
 ## Deal with the SA2s first so that we can subset the SA1s based on the SA2s 
-SA2 <- readShapePoly("./data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp", delete_null_obj = TRUE)
+SA2 <- readShapePoly("data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp", delete_null_obj = TRUE)
 coordnames(SA2) <- c("lon", "lat")
 
 ## Add the SA2 census data 
@@ -144,7 +142,7 @@ cat("Removed SA2s with no families of interest.\n")
 cat("Number of SA2s:", length(SA2_NSW_sub), "\n")
 
 ## Now deal with the SA1s
-SA1 <- readShapePoly("./data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp", delete_null_obj=TRUE)
+SA1 <- readShapePoly("data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp", delete_null_obj=TRUE)
 coordnames(SA1) <- c("lon", "lat")
 
 ## Retain only those SA1s which are in the remaining SA2s.
@@ -199,6 +197,8 @@ construct_training_data <- function(fitting = "mixed", SA1s, SA2s) {
 
 # ---- Sydney Stamen map ----
 
+# TODO Better to just save this in the data 
+
 ## map background to show Sydney
 ## NB: get_stamenmap() does NOT require a google API
 Sydney_bbox <- c(left = 150.72, bottom = -34.2, right = 151.32, top = -33.65)
@@ -207,7 +207,7 @@ suppressMessages({
                                maptype = "toner-background", 
                                color = "bw")
 })
-save(Sydney_map, file = "./data/Sydney_map.RData") 
+save(Sydney_map, file = "data/Sydney_map.RData") 
 
 ## Create map layer to place under all plots
 Sydney_map <- ggmap(Sydney_map)
@@ -277,7 +277,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   ggsave( 
     ggarrange(plotlist = training_data_plots, align = "hv", nrow = 1, legend = "top"),
     filename = paste0("4_3_Sydney_training_data_", fitting, ".png"), 
-    device = "png", path = "./results/", width = 9, height = 4.1
+    device = "png", path = "results/", width = 9, height = 4.1
   )
   
   # ---- FRK ----
@@ -339,7 +339,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   coverage   <- mean((lower <= true_value) & (true_value <= upper))
   
   diagnostics <- data.frame(coverage = coverage)
-  save_path   <- paste0("./results/4_3_Sydney_SA1_coverage_", fitting)
+  save_path   <- paste0("results/4_3_Sydney_SA1_coverage_", fitting)
   
   write.csv(diagnostics, 
             paste0(save_path, ".csv"), 
@@ -380,7 +380,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   ggsave( 
     figure,
     filename = paste0("4_3_Sydney_SA1_predictions_", fitting, ".png"), 
-    device = "png", width = 9.5, height = 4.4, path = "./results/"
+    device = "png", width = 9.5, height = 4.4, path = "results/"
   )
   
   # ---- SA3 predictions ----
@@ -426,7 +426,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   ggsave( 
     figure,
     filename = paste0("4_3_Sydney_SA3_predictions_probability_", fitting, ".png"), 
-    device = "png", width = 9.5, height = 4.4, path = "./results/"
+    device = "png", width = 9.5, height = 4.4, path = "results/"
   )
 }
 

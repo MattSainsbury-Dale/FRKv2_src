@@ -26,12 +26,12 @@ user_decision <- function(prompt, allowed_answers = c("y", "n")) {
 # Installs the dependencies listed in dependencies.txt
 install_dependencies <- function(install_exact_versions) {
   
+  CRANMIRROR <- "https://cran.csiro.au" 
+  
   if (!("devtools" %in% rownames(installed.packages()))) {
     install.packages("devtools", repos = CRANMIRROR)
   }
-  
-  CRANMIRROR <- "https://cran.csiro.au" 
-  
+
   tmp <- read.table("dependencies.txt", header = FALSE)
   pkg_versions <- setNames(as.character(tmp[, 2]), tmp[, 1])
   rm(tmp)
@@ -43,7 +43,7 @@ install_dependencies <- function(install_exact_versions) {
   
   ## dggrids is simple to deal with, so we just install the current version: 
   if(!("dggrids" %in% rownames(installed.packages())))
-    install.packages("dggrids", repos="https://andrewzm.github.io/dggrids-repo", type= "source")
+    install.packages("dggrids", repos="https://andrewzm.github.io/dggrids-repo", type = "source")
   
   
   if(!("INLA" %in% rownames(installed.packages()))) {
@@ -122,15 +122,15 @@ if (install_depends == "y") {
 # ---- Check that the data has been downloaded correctly ----
 
 downloaded_correctly <- c(
-  file.exists("./data/chicago_crime_df.Rda"),
+  file.exists("data/chicago_crime_df.Rda"),
   # Check that the Sydney SA directories exist:
-  file.exists("./data/Sydney_shapefiles/SA1"), 
-  file.exists("./data/Sydney_shapefiles/SA2"), 
-  file.exists("./data/Sydney_shapefiles/SA3"),
+  file.exists("data/Sydney_shapefiles/SA1"), 
+  file.exists("data/Sydney_shapefiles/SA2"), 
+  file.exists("data/Sydney_shapefiles/SA3"),
   # Check that the actual shapefiles exist:
-  file.exists("./data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp"), 
-  file.exists("./data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp"), 
-  file.exists("./data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp")
+  file.exists("data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp"), 
+  file.exists("data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp"), 
+  file.exists("data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp")
 )
 names(downloaded_correctly) <- c("SA1", "SA2", "SA3", "chicago_crime_df.Rda")
 if(!all(downloaded_correctly)) {

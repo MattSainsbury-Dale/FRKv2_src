@@ -16,7 +16,6 @@
 "plyr" "1.8.6"
 "pROC" "1.16.2"
 "R.utils" "2.10.1"
-"RandomFields" "3.3.8"
 "raster" "3.1.5"
 "renv" "0.13.2"
 "reshape2" "1.4.4"

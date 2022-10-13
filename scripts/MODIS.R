@@ -1,4 +1,4 @@
-source("./scripts/Utility_fns.R")
+source("scripts/Utility_fns.R")
 
 
 ## Use very-low-dimensional representations of the models to establish that the code works? 
@@ -7,10 +7,10 @@ quick <- check_quick()
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
   "FRK",
-  "INLA"#,
-  # "mgcv",
-  # "spNNGP",
-  # "spBayes"
+  "INLA",
+  "mgcv",
+  "spNNGP",
+  "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----
@@ -62,7 +62,7 @@ if (quick) {
 
 ## Load the model fitting and prediction functions
 ## (assign to dummy variable to prevent output)
-dummy <- mapply(source, paste0("./scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
+dummy <- mapply(source, paste0("scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
 
 
 
@@ -155,10 +155,7 @@ common_layers <- ggplot() + theme_bw() + coord_fixed() +
 
 # ---- Load MODIS data  ----
 
-# FIXME: Just keep MODIS_cloud_df name
 data("MODIS_cloud_df") 
-# df <- MODIS_cloud_df 
-# rm(MODIS_cloud_df)
 
 
 # ---- Analysis function ----
@@ -326,15 +323,15 @@ block          <- block_results$block
 
 ## Save all objects needed to produce the plots later
 write.csv(block %>% as.data.frame(), 
-          file = "./intermediates/MODIS_block.csv", 
+          file = "intermediates/MODIS_block.csv", 
           row.names = FALSE)
 
 ## Combine data frames, and save as a .csv
 all_df_train <- rbind(MAR_df_train, block_df_train)
-write.csv(all_df_train, file = "./intermediates/MODIS_all_df_train.csv", row.names = FALSE)
+write.csv(all_df_train, file = "intermediates/MODIS_all_df_train.csv", row.names = FALSE)
 
 all_df_test <- rbind(MAR_df_test, block_df_test)
-write.csv(all_df_test, file = "./intermediates/MODIS_all_df_test.csv", row.names = FALSE)
+write.csv(all_df_test, file = "intermediates/MODIS_all_df_test.csv", row.names = FALSE)
 
 times <- rbind(MAR_times, block_times) %>% 
   as.data.frame() %>% 
@@ -343,32 +340,29 @@ times <- rbind(MAR_times, block_times) %>%
   reshape2::melt(id.vars = "Sampling_scheme", variable.name = "Method", value.name = "time") %>% 
   mutate(time = time / 60)
 
-write.csv(times, file = "./intermediates/times.csv", row.names = FALSE)
+write.csv(times, file = "intermediates/times.csv", row.names = FALSE)
 
 
 ## ---- Re-load results (useful to change plots without running models) ----
 
-block <- read.csv("./intermediates/MODIS_block.csv")
-all_df_train <- read.csv("./intermediates/MODIS_all_df_train.csv")
-all_df_test <- read.csv(file = "./intermediates/MODIS_all_df_test.csv")
-times <- read.csv(file = "./intermediates/times.csv")
+block <- read.csv("intermediates/MODIS_block.csv")
+all_df_train <- read.csv("intermediates/MODIS_all_df_train.csv")
+all_df_test <- read.csv(file = "intermediates/MODIS_all_df_test.csv")
+times <- read.csv(file = "intermediates/times.csv")
 
 
 ## ---- Training and testing data visualisation ----
 
-## See MODIS_plotting_fns.R for the cloud colour definitions
-
 ## Plot the unthresholded version of the data
+# TODO add this plot to the supplementary material
 g_original_data <- common_layers +
-  geom_raster(data = df, aes(x, y, fill = z_unthresholded)) +
+  geom_raster(data = MODIS_cloud_df, aes(x, y, fill = z_unthresholded)) +
   scale_fill_gradient(low = no_cloud_colour, high = cloud_colour) +
   labs(fill = "Radiance")
 
 ## Plot the thresholded data (which we use for our analyses)
-
-## Full data set
 g_thresholded_data <- common_layers +
-  geom_raster(data = df, aes(x, y, fill = z)) +
+  geom_raster(data = MODIS_cloud_df, aes(x, y, fill = z)) +
   discrete_cloud_scale + discrete_cloud_theme
 
 ## Plot the training data
@@ -390,7 +384,7 @@ figure <- (common_layers +
   discrete_cloud_scale + discrete_cloud_theme + training_data_background
 
 ggsave(figure,
-       path = "./results/", filename = "4_1_MODIS_data.png", device = "png", 
+       path = "results/", filename = "4_1_MODIS_data.png", device = "png", 
        width = 10, height = 2.2)
 
 # ---- Compute diagnostics (Brier score and AUC) ----
@@ -419,7 +413,7 @@ diagnostics <- diagnostics %>%
   as.data.frame()
 
 write.csv(diagnostics, row.names = FALSE, 
-          file = "./results/4_1_MODIS_diagnostics.csv")
+          file = "results/4_1_MODIS_diagnostics.csv")
 
 save_html_table(
   diagnostics,
@@ -471,12 +465,13 @@ plot_predictions <- function(df, scheme) {
 }
 
 ggsave(plot_predictions(all_df_test, "MAR"),
-       path = "./results/", filename = "4_1_MODIS_MAR_predictions.png", device = "png", 
+       path = "results/", filename = "4_1_MODIS_MAR_predictions.png", device = "png", 
        width = 10, height = 5.1)
 
 ggsave(plot_predictions(all_df_test, "block"),
-       path = "./results/", filename = "4_1_MODIS_block_predictions.png", device = "png",
+       path = "results/", filename = "4_1_MODIS_block_predictions.png", device = "png",
        width = 12, height = 2.5)   
+
 
 # ---- ROC curves ----
 
@@ -522,6 +517,6 @@ MAR_ROC   <- plot_ROC(MAR_ROC_list)
 figure <- ggpubr::ggarrange(MAR_ROC, block_ROC, 
                     align = "h", common.legend = TRUE, legend = "right")
 
-ggsave(figure, path = "./results/", filename = "4_1_MODIS_ROC.png", device = "png", 
+ggsave(figure, path = "results/", filename = "4_1_MODIS_ROC.png", device = "png", 
        width = 6, height = 2.6)
 

@@ -5,7 +5,7 @@ library("ggplot2")
 library("ggpubr")
 library("dplyr")
 library("raster")
-library("RandomFields")
+# library("RandomFields")
 })
 
 source("scripts/Utility_fns.R")
@@ -361,7 +361,7 @@ figure <- create_figure_one_row_of_plots(data_plots)
 ggsave(figure,
        filename = "3_2_Negbinom_sim_data.png", device = "png", 
        width = 14, height = 5.1,
-       path = "./results")
+       path = "results")
 
 
 # ---- Prep BAUs and obs for FRK ----
@@ -434,7 +434,7 @@ figure <- create_figure_one_row_of_plots(list(plot_list$p_prob,
 ggsave(figure,
        filename = "3_2_Negbinom_sim_BAU_predictions.png", device = "png", 
        width = 14, height = 5.2,
-       path = "./results") 
+       path = "results") 
 
 
 # ---- Assess prediction and UQ at BAU level ----
@@ -467,7 +467,7 @@ diagnostics <- cbind(
   CRPS = mean(scoringRules::crps_sample(y = mu_true, dat = pred$MC$mu_samples))
 )
 
-write.csv(diagnostics, file = "./results/Negbinom_sim.csv", row.names = FALSE)
+write.csv(diagnostics, file = "results/Negbinom_sim.csv", row.names = FALSE)
 
 save_html_table(
   diagnostics,
@@ -516,5 +516,5 @@ figure <- create_figure_one_row_of_plots(list(plot_list$p_prob,
 ggsave(figure,
        filename = "3_2_Negbinom_sim_arbitrary_polygon_predictions.png", device = "png", 
        width = 14, height = 5.2,
-       path = "./results") 
+       path = "results") 
 

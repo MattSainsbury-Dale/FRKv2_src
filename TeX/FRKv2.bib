@@ -6,6 +6,14 @@
   address = {London},
 }
 
+  @Manual{DHARMa,
+    title = {{DHARMa}: Residual Diagnostics for Hierarchical (Multi-Level/Mixed)
+Regression Models},
+    author = {Florian Hartig},
+    year = {2022},
+    note = {\proglang{R} package version 0.4.5},
+    url = {https://CRAN.R-project.org/package=DHARMa},
+  }
 
 @Manual{Jackman:2015,
   title = {\pkg{pscl}: Classes and Methods for \proglang{R} Developed in the Political Science Computational Laboratory, Stanford University},
@@ -25,6 +33,15 @@
   pages = {341--365},
   doi = {10.1016/0304-4076(86)90002-3},
 }
+
+  @Article{spatialfusion,
+    title = {Combining Heterogeneous Spatial Datasets With
+      Process-Based Spatial Fusion Models: A Unifying Framework},
+    author = {Craig Wang and Reinhard Furrer},
+    journal = {Computational Statistics \& Data Analysis},
+    year = {2021},
+    doi = {10.1016/j.csda.2021.107240},
+  }
 
 
 @incollection{Leroux_2000_two_parameter_autoregressive_model,
@@ -143,11 +160,21 @@
 	howpublished = {\textit{arXiv:2001.09111}}
 }
 
+
+@article{Cox_Snell_1968_residuals,
+    title = {A General Definition of Residuals (With Discussion)},
+    year = {1968}, 
+	author = {Cox, D. R. and Snell, E. J.}, 
+	journal = {Journal of the Royal Statistical Society B}, 
+	volume = {30}, 
+	pages = {248--275}
+}
+
 @article{Andrieu_2010_particle_MCMC,
     title = {{Particle Markov chain Monte Carlo methods}},
     year = {2010}, 
 	author = {Andrieu, C. and Doucet, A. and Holenstein, R.}, 
-	journal = {Journal of the Royal Statistical Society}, 
+	journal = {Journal of the Royal Statistical Society B}, 
 	volume = {72}, 
 	pages = {269--342}
 }
@@ -198,6 +225,16 @@
 	volume = 88, 
 	issue = 1,
 	pages = {190--206}
+}
+
+
+@article{Dunn_Smyth_1996_randomised_qunatile_residuals,
+	title = {Randomized Quantile Residuals},
+	year = {1996}, 
+	author = {Dunn, K. P. and Smyth, G. K.}, 
+	journal = {Journal of Computational and Graphical Statistics}, 
+	volume = {5}, 
+	pages = {1--10}
 }
 
 @article{Bradley_2016_Bayesian_spatial_COS_lattice_data,
@@ -434,7 +471,8 @@
     year = {2021},
     author = {Cressie, Noel and Sainsbury-Dale, Matthew and Zammit-Mangion, Andrew},
     journal = {Annual Review of Statistics and its Applications}, 
-    volume = {In press}
+    volume = {9}, 
+    pages = {373--400}
 }
 
 
@@ -569,12 +607,67 @@
 }
 
 
+@article{Gelman_1996_posterior_predictive_assessment,
+    author = {Andrew Gelman and Xiao-Li Meng and Hal Stern},
+    year = {1996}, 
+    title = {Posterior Predictive Assessment of Model Fitness via Realized Discrepancies}, 
+    journal = {Statistica Sinica}, 
+    volume = {6}, 
+    pages = {733 -- 807}
+}
+
+@article{Box_1980_simulation-based_model_checking,
+    author = {George E. P. Box},
+    year = {1980}, 
+    title = {Sampling and {B}ayes' Inference in Scientific Modelling and Robustness}, 
+    journal = {Journal of the Royal Statistical Society A}, 
+    volume = {143}, 
+    pages = {383 -- 430}
+}
+
+
+
+@article{Gelfand_Ghosh_1998_predictive_model_selection,
+    author = {Alan E. Gelfand and Sujit K. Ghosh},
+    year = {1998}, 
+    title = {Model Choice: A Minimum Posterior Predictive Loss Approach, 
+    journal = {Biometrika}, 
+    volume = {85}, 
+    pages = {1--11}
+}
+
+@article{Laud_Ibrahim_1995_predictive_model_selection,
+    author = {Purushottam W. Laud and Joseph G. Ibrahim},
+    year = {1995}, 
+    title = {Predictive Model Selection}, 
+    journal = {Journal of the Royal Statistical Society B}, 
+    volume = {57}, 
+    pages = {247--262}
+}
+
+@article{Rubin_1984_model_selection,
+    author = {Donald R. Rubin},
+    year = {1984}, 
+    title = {{B}ayesianly Justifiable and Relevant Frequency Calculations for the Applied Statistician}, 
+    journal = {Annals of Applied Statistics}, 
+    volume = {12}, 
+    pages = {1151 -- 1172}
+}
+
 @book{Gelman_2014_BayesTextbook, 
     title = {{Bayesian Data Analysis, Third Edition}}, 
     year = {2014}, 
     author = {Gelman, A. and Carlin, J. B. and Stern, H. A. and Dunson, D. B. and Vehtari, A. and Rubin, D. B.}, 
     publisher = {CRC Press}, 
-    address = {Boca Raton, Florida},
+    address = {Boca Raton, FL},
+}
+
+@book{Gelman_Hill_2007, 
+    title = {Data Analysis using Regression and Multilevel/Hierarchical Models}, 
+    year = {2007}, 
+    author = {Gelman, A. and Hill, J.}, 
+    publisher = {Cambridge University Press}, 
+    address = {Cambridge, England},
 }
 
 @article{Gershgorin_1931_Circle_Theorem,
@@ -1123,13 +1216,21 @@ linear mixed models}},
 
 
 @article{Tierney_1986_Laplace_approx,
-	title = {{Accurate approximations for posterior moments and marginal densities}},
+	title = {Accurate Approximations for Posterior Moments and Marginal Densities},
 	year = {1986}, 
 	author = {Tierney, L. and Kadane, J. B.}, 
-	journal = {{Journal of the American Statistical Association}}, 
+	journal = {Journal of the American Statistical Association}, 
 	volume = {81}, 
-	issue = {393}, 
 	pages = {82--86}
+}
+
+@article{Rue_Martino_2007,
+	title = {Approximate {Bayesian} Inference for Hierarchical {Gaussian Markov} random field models},
+	year = {2007}, 
+	author = {Rue, H. and Martino, S.}, 
+	journal = {Journal of Statistical Planning and Inference}, 
+	volume = {137}, 
+	pages = {3177--3192}
 }
 
 

@@ -6,7 +6,7 @@ library("ggplot2")
 library("scoringRules") # crps_sample() 
 library("dplyr")
 library("ggpubr")
-source("./scripts/Utility_fns.R")
+source("scripts/Utility_fns.R")
 options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 })
 
@@ -16,7 +16,7 @@ nres <- if (quick) 2 else 4
 
 cat(paste("Heaton study: Using", nres, "basis-function resolutions.\n"))
 
-load("./data/Heaton_AllSatelliteTemps.RData")
+load("data/Heaton_AllSatelliteTemps.RData")
 
 ## Create an identifier variable
 df <- all.sat.temps %>%
@@ -98,10 +98,10 @@ diagnostics <- pred_df[validx, ] %>%
 
 
 write.csv(diagnostics, 
-          "./results/3_3_Heaton_FRKv2.csv", 
+          "results/3_3_Heaton_FRKv2.csv", 
           row.names = FALSE)
 
-diagnostics <- read.csv("./results/3_3_Heaton_FRKv2.csv")
+diagnostics <- read.csv("results/3_3_Heaton_FRKv2.csv")
 
 rownames(diagnostics) <- "FRK v2"
 
@@ -229,7 +229,7 @@ if (short_format) {
   ggsave( 
     figure,
     filename = "Heaton_FRKv1_FRKv2.png", 
-    device = "png", path = "./results/", 
+    device = "png", path = "results/", 
     width = 8, height = 1.7
   )
   

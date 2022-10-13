@@ -1,4 +1,4 @@
-\begin{thebibliography}{47}
+\begin{thebibliography}{54}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -28,6 +28,13 @@ Bell BM (2005).
   Differentiation.}
 \newblock \url{http://www.coin-or.org/CppAD}.
 \newblock Accessed: 2021-08-10.
+
+\bibitem[{Box(1980)}]{Box_1980_simulation-based_model_checking}
+Box GEP (1980).
+\newblock \enquote{Sampling and {B}ayes' Inference in Scientific Modelling and
+  Robustness.}
+\newblock \emph{Journal of the Royal Statistical Society A}, \textbf{143}, 383
+  -- 430.
 
 \bibitem[{Bradley \emph{et~al.}(2018)Bradley, Holan, and
   Wikle}]{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}
@@ -60,6 +67,12 @@ Bradley JR, Wikle CK, Holan SH (2019).
   \url{https://www.cmap.illinois.gov/documents/10180/126764/_Combined_AllCCAs.pdf/}.
   Accessed: 2021-08-10.
 
+\bibitem[{Cox and Snell(1968)}]{Cox_Snell_1968_residuals}
+Cox DR, Snell EJ (1968).
+\newblock \enquote{A General Definition of Residuals (With Discussion).}
+\newblock \emph{Journal of the Royal Statistical Society B}, \textbf{30},
+  248--275.
+
 \bibitem[{Cressie(1993)}]{Cressie_1993_stats_for_spatial_data}
 Cressie N (1993).
 \newblock \emph{{Statistics for Spatial Data}}.
@@ -81,8 +94,8 @@ Cressie N, Johannesson G (2008).
   Zammit-Mangion}]{Cressie_2021_review_spatial-basis-function_models}
 Cressie N, Sainsbury-Dale M, Zammit-Mangion A (2021).
 \newblock \enquote{Basis-Function Models in Spatial Statistics.}
-\newblock \emph{Annual Review of Statistics and its Applications}, \textbf{In
-  press}.
+\newblock \emph{Annual Review of Statistics and its Applications}, \textbf{9},
+  373--400.
 
 \bibitem[{Datta \emph{et~al.}(2016)Datta, Banerjee, Finley, and
   Gelfand}]{Datta_2016_NNGP_spatial}
@@ -98,6 +111,12 @@ Diggle PJ, Tawn JA, Moyeed RA (1998).
 \newblock \enquote{Model-Based Geostatistics.}
 \newblock \emph{Journal of the Royal Statistical Society C}, \textbf{47},
   299--350.
+
+\bibitem[{Dunn and Smyth(1996)}]{Dunn_Smyth_1996_randomised_qunatile_residuals}
+Dunn KP, Smyth GK (1996).
+\newblock \enquote{Randomized Quantile Residuals.}
+\newblock \emph{Journal of Computational and Graphical Statistics}, \textbf{5},
+  1--10.
 
 \bibitem[{Finley \emph{et~al.}(2015)Finley, Banerjee, and
   Gelfand}]{Finley_2015_spBayes}
@@ -121,6 +140,19 @@ Furrer R, Nychka D, Genton MG (2006).
 \newblock \emph{Journal of Computational and Graphical Statistics},
   \textbf{15}, 502--523.
 
+\bibitem[{Gelman and Hill(2007)}]{Gelman_Hill_2007}
+Gelman A, Hill J (2007).
+\newblock \emph{Data Analysis using Regression and Multilevel/Hierarchical
+  Models}.
+\newblock Cambridge University Press, Cambridge, England.
+
+\bibitem[{Gelman \emph{et~al.}(1996)Gelman, Meng, and
+  Stern}]{Gelman_1996_posterior_predictive_assessment}
+Gelman A, Meng XL, Stern H (1996).
+\newblock \enquote{Posterior Predictive Assessment of Model Fitness via
+  Realized Discrepancies.}
+\newblock \emph{Statistica Sinica}, \textbf{6}, 733 -- 807.
+
 \bibitem[{Gneiting \emph{et~al.}(2007)Gneiting, Balabdaoui, and
   Raftery}]{Gneiting_2007_scoring_rules}
 Gneiting T, Balabdaoui F, Raftery AE (2007).
@@ -134,6 +166,13 @@ Guennebaud G, Jacob B, \emph{et~al.} (2010).
 \newblock \enquote{{\pkg{Eigen} v3}.}
 \newblock \url{http://eigen.tuxfamily.org}.
 \newblock Accessed: 2021-08-10.
+
+\bibitem[{Hartig(2022)}]{DHARMa}
+Hartig F (2022).
+\newblock \emph{{DHARMa}: Residual Diagnostics for Hierarchical
+  (Multi-Level/Mixed) Regression Models}.
+\newblock \proglang{R} package version 0.4.5,
+  \urlprefix\url{https://CRAN.R-project.org/package=DHARMa}.
 
 \bibitem[{Hastie \emph{et~al.}(2009)Hastie, Tibshirani, and
   Friedman}]{Hastie_2009_Elements_Statistical_Learning}
@@ -158,12 +197,6 @@ Hersbach H (2000).
   Ensemble Prediction Systems.}
 \newblock \emph{American Meteorological Society}, \textbf{15}, 559--570.
 
-\bibitem[{Hu and Bradley(2018)}]{Hu_2018_log-gamma_earthquake_magnitudes}
-Hu G, Bradley JR (2018).
-\newblock \enquote{A {B}ayesian Spatial-Temporal Model with Latent Multivariate
-  Log-Gamma Random Effects with Application to Earthquake Magnitudes.}
-\newblock \emph{Stat}, \textbf{7}, e179.
-
 \bibitem[{Huang \emph{et~al.}(2009)Huang, Yao, Cressie, and
   Hsing}]{Huang_2009_multivar_intrinsic_rand_functions_cokriging}
 Huang C, Yao Y, Cressie N, Hsing T (2009).
@@ -176,12 +209,6 @@ Hughes J (2014).
   Autologistic and Sparse Spatial Generalized Linear Mixed Models for Areal
   Data}.}
 \newblock \emph{{The \proglang{R} Journal}}, \textbf{6}, 81--95.
-
-\bibitem[{Kassambara(2020)}]{Kassambara_2020_ggpubr}
-Kassambara A (2020).
-\newblock \emph{\pkg{ggpubr}: `\pkg{ggplot2}' Based Publication Ready Plots}.
-\newblock \proglang{R} package version 0.4.0,
-  \urlprefix\url{https://CRAN.R-project.org/package=ggpubr}.
 
 \bibitem[{Kristensen \emph{et~al.}(2016)Kristensen, Nielsen, Berg, Skaug, and
   Bell}]{Kristensen_2016_TMB}
@@ -247,6 +274,14 @@ McCullagh P, Nelder JA (1989).
   Adaptive Processing System, {Goddard Space Flight Center, USA}.}
 \newblock \url{https://mcst.gsfc.nasa.gov/}.
 
+\bibitem[{Nychka \emph{et~al.}(2016)Nychka, Hammerling, Sain, and
+  Lenssen}]{Nychka_2016_LatticeKrig}
+Nychka D, Hammerling D, Sain S, Lenssen N (2016).
+\newblock \emph{LatticeKrig: Multiresolution Kriging Based on Markov Random
+  Fields}.
+\newblock \proglang{R} package version 6.2,
+  \urlprefix\url{www.image.ucar.edu/LatticeKrig}.
+
 \bibitem[{Papritz(2020)}]{georob}
 Papritz A (2020).
 \newblock \emph{\pkg{georob}: Robust Geostatistical Analysis of Spatial Data}.
@@ -259,12 +294,6 @@ Paul R, Cressie N (2011).
 \newblock \enquote{Lognormal Block Kriging for Contaminated Soil.}
 \newblock \emph{{European Journal of Soil Science}}, \textbf{62}, 337--345.
 
-\bibitem[{Pebesma(2018)}]{Pebesma_2018_sf_package}
-Pebesma E (2018).
-\newblock \enquote{Simple Features for \proglang{R}: Standardized Support for
-  Spatial Vector Data.}
-\newblock \emph{The \proglang{R} Journal}, \textbf{10}, 439--446.
-
 \bibitem[{Pebesma and Bivand(2005)}]{Pebesma_2005_sp_package}
 Pebesma EJ, Bivand RS (2005).
 \newblock \enquote{Classes and Methods for Spatial Data in \proglang{R}.}
@@ -275,6 +304,19 @@ Pebesma EJ, Bivand RS (2005).
 \newblock \emph{\proglang{R}: A Language and Environment for Statistical
   Computing}.
 \newblock \proglang{R} Foundation for Statistical Computing, Vienna, Austria.
+
+\bibitem[{Rubin(1984)}]{Rubin_1984_model_selection}
+Rubin DR (1984).
+\newblock \enquote{{B}ayesianly Justifiable and Relevant Frequency Calculations
+  for the Applied Statistician.}
+\newblock \emph{Annals of Applied Statistics}, \textbf{12}, 1151 -- 1172.
+
+\bibitem[{Rue and Martino(2007)}]{Rue_Martino_2007}
+Rue H, Martino S (2007).
+\newblock \enquote{Approximate {Bayesian} Inference for Hierarchical {Gaussian
+  Markov} random field models.}
+\newblock \emph{Journal of Statistical Planning and Inference}, \textbf{137},
+  3177--3192.
 
 \bibitem[{Rue \emph{et~al.}(2009)Rue, Martino, and Chopin}]{Rue_2009_INLA}
 Rue H, Martino S, Chopin N (2009).
@@ -289,14 +331,6 @@ Sengupta A, Cressie N (2013).
   Using the {Exponential Family} of Distributions.}
 \newblock \emph{Spatial Statistics}, \textbf{4}, 14--44.
 
-\bibitem[{Sengupta \emph{et~al.}(2016)Sengupta, Cressie, Kahn, and
-  Frey}]{Sengupta_2016_MODIS}
-Sengupta A, Cressie N, Kahn BH, Frey R (2016).
-\newblock \enquote{Predictive Inference for Big, Spatial, Non-{Gaussian} Data:
-  {MODIS} Cloud Data and its Change-of-Support.}
-\newblock \emph{Australian \& New Zealand Journal of Statistics}, \textbf{58},
-  15--45.
-
 \bibitem[{{The University of Chicago
   Library}(2020)}]{Chicago_library_census_data_info}
 {The University of Chicago Library} (2020).
@@ -305,6 +339,20 @@ Sengupta A, Cressie N, Kahn BH, Frey R (2016).
 \newblock URL
   \url{https://www.lib.uchicago.edu/e/collections/maps/censusinfo.html}.
 \newblock Accessed: 2021-08-10.
+
+\bibitem[{Tierney and Kadane(1986)}]{Tierney_1986_Laplace_approx}
+Tierney L, Kadane JB (1986).
+\newblock \enquote{Accurate Approximations for Posterior Moments and Marginal
+  Densities.}
+\newblock \emph{Journal of the American Statistical Association}, \textbf{81},
+  82--86.
+
+\bibitem[{Wang and Furrer(2021)}]{spatialfusion}
+Wang C, Furrer R (2021).
+\newblock \enquote{Combining Heterogeneous Spatial Datasets With Process-Based
+  Spatial Fusion Models: A Unifying Framework.}
+\newblock \emph{Computational Statistics \& Data Analysis}.
+\newblock \doi{10.1016/j.csda.2021.107240}.
 
 \bibitem[{Wickham(2016)}]{Wickham_2016_ggplot2}
 Wickham H (2016).
