@@ -69,7 +69,12 @@ Note that the replication script is clearly presented and commented; hence, one 
 
 #### Real-world example
 
-For users wishing to "try out" the package on a real-world example, we suggest the Sydney spatial change-of-support example presented in Section 4.3.  
+For users wishing to "try out" the package on a real-world example, we suggest the Sydney spatial change-of-support example presented in Section 4.3. 
+
+
+#### Archived packages
+
+The reproducible code for the Americium experiment, given in Section 4.2 of the manuscript, uses the package **georob**. However, **georob** and one of its dependencies, **RandomFields**, have been archived. To prevent dependencies on archived packages, we no longer execute the **georob** code when running the replication script; instead, the results are saved as a csv file and stored in the data folder. 
 
 <!---
 ### Note to Windows users

@@ -253,7 +253,7 @@ ggsave("3_1_Poisson_sim.png", plot = figure,
 .IS90 <- function(lower, upper, true, alpha = 0.1) {
   (upper - lower) + 2/alpha * (lower - true) * (true < lower) +
     2/alpha * (true - upper) * (true > upper)
-}a
+}
 .diagnostic_stats <- function(lower, upper, pred, samples, true) {
   data.frame(RMSPE = .RMSPE(true, pred),
              CRPS = mean(scoringRules::crps_sample(y = true, dat = samples)),

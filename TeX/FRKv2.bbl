@@ -169,7 +169,7 @@ Guennebaud G, Jacob B, \emph{et~al.} (2010).
 
 \bibitem[{Hartig(2022)}]{DHARMa}
 Hartig F (2022).
-\newblock \emph{{DHARMa}: Residual Diagnostics for Hierarchical
+\newblock \emph{\pkg{DHARMa}: Residual Diagnostics for Hierarchical
   (Multi-Level/Mixed) Regression Models}.
 \newblock \proglang{R} package version 0.4.5,
   \urlprefix\url{https://CRAN.R-project.org/package=DHARMa}.

@@ -1663,11 +1663,12 @@ In Section~\ref{sec:block_prediction}, we demonstrate block prediction using con
 In Section~\ref{sec:spatialCOS}, we use data on poverty figures in Sydney, Australia, to demonstrate the spatial change-of-support functionality of \pkg{FRK}~v2 in a non-Gaussian setting.  
 In Section~\ref{sec:ST_example}, we provide a non-Gaussian spatio-temporal example through modelling crime counts in the city of Chicago during the first two decades of the 21st century. 
 For readers wishing to `try out' \pkg{FRK}~v2 on a real-world example, we suggest Section~\ref{sec:spatialCOS}.  
+ \Copy{sphere}{For the use of \pkg{FRK} on the surface of a sphere, see \citet[][Sec.~4.2]{FRK_paper} and the examples given in the package vignette.}
 
 \subsection{Comparative study: MODIS cloud data}\label{sec:04-01:MODIS}
 
 
-In this section, we compare out-of-sample predictions from \pkg{FRK}~version 2.0.1 to those from the \proglang{R} packages \pkg{INLA} version 20.03.17 \citep{Lindgren_2015_R-INLA},  \pkg{spNNGP} version 0.1.4 \citep{Finley_2020_spNNGP}, \pkg{spBayes} version 0.4.3 \citep{Finley_2015_spBayes}, and \pkg{mgcv} version 1.8.33 \citep{Wood_2017_GAM:R} from a spatial binary data set. 
+In this section, we compare out-of-sample predictions from \pkg{FRK}~version 2.0.1 to those from the \proglang{R} packages \pkg{INLA} version 20.03.17 \citep{Lindgren_2015_R-INLA}, \pkg{spNNGP} version 0.1.4 \citep{Finley_2020_spNNGP}, \pkg{spBayes} version 0.4.3 \citep{Finley_2015_spBayes}, and \pkg{mgcv} version 1.8.33 \citep{Wood_2017_GAM:R} from a spatial binary data set. 
 The data form an image of a cloud taken by the Moderate Resolution Imaging Spectroradiometer (MODIS) instrument aboard the Aqua satellite \citep{MODIS_satelitte} on 05 December 2018 01:00 UTC, over the South Pacific, just east of New Zealand. 
 %Data collected from the MODIS instrument have been used in several related works; see, for instance, \cite{Sengupta_2016_MODIS} and \cite{ZammitMangion_2021_Deep_compositional_spatial_model}.
 For this comparative study, we pre-processed the data as follows. First, we coarsened the image from over 10 million pixels to a more manageable 33,750 pixels, by creating a 150 $\times$ 225 grid and computing the average value of the response within each grid cell. 
