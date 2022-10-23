@@ -351,7 +351,8 @@ Tierney L, Kadane JB (1986).
 Wang C, Furrer R (2021).
 \newblock \enquote{Combining Heterogeneous Spatial Datasets With Process-Based
   Spatial Fusion Models: A Unifying Framework.}
-\newblock \emph{Computational Statistics \& Data Analysis}.
+\newblock \emph{Computational Statistics \& Data Analysis}, \textbf{161},
+  107240.
 \newblock \doi{10.1016/j.csda.2021.107240}.
 
 \bibitem[{Wickham(2016)}]{Wickham_2016_ggplot2}

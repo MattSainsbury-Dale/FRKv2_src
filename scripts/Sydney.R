@@ -433,11 +433,11 @@ Sydney_analysis <- function(fitting = "mixed") {
 cat("\nStarting FRK analysis: Using a mixture of SA1 and SA2 regions as training data.\n")
 Sydney_analysis(fitting = "mixed")
 
-# ## This is only used for presentations, and not at all in the paper:
-# cat("\nStarting FRK analysis: Using only SA2 regions as training data.\n")
-# Sydney_analysis(fitting = "SA2s")
-# 
-# ## This serves a test for the case of binomial data with areal observation
-# ## supports, where the osbervation supports and BAUs coincide:
-# cat("\nStarting FRK analysis: Using only SA1 regions as training data.\n")
-# Sydney_analysis(fitting = "SA1s")
+## This is only used for presentations, and not at all in the paper:
+cat("\nStarting FRK analysis: Using only SA2 regions as training data.\n")
+Sydney_analysis(fitting = "SA2s")
+
+## This serves a test for the case of binomial data with areal observation
+## supports, where the osbervation supports and BAUs coincide:
+cat("\nStarting FRK analysis: Using only SA1 regions as training data.\n")
+Sydney_analysis(fitting = "SA1s")

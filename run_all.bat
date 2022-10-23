@@ -27,12 +27,6 @@ Rscript scripts\Poisson_sim.R %quick%
 
 echo 
 
-echo "######## STARTING NEGATIVE-BINOMIAL EXAMPLE OF SECTION 3.2 #############"
-echo %quick%
-Rscript scripts\Negbinom_sim.R %quick%
-
-echo 
-
 echo "######## STARTING HEATON COMPARISON OF SECTION 3.3 #############"
 Rscript scripts\Heaton.R %quick%
 

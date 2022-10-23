@@ -115,6 +115,7 @@
 \newcommand{\ENoLR}[1]{\mathbb{E}(#1)} % Expectation operator
 \newcommand{\ECurly}[1]{\mathbb{E}\left\{#1\right\}} % Expec operator, curly brackets
 \newcommand{\ESquare}[1]{\mathbb{E}\left[#1\right]} % Expec operator, square brackets
+\newcommand{\sd}[1]{{\rm sd\!}\left(#1\right)} % standard deviation operator
 \newcommand{\var}[1]{{\rm var\!}\left(#1\right)} % variance operator
 \newcommand{\precision}[1]{{\rm prec}\left(#1\right)} % precision operator
 \newcommand{\precisionNoLR}[1]{{\rm prec}(#1)} % precision operator
@@ -318,7 +319,7 @@
 
 
 \Abstract{
- Non-Gaussian spatial and spatio-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of disciplines.  %, such as those involving small-area demographics or global satellite remote sensing. 
+ Non-Gaussian spatial and spatio-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of disciplines. %, such as those involving small-area demographics or global satellite remote sensing. 
   \pkg{FRK} is an \proglang{R} package for spatial/spatio-temporal modelling and prediction with very large data sets that, to date, has only supported linear process models and Gaussian data models. 
  In this paper, we describe a major upgrade to \pkg{FRK} that allows for non-Gaussian data to be analysed in a generalised linear mixed model framework. 
   These vastly more general spatial and spatio-temporal models are fitted using the Laplace approximation via the software \pkg{TMB}. 
@@ -358,7 +359,8 @@
 
 \section{Introduction}\label{sec:intro}
 
- Non-Gaussian spatial and spatio-temporal data arise from a vast array of sources, and %, including statistical studies in contaminated soil \citep[e.g.,][]{Paul_Cressie_2011_lognormal_kriging_block_prediction}, satellite remote sensing  \citep[e.g.,][]{Sengupta_2016_MODIS}, small-area demographics \citep[e.g.,][]{Bradley_2016_Bayesian_spatial_COS_lattice_data}, and earthquake magnitudes \citep[e.g.,][]{Hu_2018_log-gamma_earthquake_magnitudes}.  
+ Non-Gaussian spatial and spatio-temporal data arise from a vast array of sources, and % studies in the geophysical sciences and social sciences. 
+% contaminated soil \citep[e.g.,][]{Paul_Cressie_2011_lognormal_kriging_block_prediction}, satellite remote sensing  \citep[e.g.,][]{Sengupta_2016_MODIS}, small-area demographics \citep[e.g.,][]{Bradley_2016_Bayesian_spatial_COS_lattice_data}, and earthquake magnitudes \citep[e.g.,][]{Hu_2018_log-gamma_earthquake_magnitudes}.  
  the statistical modelling of these data is pertinent, as accurate predictions, and uncertainty quantification of those predictions, give informed answers to real-world problems. 
  
  There are, by now, several approaches to statistical modelling and spatial/spatio-temporal prediction with non-Gaussian data. 
@@ -367,7 +369,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
  In their seminal work, \cite{Diggle_1998_spatial_GLMM} employed a stationary model for $Y(\cdot)$ within the spatial GLMM framework, and a Markov chain Monte Carlo (MCMC) algorithm to obtain predictive distributions. 
  Optimal prediction or estimation of unknown quantities from $m$ observations entails the inversion of an $m\times m$ covariance matrix for many statistical models. 
 % Since this task is generally $O(m^3)$ in computational complexity, some form of dimension-reduction is often employed in `big data' settings. 
- \Copy{FixedRankMethods}{Since this task is generally $O(m^3)$ in computational complexity, alternative approaches that scale well to large sample sizes, which we collectively refer to as \textit{fixed-rank} approaches, are often employed in `big data' settings.}
+ \Copy{FixedRankMethods}{Since this task is generally $O(m^3)$ in computational complexity, alternative approaches that scale well with sample size, which we collectively refer to as \textit{fixed-rank} approaches, are often employed in `big data' settings.}
 
 
 %\citet{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data} modelled multivariate, spatio-temporal count-valued data using a Poisson GLMM with latent multivariate log-gamma distributed random effects;  \cite{Bradley_2019_ST_models_for_big_multinomial_data_using_conditional_multivariate_logit_beta_distribution} modelled spatio-temporal multinomial data using a multinomial GLMM with latent multivariate logit-beta random effects. 
@@ -398,7 +400,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
  The fixed-rank spatial GLMM naturally extends to the spatio-temporal setting; see, for example,  \cite{Lopes_2011_spatial_GLMM_reduced_rank_factor_analytic_model}, 
 \citet{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}, \citet{Bradley_2019_ST_models_for_big_multinomial_data_using_conditional_multivariate_logit_beta_distribution}, and \citet{Zhang_2020_spatio-temporal_Arctic_sea_ice}. 
  
- \Copy{KrigingClause}{Despite the many modelling approaches available, software for spatial and spatio-temporal modelling of non-Gaussian data (for which kriging-based approaches may be sub-optimal) are relatively limited.} 
+ \Copy{KrigingClause}{Despite the many modelling approaches available, software for spatial and spatio-temporal modelling of non-Gaussian data (for which classical kriging-based approaches may be sub-optimal) are relatively limited.} 
  \Copy{SoftwareReview}{
  Software 
  %that facilitate in a straightforward manner the modelling of non-Gaussian spatial and spatio-temporal data 
@@ -453,7 +455,7 @@ where each term in (\ref{eqn:04-01:Y(s)}) models a different type of spatial var
 First, spatially referenced covariates $\vec{t}(\cdot)$ and their associated regression parameters $\vec{\alpha}$, capture spatial variation that is linked to known, usually large-scale, explanatory variables that are elements of $\vec{t}(\cdot)$; the model requires that the covariates are known at every location in $D$. 
 Second, the spatially correlated random effect $v(\cdot)$ captures medium-to-small-scale spatial variation.
 %Accounting for the scales of spatial variation with only $\vec{t}(\cdot)^\tp \vec{\alpha}$ and $v(\cdot)$ can result in an overly smooth spatial model and hence overly optimistic predictions; this problem is alleviated by also including a fine-scale-variation random process, $\xi(\cdot)$. 
- \Copy{MotivationForFineScaleProcess}{If the scales of spatial variation in the modelled spatial process are at a fine resolution, including only $\vec{t}(\cdot)^\tp \vec{\alpha}$ and $v(\cdot)$ can result in an overly smooth spatial model and hence overly optimistic predictions; this problem is alleviated by also including a fine-scale-variation random process, $\xi(\cdot)$.}
+ \Copy{MotivationForFineScaleProcess}{If the spatial process being modelled has fine-scale variation, including only $\vec{t}(\cdot)^\tp \vec{\alpha}$ and $v(\cdot)$ can result in an overly smooth spatial model and hence overly optimistic predictions. This problem is alleviated by also including a fine-scale-variation random process, $\xi(\cdot)$, in the model.}
  
 In \FRKgeneric, the medium-to-small-scale term $v(\cdot)$ is constructed as a linear combination of $r$ spatial basis functions with random coefficients, where $r$ is fixed and usually smaller than $m$, the number of observations. Specifically,
 \[
@@ -471,7 +473,7 @@ See Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details on how these basis fu
 
  To cater for different observation supports and facilitate solutions to spatial change-of-support problems, \FRKgeneric assumes a discretised domain of interest, \mbox{$D^G \equiv \{A_i: i = 1, \dots, N\}$}, that is made up of $N$ non-overlapping basic areal units (BAUs) such that $D = \cup_{i = 1}^N A_i$. 
 % These BAUs may correspond to physical real-world boundaries, such as regional borders, or simply a fine mesh covering that spatial domain. 
- \Copy{BAUEffectOnPrediction}{If $N$ is large enough to render the discretisation error neglible, the use of BAUs does not result in a loss in predictive power compared with classical geostatistical approaches (see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~4;  \citeauthor{Cressie_2021_review_spatial-basis-function_models}, \citeyear{Cressie_2021_review_spatial-basis-function_models}, Sec.~5), and this allows \pkg{FRK} to be used as an omnibus approach for spatial analyses.}
+ \Copy{BAUEffectOnPrediction}{If $N$ is large enough to render the discretisation error negligible, the use of BAUs does not lead to prediction inaccuracies when compared with classical geostatistical approaches (see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~4;  \citeauthor{Cressie_2021_review_spatial-basis-function_models}, \citeyear{Cressie_2021_review_spatial-basis-function_models}, Sec.~5).} 
  Now, let $Y(A_i)$ denote a representative value of $\{Y(\vec{s}) : \vec{s} \in A_i\}$, where commonly that value is the spatial integral or the spatial average over $A_i$.  
  Define the discretised latent spatial process $Y(\cdot)$ evaluated over the $N$ BAUs as $\vec{Y} \equiv (Y_1, \dots, Y_N)^\tp$, where $Y_i \equiv Y(A_i)$, $i = 1, \dots, N$. Then, a vectorised version of (\ref{eqn:04-01:Y(s)}) is
 \begin{equation}\label{Ch4:eqn:vecY}
@@ -671,18 +673,21 @@ As we only consider data models in the exponential family, $\ln{[\vec{Z}  \mid  
 where $a(\cdot)$, $b(\cdot)$, and $c(\cdot, \cdot)$ are deterministic functions specific to the chosen exponential family member, and $\lambda(\cdot)$ is the canonical parameter.
 
 The model employed by \pkg{FRK}~v2 can be summarised as follows.
-\Copy{ModelSummary}{ 
+
 \begin{gather}
+	\Copy{ModelSummary}{ 
     Z_j \mid \vec{\mu}_Z, \psi \inddist \text{EF}(\mu_{Z_j}, \psi); \quad j = 1, \dots, m, \label{eqn:new_model_Z}\\
     \vec{\mu}_Z = \vec{C}_Z \vec{\mu}, \label{eqn:new_model_muZ}\\
     g(\vec{\mu}) = \vec{Y}, \label{eqn:new_model_g(mu)}\\
     \vec{Y} = \vec{T} \vec{\alpha} + \vec{S} \vec{\eta} + \vec{\xi}, \label{eqn:new_model_Y}\\
     \vec{\eta} \mid \vec{\vartheta} \sim \Gau(\vec{0}, \vec{Q}^{-1}), \\
     \vec{\xi} \mid \sigma^2_\xi \sim \Gau(\vec{0}, \sigma^2_\xi \vec{V}), \label{eqn:new_model_priors}
+}
 \end{gather}
- where $\vec{V}$ is a known, positive-definite diagonal matrix} which, in the absence of problem specific fine-scale information, can simply be set to $\vec{I}$, and $\sigma^2_\xi$ is either unknown and estimated, or provided by the user.  
+ where $\vec{V}$ is a known, positive-definite diagonal matrix which, in the absence of problem specific fine-scale information, can simply be set to $\vec{I}$, and $\sigma^2_\xi$ is either unknown and estimated, or provided by the user.  
  In a spatio-temporal setting, a more complex model for $\vec{\xi}$ is allowed; see Section~\ref{sec:spatio-temporal}. 
  Note that \pkg{FRK}~v2 is backwards compatible, since an identity link function and a Gaussian data model in (\ref{eqn:new_model_Z}) yields the model used in \pkg{FRK}~v1; then $\psi$ is simply the measurement-error variance $\sigma^2_\epsilon$ in $Z_j \mid \mu_{Z_j}, \sigma^2_\epsilon \sim \Gau(\mu_{Z_j}, \sigma^2_\epsilon)$. 
+ 
 
 \subsection{Estimation}\label{subsection:02-03:Estimation}
 
@@ -744,7 +749,7 @@ Let $\hat{\vec{u}}\equiv\hat{\vec{u}}(\vec{\theta}, \vec{Z})$ be a mode of $\ell
     \approx L(\vec{\theta} ; \vec{Z}, \hat{\vec{u}})
     (2\pi)^{\frac{{p}}{2}}\left|\vec{H}\right|^{\frac{1}{2}}$.
 % This allows $\vec{u}$ to be integrated out of $L(\vec{\theta}; \vec{Z}, \vec{u})$, yielding the Laplace approximation of the observed-data log likelihood, $\ell^*(\vec{\theta}; \vec{Z}) \approx \ell(\vec{\theta} ;  \vec{Z}, \hat{\vec{u}}) + \frac{{p}}{2} \ln{2\pi} + \frac{1}{2} \ln{\left|\vec{H}\right|}$.
-   \Copy{LaplaceApproximation}{For a more detailed discussion on the Laplace approximation and its accuracy, see, for example, \cite{Tierney_1986_Laplace_approx}, \cite{Rue_Martino_2007}, and \cite{Rue_2009_INLA}.}
+   \Copy{LaplaceApproximation}{For a more detailed discussion on the Laplace approximation and its properties, see, for example, \cite{Tierney_1986_Laplace_approx}, \cite{Rue_Martino_2007}, and \cite{Rue_2009_INLA}.}
  
  
  Note that $[\vec{u} \mid \vec{Z}, \vec{\theta}] \propto [\vec{Z}, \vec{u} \mid \vec{\theta}]$, which is equal to the complete-data likelihood function, $L(\vec{\theta}; \vec{Z}, \vec{u})$. 
@@ -1521,7 +1526,7 @@ However, they are still often used in such settings and, hence, \pkg{FRK}~v2 als
  Table~\ref{tab:03-02:PoissonScoringRules} shows the results for each model. 
    Clearly, predictive performance improves as the number of resolutions, and hence the number of basis functions, increases. However, the coverage remains accurate in all runs, implying that the model is able to accurately quantify uncertainty irrespective of the number of basis functions employed. 
    This important property is due largely to the presence of the fine-scale random variation term, $\xi(\cdot)$, in (\ref{eqn:04-01:Y(s)}). 
-  Further, \Copy{PoissonVaryingBasisFunctions}{the relative smoothness in the data (recall the right panel of Figure~\ref{fig:Poisson_residuals}) suggests that only a moderate number of basis functions are needed for this application. 
+  Further, \Copy{PoissonVaryingBasisFunctions}{the relative smoothness in the data (recall the right panel of Figure~\ref{fig:Poisson_true_and_Z}) suggests that only a moderate number of basis functions are needed for this application. 
   Indeed, Table~\ref{tab:03-02:PoissonScoringRules} shows that adding a fourth resolution of basis functions does not substantially improve the predictive performance, which is reflected by an increase in the AIC. %, despite the fact that this criterion does not account for the number of dependent random effects: 
   Importantly, however, the use of more basis functions than is strictly necessary does not reduce predictive performance. 
   }
@@ -1672,7 +1677,7 @@ In this section, we compare out-of-sample predictions from \pkg{FRK}~version 2.0
 The data form an image of a cloud taken by the Moderate Resolution Imaging Spectroradiometer (MODIS) instrument aboard the Aqua satellite \citep{MODIS_satelitte} on 05 December 2018 01:00 UTC, over the South Pacific, just east of New Zealand. 
 %Data collected from the MODIS instrument have been used in several related works; see, for instance, \cite{Sengupta_2016_MODIS} and \cite{ZammitMangion_2021_Deep_compositional_spatial_model}.
 For this comparative study, we pre-processed the data as follows. First, we coarsened the image from over 10 million pixels to a more manageable 33,750 pixels, by creating a 150 $\times$ 225 grid and computing the average value of the response within each grid cell. 
- \Copy{MODISthreshold}{Second, since the data provided by the MODIS instrument is continuous (namely spectral radiances in units of $\text{W/m}^2/\si{\um}/\text{st}$), we applied a threshold to obtain a binary version of the data. Specifically, pixels with spectral radiance greater than 7,000 $\text{W/m}^2/\si{\um}/\text{st}$ were labelled `Cloud', and the remaining pixels were labelled `No-cloud'. This threshold was chosen for illustration purposes and has no particular scientific meaning.}  
+ \Copy{MODISthreshold}{Second, since the data provided by the MODIS instrument is continuous (namely spectral radiances in units of $\text{W/m}^2/\si{\um}/\text{st}$), we applied a threshold to obtain a binary version of the data. Specifically, pixels with spectral radiance greater than 7,000 $\text{W/m}^2/\si{\um}/\text{st}$ were labelled `Cloud', and the remaining pixels were labelled `No-cloud'. This threshold was chosen such that the resulting data have roughly equal proportions of `Cloud' and `No-cloud'.}  
 
 We considered two types of sampling schemes for model comparison.
  The first was missing-at-random (MR), where we randomly selected a sub-sample of pixels to act as training data.
@@ -1703,7 +1708,7 @@ The training and test sets under the two sampling schemes are shown in Figure~\r
  For \pkg{FRK}~v2, we used four resolutions of basis functions, giving a total of 11,130 basis functions. 
  For \pkg{INLA}, we discretised the domain into 13,494 elements.
  For \pkg{mgcv}, we used the \fct{bam} function, which is similar to the generalised-additive-model function \fct{gam} but optimised for large data sets, with 2,250 knots. 
-\Copy{spBayesLimitation2}{For \pkg{spBayes}, we used 400 knots; increasing the number of knots further was computationally prohibitive (recall from Section~\ref{sec:intro} that \pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of predictive-process knots).} 
+\Copy{spBayesLimitation2}{For \pkg{spBayes}, we used 400 knots; increasing the number of knots further was computationally prohibitive (\pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of predictive-process knots).} 
  When using \pkg{spNNGP}, we found that the default option of considering 15 neighbours at a time was appropriate. 
  The packages \pkg{spNNGP} and \pkg{spBayes} use Markov chain Monte Carlo (MCMC). With these packages, we used 10,000 MCMC samples in total, with a burn-in of 6,000 samples and a thinning factor of 10. 
 The number of cores used for \pkg{spNNGP} can be controlled through the argument \code{n.omp.threads}. 
@@ -1731,7 +1736,7 @@ The predictions from \pkg{FRK}~v2, \pkg{INLA}, and \pkg{spNNGP} are similar,
  while the predictions from \pkg{mgcv} are slightly smoother than those from the aforementioned packages.
  The predictions of \pkg{spBayes} are even smoother, and this is due to the small number of knots it employs. 
  Figure~\ref{fig:MODIS:pred_block} shows the predictions resulting from the MB sampling scheme shown in Figure~\ref{fig:03-04-Modis1}. 
- \Copy{SmallBand}{Close inspection of the corresponding training data, shown in the centre right panel of Figure~\ref{fig:03-04-Modis1}, indicates that predictions within the missing block are largely driven by observations immediately surrounding the block.} 
+ \Copy{SmallBand}{Close inspection of the corresponding training data, shown in the centre right panel of Figure~\ref{fig:03-04-Modis1}, indicates that predictions within the missing block are largely driven by observations immediately surrounding the block, as expected.} 
  The packages \pkg{FRK}~v2 and \pkg{INLA} return predictive probabilities close to 0.5, while \pkg{mgcv} and \pkg{spBayes} are more confident in their predictions. 
  There is an interesting pattern in the \pkg{spNNGP} predictions; this is an expected artefact of the nearest-neighbour approach. 
 
@@ -1785,7 +1790,7 @@ MB & FRK v2 & \textbf{0.19} & \textbf{0.77} & 31.74 \\
  
  The task of prediction over a completely unobserved region is challenging, and so it is no surprise that the diagnostics for the MB sampling scheme are worse than for the MR sampling scheme. 
  In this case, we see \pkg{FRK}~v2, \pkg{INLA}, and \pkg{spNNGP} performing slightly better than \pkg{mgcv}, which in turn performs better than \pkg{spBayes}. 
- \Copy{DataPaucityExplanation}{These results illustrate that purely covariance or nearest-neighbour based spatial models are only suitable when prediction locations are `close' to data points. Spatial models that include covariates are typically much more effective at predicting over regions of data paucity.}
+ \Copy{DataPaucityExplanation}{These results reflect the fact that purely covariance or nearest-neighbour based spatial models are only useful for prediction locations that are `close' to data points. Spatial models that include covariates are typically much more effective at predicting over regions of data paucity.}
  
  
 % Note that all run times increased under the MB scheme; however, \pkg{FRK}~v2 increased by a factor of less than 2, while increases in the run times for other packages were between a factor of 3 and 10. 
@@ -1843,7 +1848,7 @@ R> BAUs$x4 <- d_BAU * BAUs$x3
 
 
 Spatial statistical modelling for this problem is done by setting \code{response = "Gaussian"} and \code{link = "log"} when calling \fct{FRK}. 
-\Copy{lognormalkriging}{In order to mimic lognormal block kriging, which models the response as a lognormal process, here we fix the measurement-error standard deviation to a small value relative to the process variance (specifically, we set the measurement-error standard deviation equal to 1) prior to model fitting.} 
+\Copy{lognormalkriging}{In order to mimic lognormal block kriging, which models the response as a lognormal process, here we fix the measurement-error variance to a value that is small relative to the total variance of the data (specifically, we set the measurement-error variance equal to 1, while $\sd{\vec{Z}} = 77300$) prior to model fitting.} 
  In summary, the data model we use is Gaussian, $Z_j \mid \vec{\mu} \sim \text{Gau}(\mu_{Z_j}, 1)$ for $j = 1, \dots, m$, and we use a log link function, $g(\cdot) = \log(\cdot)$.
  Note that in the code below, we suppress the global intercept since we model the region-specific intercepts separately through \code{x1} and \code{x3}. 
 \begin{Code}
@@ -2136,7 +2141,7 @@ The prediction intervals are slightly wider in validation years (2010 and 2019) 
 
  In this paper, we have described  \pkg{FRK}~v2, which is a major upgrade to \pkg{FRK}~v1. Substantial enhancements allow for the spatial and spatio-temporal modelling of, and large-scale prediction from, big, non-Gaussian data sets. 
 Using a GLMM model and the software \pkg{TMB}, \pkg{FRK}~v2 can now cater for many distributions within the exponential family, as well as many link functions. % (Table~\ref{table:response_and_links}).  
- \Copy{MoreBasisFunctions}{Furthermore, \pkg{FRK}~v2 allows for the use of many more basis functions when modelling the spatial process, and hence it can often achieve more accurate predictions in a Gaussian setting than \pkg{FRK}~v1 (Table~\ref{tab:Heaton_comparison:full}).} 
+ \Copy{MoreBasisFunctions}{Furthermore, \pkg{FRK}~v2 allows for the use of many more basis functions when modelling the spatial process, and hence it can often achieve more accurate predictions than \pkg{FRK}~v1 (Table~\ref{tab:Heaton_comparison:full}).} 
  The existing functionality of \pkg{FRK}~v1 is retained with this extension; in particular, the package makes use of automatic basis-function construction, it is capable of handling both point-referenced and areal data, and it resolves the spatial change-of-support problem through the use of BAUs.
  The current version now provides a highly accessible and user-friendly approach to spatial and spatio-temporal modelling of big data in both a Gaussian and non-Gaussian setting.
 
@@ -2146,8 +2151,7 @@ Using a GLMM model and the software \pkg{TMB}, \pkg{FRK}~v2 can now cater for ma
  We are currently exploring avenues to relax this requirement via the provision of a robust offline estimate.
  Despite the added flexibility of \pkg{FRK}~v2, several models of interest, such as the zero-inflated Poisson, are still not catered for. 
  Future work will see the introduction of such models.
- \Copy{FutureWork}{Further future work includes the addition of multivariate responses, for which basis-function models are well suited \citep[for an overview, see][Sec.~4.1]{Cressie_2021_review_spatial-basis-function_models}, as well as spatially varying regression coefficients, which can enhance understanding of the underlying spatial process.}
- %TODO Yang (2022) noted several problems with simulation-based residuals. When the model has at least one continuous covariate, Yang proposed an interesting new form of residual. 
+ \Copy{FutureWork}{Further future work includes adding support for multivariate responses, for which basis-function models are well suited \citep[for an overview, see][Sec.~4.1]{Cressie_2021_review_spatial-basis-function_models}, and for spatially varying regression coefficients, which are sometimes needed in spatial analyses.}
 
 
 

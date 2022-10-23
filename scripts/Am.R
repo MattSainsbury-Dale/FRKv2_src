@@ -5,7 +5,6 @@ library("ggplot2")
 library("ggpubr")
 library("dplyr")
 library("reshape2")
-library("DHARMa")
 
 # georob has been archived since it depends on RandomFields; now, we load 
 # the pre-saved estimates from georob.
@@ -19,6 +18,8 @@ library("DHARMa")
 
 GZ_df   <- data.frame("Easting" = 219868.09, "Northing" = 285320.84)
 Am_data <- read.csv("data/Am_data.csv")
+write.csv(sd(Am_data$Americium), file = "results/Am_total_data_standard-deviation.csv", row.names = FALSE)
+
 
 ## Convert Easting and Northing from feet to metres, and rename Americium.
 Am_data$Easting   <- Am_data$Easting * 0.3048
@@ -284,19 +285,6 @@ FRK_results <- pred$newdata@data %>%
   melt(id.vars = c("area_sqrt", "Scheme", "Framework"))
 
 cat("FRK analysis complete.\n")
-
-
-# ---- FRK diagnostic plots ----
-
-DHARMA_object <- createDHARMa(
-  simulatedResponse = simulate(M, conditional_fs = FALSE),
-  observedResponse = Am_data$Am,
-  integerResponse = FALSE
-)
-
-plot(DHARMA_object, quantreg = F)
-plotResiduals(DHARMA_object, quantreg = F)
-plotResiduals(DHARMA_object, form = sqrt(Am_data$d))
 
 
 # ---- Only FRK ----

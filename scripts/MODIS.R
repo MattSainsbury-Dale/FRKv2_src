@@ -7,7 +7,7 @@ quick <- check_quick()
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
   "FRK",
-  "INLA",
+  "INLA", 
   "mgcv",
   "spNNGP",
   "spBayes"
@@ -30,12 +30,12 @@ library("tibble")
 ## Packages required by INLA
 library("foreach")
 library("splancs")
-library("rgdal") # TODO this package is deprecated
+library("rgdal") 
 
 ## Packages used in the comparison study
 library("FRK") 
 library("mgcv")
-library("INLA")
+library("INLA") 
 library("spNNGP")
 library("spBayes")
 })

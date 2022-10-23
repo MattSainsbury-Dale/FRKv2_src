@@ -123,7 +123,7 @@ coordinates(Poisson_testing_data) <- ~ x + y
 
 dat <- Poisson_testing_data
 
-samples <- simulate(S, dat, n_MC = 50)
+samples <- simulate(S, dat)
 
 DHARMa <- createDHARMa(
   simulatedResponse = samples,
@@ -134,12 +134,6 @@ DHARMa <- createDHARMa(
 pdf("results/3_2_Poisson_sim_residuals.pdf", width = 8, height = 4)
 plot(DHARMa, title = "")
 dev.off()
-
-testSpatialAutocorrelation(
-  DHARMa,
-  x = coordinates(dat)[, 1],
-  y = coordinates(dat)[, 2]
-)
 
 # ---- Prediction ----
 

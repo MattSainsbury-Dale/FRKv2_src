@@ -24,26 +24,21 @@ fi
 
 Rscript scripts/setup.R
 
-echo ""
-echo "######## STARTING POISSON EXAMPLE OF SECTION 3.1 ############"
-echo ""
-Rscript scripts/Poisson_sim.R $quick
-echo ""
+# echo ""
+# echo "######## STARTING POISSON EXAMPLE OF SECTION 3.1 ############"
+# echo ""
+# Rscript scripts/Poisson_sim.R $quick
+# echo ""
+# 
+# echo "######## STARTING HEATON COMPARISON OF SECTION 3.3 #############"
+# echo ""
+# Rscript scripts/Heaton.R $quick
+# echo ""
 
-echo "######## STARTING NEGATIVE-BINOMIAL EXAMPLE OF SECTION 3.2 #############"
-echo ""
-Rscript scripts/Negbinom_sim.R $quick
-echo ""
-
-echo "######## STARTING HEATON COMPARISON OF SECTION 3.3 #############"
-echo ""
-Rscript scripts/Heaton.R $quick
-echo ""
-
-echo "######## STARTING MODIS COMPARISON OF SECTION 4.1 #############"
-echo ""
-Rscript scripts/MODIS.R $quick
-echo ""
+# echo "######## STARTING MODIS COMPARISON OF SECTION 4.1 #############"
+# echo ""
+# Rscript scripts/MODIS.R $quick
+# echo ""
 
 echo "######## STARTING AMERICIUM COMPARISON OF SECTION 4.2 #############"
 echo ""
