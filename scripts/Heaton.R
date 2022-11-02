@@ -51,7 +51,7 @@ runtime <- system.time({
     rmidx <- which(basis_df$loc2 > 36.5 &
                      basis_df$loc1 > -94.5 &
                      basis_df$res == 3)
-    basis <- remove_basis(basis, rmidx)
+    suppressMessages(basis <- remove_basis(basis, rmidx))
   }
   
   ## Construct SRE object
@@ -115,10 +115,7 @@ save_html_table(
 
 # ---- Short (6-page) format material ----
 
-## This code isn't very expensive, so I'll just hard code it to always run. 
-## Leave it inside an if-statement in case I want to change this in the future. 
-
-short_format <- TRUE
+short_format <- FALSE
 
 if (short_format) {
   

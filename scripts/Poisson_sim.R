@@ -4,10 +4,9 @@
 #   mean process mu(.), the data Z, and predictions and associated uncertainties 
 #   of the latent process Y(.) and mean process mu(.). 
 #   It also compares the performance of FRK when using basis functions of 1, 2, 
-#   and 3 resolutions. It does so using prediction and uncertainty plots at each 
+#   3, and 4 resolutions. It does so using prediction and uncertainty plots at each 
 #   resolution, as well as computing the diagnostics based on the true process 
-#   values. The way in which we generate the true mean process mu(.) is very 
-#   important, and the steps are as follows;
+#   values. The way in which we generate the true mean process mu(.) is as follows.
 #     1. Generate a fine grid to act as BAUs
 #     2. Generate a true process (with fine-scale variation) over those BAUs, 
 #        defined using trignometric and exponential functions
@@ -22,9 +21,12 @@ library("sp")
 library("dplyr")
 library("ggpubr")
 library("DHARMa")
-# library("RandomFields") # NB we can use GpGp instead
 source("scripts/Utility_fns.R")
 })
+
+## Use very-low-dimensional representations of the models to establish that the code works? 
+quick <- check_quick()
+max_nres <- if (quick) 3 else 4
 
 # ---- set up ----
 
@@ -74,8 +76,6 @@ BAUs_df <- mutate(BAUs_df, mu = exp(Y))
 
 ## Subsample n of the BAUs to act as observation locations, and simulate data
 n <- 750
-# Poisson_data <- sample_n(BAUs_df, n) %>% 
-#   dplyr::mutate(Z = rpois(n, lambda = mu)) 
 obs_idx <- sample(1:length(BAUs), n)
 Poisson_data <- BAUs_df[obs_idx, ] %>% dplyr::mutate(Z = rpois(n, lambda = mu))
 
@@ -89,7 +89,6 @@ coordinates(Poisson_data) <- ~ x + y
 
 ## Predictive performance with changing number of basis functions: Fit the SRE 
 ## object using 1, 2, 3, and 4 resolutions of basis functions.
-max_nres <- 4 
 pred_list <- S_list <- timings <- list()
 RNGversion("3.6.0"); set.seed(1)
 for (i in 1:max_nres) { 
@@ -116,24 +115,24 @@ n_test <- 500
 unobs_idx <- (1:length(BAUs))[-obs_idx]
 unobs_idx <- sample(unobs_idx, n_test)
 Poisson_testing_data <- BAUs_df[unobs_idx, ] %>% dplyr::mutate(Z = rpois(n_test, lambda = mu))
-# Poisson_testing_data <- BAUs_df %>%
-#   sample_n(n_test) %>%
-#   dplyr::mutate(Z = rpois(n_test, lambda = mu))
 coordinates(Poisson_testing_data) <- ~ x + y
 
 dat <- Poisson_testing_data
 
 samples <- simulate(S, dat)
 
-DHARMa <- createDHARMa(
-  simulatedResponse = samples,
-  observedResponse  = dat$Z,
-  integerResponse = T
-)
+suppressMessages({
+  DHARMa <- createDHARMa(
+    simulatedResponse = samples,
+    observedResponse  = dat$Z,
+    integerResponse = T
+  )
+  
+  pdf("results/3_2_Poisson_sim_residuals.pdf", width = 8, height = 4)
+  plot(DHARMa, title = "")
+  dev.off()
+})
 
-pdf("results/3_2_Poisson_sim_residuals.pdf", width = 8, height = 4)
-plot(DHARMa, title = "")
-dev.off()
 
 # ---- Prediction ----
 

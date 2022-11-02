@@ -6,11 +6,11 @@ quick <- check_quick()
 
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
-  "FRK",
-  "INLA", 
-  "mgcv",
-  "spNNGP",
-  "spBayes"
+  # "FRK",
+  "INLA"#, 
+  # "mgcv",
+  # "spNNGP",
+  # "spBayes"
 )
 
 # ---- Load packages and user-defined functions ----

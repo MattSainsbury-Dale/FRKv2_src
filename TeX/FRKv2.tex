@@ -400,12 +400,12 @@ Several other approaches hinge on the use of a spatial version of the generalise
  The fixed-rank spatial GLMM naturally extends to the spatio-temporal setting; see, for example,  \cite{Lopes_2011_spatial_GLMM_reduced_rank_factor_analytic_model}, 
 \citet{Bradley_2018_computationally_efficient_multivariate_ST_models_for_high-dimensional_count-valued_data}, \citet{Bradley_2019_ST_models_for_big_multinomial_data_using_conditional_multivariate_logit_beta_distribution}, and \citet{Zhang_2020_spatio-temporal_Arctic_sea_ice}. 
  
- \Copy{KrigingClause}{Despite the many modelling approaches available, software for spatial and spatio-temporal modelling of non-Gaussian data (for which classical kriging-based approaches may be sub-optimal) are relatively limited.} 
+ \Copy{KrigingClause}{Despite the many modelling approaches available, software for spatial and spatio-temporal modelling of non-Gaussian data (for which classical kriging-based approaches are linear and hence may be sub-optimal) are relatively limited.} 
  \Copy{SoftwareReview}{
  Software 
  %that facilitate in a straightforward manner the modelling of non-Gaussian spatial and spatio-temporal data 
  dedicated to this task include the \proglang{R} \citep{Rcoreteam_2021} packages  \pkg{ngspatial} \citep{ngspatial_2014}, \pkg{spBayes} \citep{Finley_2015_spBayes}, \pkg{mgcv} \citep{Wood_2017_GAM:R}, \pkg{spNNGP} \citep{Finley_2020_spNNGP}, \pkg{georob} \citep{georob}, and \pkg{spatialfusion} \citep{spatialfusion}. 
- Each of these packages have a different set of limitations: \pkg{spBayes}, \pkg{mgcv}, and \pkg{spNNGP} are limited to point-referenced data; \Copy{spBayesLimitation}{\pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of predictive-process knots, which in turn yields a high degree of smoothing}; \pkg{georob} is not designed for large data sets; and \pkg{ngspatial}, \pkg{spBayes}, \pkg{spNNGP}, \pkg{georob}, and \pkg{spatialfusion} are restricted to the spatial setting, where they cater for only a small number of non-Gaussian distributions.
+ Each of these packages has a different set of limitations: \pkg{spBayes}, \pkg{mgcv}, and \pkg{spNNGP} are limited to point-referenced data; \Copy{spBayesLimitation}{\pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of predictive-process knots, which in turn yields a high degree of smoothing}; \pkg{georob} is not designed for large data sets; and \pkg{ngspatial}, \pkg{spBayes}, \pkg{spNNGP}, \pkg{georob}, and \pkg{spatialfusion} are restricted to the spatial setting, where they cater for only a small number of non-Gaussian distributions.
  Further, with the exception of \pkg{spatialfusion}, these software packages do not cater for spatial change-of-support.
  }
   Some general-purpose packages  \citep[e.g., \pkg{INLA};][]{Rue_2009_INLA, Lindgren_2015_R-INLA} can, in principle, handle the wide array of modelling challenges posed by non-Gaussian spatial and spatio-temporal data; however, they are not specifically designed for this purpose and can be difficult for an unfamiliar user to implement. 
@@ -473,7 +473,8 @@ See Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details on how these basis fu
 
  To cater for different observation supports and facilitate solutions to spatial change-of-support problems, \FRKgeneric assumes a discretised domain of interest, \mbox{$D^G \equiv \{A_i: i = 1, \dots, N\}$}, that is made up of $N$ non-overlapping basic areal units (BAUs) such that $D = \cup_{i = 1}^N A_i$. 
 % These BAUs may correspond to physical real-world boundaries, such as regional borders, or simply a fine mesh covering that spatial domain. 
- \Copy{BAUEffectOnPrediction}{If $N$ is large enough to render the discretisation error negligible, the use of BAUs does not lead to prediction inaccuracies when compared with classical geostatistical approaches (see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~4;  \citeauthor{Cressie_2021_review_spatial-basis-function_models}, \citeyear{Cressie_2021_review_spatial-basis-function_models}, Sec.~5).} 
+ \Copy{BAUEffectOnPrediction}{The finest resolution at which one can make predictions is at the level of the BAU. Point predictions are not possible; however, when the BAUs are so fine that the chosen basis functions are approximately constant within each BAU, the BAU-level predictions are practically equivalent to point predictions (see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~2, for more details). %, and see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~4, and   \citeauthor{Cressie_2021_review_spatial-basis-function_models}, \citeyear{Cressie_2021_review_spatial-basis-function_models}, Sec.~5).
+ }
  Now, let $Y(A_i)$ denote a representative value of $\{Y(\vec{s}) : \vec{s} \in A_i\}$, where commonly that value is the spatial integral or the spatial average over $A_i$.  
  Define the discretised latent spatial process $Y(\cdot)$ evaluated over the $N$ BAUs as $\vec{Y} \equiv (Y_1, \dots, Y_N)^\tp$, where $Y_i \equiv Y(A_i)$, $i = 1, \dots, N$. Then, a vectorised version of (\ref{eqn:04-01:Y(s)}) is
 \begin{equation}\label{Ch4:eqn:vecY}
@@ -1528,7 +1529,7 @@ However, they are still often used in such settings and, hence, \pkg{FRK}~v2 als
    This important property is due largely to the presence of the fine-scale random variation term, $\xi(\cdot)$, in (\ref{eqn:04-01:Y(s)}). 
   Further, \Copy{PoissonVaryingBasisFunctions}{the relative smoothness in the data (recall the right panel of Figure~\ref{fig:Poisson_true_and_Z}) suggests that only a moderate number of basis functions are needed for this application. 
   Indeed, Table~\ref{tab:03-02:PoissonScoringRules} shows that adding a fourth resolution of basis functions does not substantially improve the predictive performance, which is reflected by an increase in the AIC. %, despite the fact that this criterion does not account for the number of dependent random effects: 
-  Importantly, however, the use of more basis functions than is strictly necessary does not reduce predictive performance. 
+  Importantly, the use of more basis functions than is strictly necessary does not reduce predictive performance. 
   }
   
 \begin{table}[t!]
@@ -1677,7 +1678,7 @@ In this section, we compare out-of-sample predictions from \pkg{FRK}~version 2.0
 The data form an image of a cloud taken by the Moderate Resolution Imaging Spectroradiometer (MODIS) instrument aboard the Aqua satellite \citep{MODIS_satelitte} on 05 December 2018 01:00 UTC, over the South Pacific, just east of New Zealand. 
 %Data collected from the MODIS instrument have been used in several related works; see, for instance, \cite{Sengupta_2016_MODIS} and \cite{ZammitMangion_2021_Deep_compositional_spatial_model}.
 For this comparative study, we pre-processed the data as follows. First, we coarsened the image from over 10 million pixels to a more manageable 33,750 pixels, by creating a 150 $\times$ 225 grid and computing the average value of the response within each grid cell. 
- \Copy{MODISthreshold}{Second, since the data provided by the MODIS instrument is continuous (namely spectral radiances in units of $\text{W/m}^2/\si{\um}/\text{st}$), we applied a threshold to obtain a binary version of the data. Specifically, pixels with spectral radiance greater than 7,000 $\text{W/m}^2/\si{\um}/\text{st}$ were labelled `Cloud', and the remaining pixels were labelled `No-cloud'. This threshold was chosen such that the resulting data have roughly equal proportions of `Cloud' and `No-cloud'.}  
+ \Copy{MODISthreshold}{Second, since the data provided by the MODIS instrument is continuous (namely spectral radiances in units of $\text{W/m}^2/\si{\um}/\text{st}$), we applied a threshold to obtain a binary version of the data. Specifically, pixels with spectral radiance greater than 7,000 $\text{W/m}^2/\si{\um}/\text{st}$ were labelled `Cloud', and the remaining pixels were labelled `No-cloud'. This threshold was chosen to illustrate our methodology such that the resulting data have roughly equal proportions of `Cloud' and `No-cloud'.}  
 
 We considered two types of sampling schemes for model comparison.
  The first was missing-at-random (MR), where we randomly selected a sub-sample of pixels to act as training data.
@@ -1795,7 +1796,7 @@ MB & FRK v2 & \textbf{0.19} & \textbf{0.77} & 31.74 \\
  
 % Note that all run times increased under the MB scheme; however, \pkg{FRK}~v2 increased by a factor of less than 2, while increases in the run times for other packages were between a factor of 3 and 10. 
 % Given that the training sample size is significantly larger in the MB scheme than under the MR scheme (32,850 pixels compared to 6,000 pixels), this suggests that \pkg{FRK}~v2 is well suited to fitting and predicting with large sample sizes.  
- \Copy{ElaborateAnalyses}{Overall, these results suggest that \pkg{FRK}~v2 is comparable to, or favourable to, other packages in this application that features point-referenced spatial data. 
+ \Copy{ElaborateAnalyses}{Overall, these results suggest that \pkg{FRK}~v2 is comparable to, or favourable to, other packages in this application where point-referenced spatial data are featured. 
  However, the main advantages of \pkg{FRK}~v2 lie in the ease with which it does more elaborate analyses with spatial or spatio-temporal non-Gaussian data of differing support, as shown in the next sections.}
  
 

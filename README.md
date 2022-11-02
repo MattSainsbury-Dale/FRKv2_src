@@ -1,15 +1,17 @@
-# Source code for FRK v2 paper
+# Source code for FRK v2 
 
-This repository contains the source code for reproducing the results in "Modelling, Fitting, and Prediction with Non-Gaussian Spatial and Spatio-Temporal Data using FRK".
-To reproduce the results of the short (6-page) format of this paper, please invoke `run_all_6page.{sh/bat}` rather than `run_all.{sh/bat}` (see below).
+This repository contains the source code for reproducing the results in "Modelling Big, Heterogeneous, Non-Gaussian
+Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale et al., 2022).
+<!---To reproduce the results of the short (6-page) format of this paper, please invoke `run_all_6page.{sh/bat}` rather than `run_all.{sh/bat}` (see below).--->
 
 ## Instructions
 
-First, download this repo and navigate to its top-level directory within the command line (i.e., `cd` to wherever you installed the repo).
+First, download this repo and navigate to its top-level directory within the command line.
 
 ### Data
 
-Some data sets were too large (a few hundred Mb in total) to be stored on GitHub: These data sets are associated with Section 4.3 (Sydney spatial change-of-support) and Section 4.4 (Chicago crime). To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, or if the data is not downloading as expected, please:
+Some data sets are too large (a few hundred Mb in total) to be stored on GitHub: These data sets are associated with Section 4.3 (Sydney spatial change-of-support) and Section 4.4 (Chicago crime). To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, or if the data is not downloading as expected, please:
+
 - Download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder; and
 - download the [folders containing the Sydney SA1/SA2/SA3 region shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`.
 
@@ -28,7 +30,29 @@ Note that we have included checks at the beginning of the replication script to 
 
 ### Dependencies
 
-When running the replication script, the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the correct version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages).
+There are two approaches to installing the package dependencies, described below. 
+
+#### conda environment
+
+The first method uses a conda environment to replicate the exact conditions at the time of submission (e.g., package versions, version of R, etc.). This is the most robust method to reproduce the results of the paper, but is currently only available for Linux systems. First, download packages from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz, then enter the following commands:
+```bash
+tar -xzvf FRKv2_renv.tar.gz
+cd FRKv2
+conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal udunits2 proj
+conda activate ./.condaenv
+Rscript -e "renv::status()"   
+```
+The result of the last command should be "The project is already synchronized with the lockfile". Then, you are ready to run the replication script described in the Results section.
+
+#### Custom installation
+
+Alternatively, when running the replication script, the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages). 
+
+<!---
+#### Archived packages
+
+The reproducible code for the Americium experiment, given in Section 4.2 of the manuscript, uses the package **georob**. However, **georob** and one of its dependencies, **RandomFields**, have been archived. To prevent dependencies on archived packages, we no longer execute the **georob** code when running the replication script; instead, the results are saved as a csv file and stored in the data folder. 
+--->
 
 ### Results
 
@@ -72,12 +96,3 @@ Note that the replication script is clearly presented and commented; hence, one 
 For users wishing to "try out" the package on a real-world example, we suggest the Sydney spatial change-of-support example presented in Section 4.3. 
 
 
-#### Archived packages
-
-The reproducible code for the Americium experiment, given in Section 4.2 of the manuscript, uses the package **georob**. However, **georob** and one of its dependencies, **RandomFields**, have been archived. To prevent dependencies on archived packages, we no longer execute the **georob** code when running the replication script; instead, the results are saved as a csv file and stored in the data folder. 
-
-<!---
-### Note to Windows users
-
-Windows users can install a Windows version of `make`: This is easy to do (see, e.g., [here](https://stackoverflow.com/a/32127632/16776594)). Once installed, the commands remain as given above.
---->
