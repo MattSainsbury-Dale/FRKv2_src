@@ -8,7 +8,7 @@ Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale et al., 2022).
 
 
 
-## Creating an environment
+## Creating a reproducible environment
 
 There are three ways to create an environment that can reproduce the results of the paper, and these are listed below in the order of preference: 
 
