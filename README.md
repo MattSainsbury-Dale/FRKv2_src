@@ -80,7 +80,7 @@ The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alterna
 
 Please note that the replication material for Section 3.3, Table 4, reproduces the results for row FRK v2 only; the results for other rows are taken from Table 3 in Heaton et al. (2019).
 
-#### Code structure
+## Code structure
 
 As described above, to reproduce the results of the manuscript, users need only run a single script, `run_all.{sh/bat}`, which runs the `R` files stored in the `scripts` folder: Each file corresponds to a single section of the manuscript, and is clearly labelled. There are a few small exceptions:
 
@@ -90,11 +90,11 @@ As described above, to reproduce the results of the manuscript, users need only 
 
 We deviate from the standard of a single standalone replication script in part because of practical necessity; calling the `R` scripts individually from terminal means that each section is run independently of the other sections. This independence is important in order to keep the hardware requirements to a minimum; if the scripts are run in a single `R` session, garbage can accrue, leading to potential memory issues.   
 
-#### Hardware requirements
+## Hardware requirements
 
 You will need at least 32GB of RAM (or RAM + swap) to run the very-low-dimensional representations of the models, and you will need at least 64GB of RAM (or RAM + swap) to run the full models.
 
-#### Run times
+## Run times
 
 It takes a total of ~30 minutes to run the quick versions of the models. The following are estimates of the expected run time needed to reproduce the full results of the manuscript:
 
@@ -111,7 +111,7 @@ We note that the only problematic section is Section 4.1, the MODIS comparison s
 Note that the replication script is clearly presented and commented; hence, one may easily "comment out" sections to produce a subset of the results. (Comments in `.sh` files are made with `##`, and comments in `.bat` files are made using `::`.)
 
 
-#### Real-world example
+## Real-world example
 
 For users wishing to "try out" the package on a real-world example, we suggest the Sydney spatial change-of-support example presented in Section 4.3. 
 
