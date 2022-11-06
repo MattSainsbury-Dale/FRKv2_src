@@ -4,11 +4,55 @@ This repository contains the source code for reproducing the results in "Modelli
 Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale et al., 2022).
 <!---To reproduce the results of the short (6-page) format of this paper, please invoke `run_all_6page.{sh/bat}` rather than `run_all.{sh/bat}` (see below).--->
 
-## Instructions
+
+
+
+
+## Creating an environment
+
+There are three ways to create an environment that can reproduce the results of the paper, and these are listed below in the order of preference: 
+
+1. using a docker contained (cross platform),
+1. using a conda environment (linux only), 
+1. using the current github code + local install.
+
+### Using a docker container
+
+First, download and install `docker` or `Docker Desktop`. Then, 
+
+1. Download the archive containing all R packages, FRKv2 source code, and the Dockerfile from: https://hpc.niasra.uow.edu.au/FRKv2_renv_docker.tar.gz
+2. Uncompress the downloaded archive. This will yield a folder with the structure:  
+```bash
+├── FRK_docker
+│   ├── Dockerfile
+│   ├── FRKv2
+```
+3. Start a terminal and change directory to `FRK_docker`
+4. Download the pre-prepared docker image from dockerhub: `sudo docker pull ycaodocker/frkv2`
+5. Build a local docker image from the downloaded image: `sudo DOCKER_BUILDKIT=1 docker build -t 31b8d383613a:latest .`
+6. Start a docker container with an interactive bash terminal (change `absolute_path` in the following command accordingly): `sudo docker run --rm -it -v "absolute_path/FRK_docker/FRKv2:/project" 31b8d383613a:latest bash`
+
+Note that the above commands are for linux/mac, and small changes might be needed for Windows. For instance, it may be necessary to remove `sudo`, and replace `DOCKER_BUILDKIT=1` with `set DOCKER_BUILDKIT=1` in a separate line before building the docker file. 
+
+You are now ready to run the replication script described in the Results section. 
+
+
+### Using a conda environment
+
+The second method uses a conda environment to replicate the exact conditions at the time of submission (e.g., the version of R, package versions, etc.). This is a robust method to reproduce the results of the paper, but it is only available for Linux systems. First, download packages from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz, then enter the following commands:
+```bash
+tar -xzvf FRKv2_renv.tar.gz
+cd FRKv2
+conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal udunits2 proj
+conda activate ./.condaenv
+Rscript -e "renv::status()"   
+```
+The result of the last command should be "The project is already synchronized with the lockfile". You are now ready to run the replication script described in the Results section.
+
+
+### Current github code + local install
 
 First, download this repo and navigate to its top-level directory within the command line.
-
-### Data
 
 Some data sets are too large (a few hundred Mb in total) to be stored on GitHub: These data sets are associated with Section 4.3 (Sydney spatial change-of-support) and Section 4.4 (Chicago crime). To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, or if the data is not downloading as expected, please:
 
@@ -28,46 +72,9 @@ Some data sets are too large (a few hundred Mb in total) to be stored on GitHub:
 
 Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if these files are not present.
 
-### Dependencies
+When running the replication script (described in the Results section), the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages). 
 
-There are several possible approaches to setting up a reproducible environment, and these are described below. 
-
-#### Using a docker container
-
-First, download and install `docker`. Then, 
-
-1. Download the archive containing all R packages, FRKv2 source code, and the Dockerfile from: https://hpc.niasra.uow.edu.au/FRKv2_renv_docker.tar.gz
-2. Uncompress the downloaded archive. This will yield a folder with the structure:  
-```bash
-├── FRK_docker
-│   ├── Dockerfile
-│   ├── FRKv2
-```
-3. Start a terminal and change directory to `FRK_docker`
-4. Download the pre-prepared docker image from dockerhub: `sudo docker pull ycaodocker/frkv2`
-5. Build a local docker image from the downloaded image: `sudo DOCKER_BUILDKIT=1 docker build -t 31b8d383613a:latest .`
-6. Start a docker container with an interactive bash terminal: `sudo docker run --rm -it -v "absolute_path/FRK_docker/FRKv2:/project" 31b8d383613a:latest bash`
-
-You are now ready to run the replication script described in the Results section (e.g., using `bash run_all.sh`).
-
-
-#### Using a conda environment
-
-The second method uses a conda environment to replicate the exact conditions at the time of submission (e.g., the version of R, package versions, etc.). This is a robust method to reproduce the results of the paper, but it is only available for Linux systems. First, download packages from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz (1.1 GB), then enter the following commands:
-```bash
-tar -xzvf FRKv2_renv.tar.gz
-cd FRKv2
-conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal udunits2 proj
-conda activate ./.condaenv
-Rscript -e "renv::status()"   
-```
-The result of the last command should be "The project is already synchronized with the lockfile". You are now ready to run the replication script described in the Results section.
-
-#### Using custom installation
-
-Alternatively, when running the replication script, the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages). 
-
-### Results
+## Results
 
 The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. Note that some of the results will look very different when using these low-dimensional representations (particularly the results for Section 4.1).
 
