@@ -30,11 +30,30 @@ Note that we have included checks at the beginning of the replication script to 
 
 ### Dependencies
 
-There are two approaches to installing the package dependencies, described below. 
+There are several possible approaches to setting up a reproducible environment, and these are described below. 
 
-#### conda environment
+#### Using a docker container
 
-The first method uses a conda environment to replicate the exact conditions at the time of submission (e.g., package versions, version of R, etc.). This is the most robust method to reproduce the results of the paper, but is currently only available for Linux systems. First, download packages from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz, then enter the following commands:
+First, download and install `docker`. Then, 
+
+1. Download the archive containing all R packages, FRKv2 source code, and the Dockerfile from: https://hpc.niasra.uow.edu.au/FRKv2_renv_docker.tar.gz
+2. Uncompress the downloaded archive. This will yield a folder with the structure:  
+```bash
+├── FRK_docker
+│   ├── Dockerfile
+│   ├── FRKv2
+```
+3. Start a terminal and change directory to `FRK_docker`
+4. Download the pre-prepared docker image from dockerhub: `sudo docker pull ycaodocker/frkv2`
+5. Build a local docker image from the downloaded image: `sudo DOCKER_BUILDKIT=1 docker build -t 31b8d383613a:latest .`
+6. Start a docker container with an interactive bash terminal: `sudo docker run --rm -it -v "absolute_path/FRK_docker/FRKv2:/project" 31b8d383613a:latest bash`
+
+You are now ready to run the replication script described in the Results section (e.g., using `bash run_all.sh`).
+
+
+#### Using a conda environment
+
+The second method uses a conda environment to replicate the exact conditions at the time of submission (e.g., the version of R, package versions, etc.). This is a robust method to reproduce the results of the paper, but it is only available for Linux systems. First, download packages from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz (1.1 GB), then enter the following commands:
 ```bash
 tar -xzvf FRKv2_renv.tar.gz
 cd FRKv2
@@ -42,17 +61,11 @@ conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal ud
 conda activate ./.condaenv
 Rscript -e "renv::status()"   
 ```
-The result of the last command should be "The project is already synchronized with the lockfile". Then, you are ready to run the replication script described in the Results section.
+The result of the last command should be "The project is already synchronized with the lockfile". You are now ready to run the replication script described in the Results section.
 
-#### Custom installation
+#### Using custom installation
 
 Alternatively, when running the replication script, the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages). 
-
-<!---
-#### Archived packages
-
-The reproducible code for the Americium experiment, given in Section 4.2 of the manuscript, uses the package **georob**. However, **georob** and one of its dependencies, **RandomFields**, have been archived. To prevent dependencies on archived packages, we no longer execute the **georob** code when running the replication script; instead, the results are saved as a csv file and stored in the data folder. 
---->
 
 ### Results
 
