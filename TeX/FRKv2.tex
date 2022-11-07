@@ -1,5 +1,5 @@
-\documentclass[nojss]{jss}
-%\documentclass[article]{jss}
+%\documentclass[nojss]{jss}
+\documentclass[article]{jss}
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
@@ -13,8 +13,7 @@
 \widowpenalty10000
 \clubpenalty10000
 % prevent orphans for section headings:
-%\usepackage[nobottomtitles]{titlesec} % doesn't work: breaks the code
-%\usepackage[all]{nowidow}
+\usepackage[all]{nowidow}
 % Couldn't find a solution... Just use \newpage at problematic headings, for now.
 
 
@@ -379,7 +378,10 @@ Several other approaches hinge on the use of a spatial version of the generalise
 
 
 
- Fixed-rank variants of trans-Gaussian kriging are relatively under-developed (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~3.2.1, for a discussion), however many modellers have used fixed-rank variants of the spatial GLMM.  
+ Fixed-rank variants of trans-Gaussian kriging are relatively under-developed 
+% (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~3.2.1, for a discussion), 
+ \citep[see][sec.~3.2.1]{Cressie_2021_review_spatial-basis-function_models}, 
+ however many modellers have used fixed-rank variants of the spatial GLMM.  
   A popular fixed-rank model for $Y(\cdot)$ is the so-called spatial random effects (SRE) model, where $Y(\cdot)$ is modelled as a linear combination of a fixed number of spatial basis functions with spatially correlated random coefficients \citep{Cressie_Johannesson_2008_FRK}: For example, \cite{Sengupta_Cressie_2013_spatial_GLMM_FRK} and \citet{Bradley_2016_Bayesian_spatial_COS_lattice_data} use it in the spatial GLMM context. 
 %  They obtained parameter estimates using a Laplace approximation in an expectation maximisation (EM) algorithm, and the empirical predictive distribution was generated using an MCMC algorithm.  
 % A latent SRE model was also employed by \citet{Bradley_2016_Bayesian_spatial_COS_lattice_data} to facilitate spatial change-of-support for count-valued survey data. % (in particular, up-scaling to larger target supports).  
@@ -409,7 +411,8 @@ Several other approaches hinge on the use of a spatial version of the generalise
  Further, with the exception of \pkg{spatialfusion}, these software packages do not cater for spatial change-of-support.
  }
   Some general-purpose packages  \citep[e.g., \pkg{INLA};][]{Rue_2009_INLA, Lindgren_2015_R-INLA} can, in principle, handle the wide array of modelling challenges posed by non-Gaussian spatial and spatio-temporal data; however, they are not specifically designed for this purpose and can be difficult for an unfamiliar user to implement. 
- A project aimed at facilitating Gaussian and non-Gaussian spatial statistical modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}; at the time of writing,  spatio-temporal modelling was not implemented in \pkg{inlabru}.
+% A project aimed at facilitating Gaussian and non-Gaussian spatial statistical modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}; at the time of writing,  spatio-temporal modelling was not implemented in \pkg{inlabru}. 
+ The package \pkg{inlabru} \citep{Bachl_2019_inlabru} aims to facilitate Gaussian and non-Gaussian spatial modelling using \pkg{INLA} but, at the time of writing, it does not implement spatio-temporal modelling.
  
 
  \pkg{FRK} \citep{FRK_paper} is an \proglang{R} package for spatial/spatio-temporal statistical modelling and prediction. 
@@ -428,7 +431,7 @@ In Section~\ref{SEC:ApplicationStudy} we present a comparative study between \pk
 
 \section{Methodology}\label{SEC:Methodology}
 
-The statistical model used in \pkg{FRK}~v2 is a spatial or spatio-temporal hierarchical statistical model consisting of two conditional-probability layers.
+The model used in \pkg{FRK}~v2 is a spatial or spatio-temporal hierarchical statistical model consisting of two conditional-probability layers.
  In the \textit{process layer}, we model the conditional mean of the data as a transformation of a latent spatial process modelled as a low-rank SRE model; see Section  \ref{subsection:04-01:ProcessLayer}. 
  In the %first layer, which we refer to as the 
 \textit{data layer}, we use a conditionally independent exponential-family model for each element of the data vector; see Section~\ref{subsection:DataLayer}. 
@@ -485,9 +488,10 @@ See Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details on how these basis fu
 As in \pkg{FRK}~v1, \Copy{ParameterisationOfBasisFunctionWeights}{the elements of $\vec{\xi}$ are often modelled as independent and identically distributed (i.i.d.) Gaussian random variables with mean zero and variance $\sigma^2_\xi$, and $\vec{\eta}$ is modelled as a mean-zero multivariate-Gaussian random vector with covariance matrix $\cov{\vec{\eta}}{\vec{\eta}}$. 
  In \pkg{FRK}~v2, $\cov{\vec{\eta}}{\vec{\eta}}$ is modelled either as $\vec{K}$ or as $\vec{Q}^{-1}$, where $\vec{Q}$ is a precision matrix.} 
  Both formulations use block-diagonal matrices, so that basis-function coefficients between basis-function resolutions are independent; see Appendix~\ref{Appendix:CovarianceTapering} for how the intra-resolution dependencies with $\vec{K}$ and $\vec{Q}$ are modelled. 
-  Although both $\vec{K}$ and $\vec{Q}$ are generally sparse, use of $\vec{Q}$ instead of $\vec{K}$ is typically computationally advantageous. Irrespective of the parameterisation, we assume that $\cov{\vec{\eta}}{\vec{\eta}}$ depends on a parameter vector $\vec{\vartheta}$, which needs to be estimated.
+  Although both $\vec{K}$ and $\vec{Q}$ are generally sparse, use of $\vec{Q}$ instead of $\vec{K}$ is typically computationally advantageous. Irrespective of the parameterisation, we assume that $\cov{\vec{\eta}}{\vec{\eta}}$ depends on an unknown parameter vector $\vec{\vartheta}$.
 
- Following standard generalised-linear-model theory \citep{McCullagh_Nelder_1989_GLM}, \pkg{FRK}~v2 uses an invertible link function, $g(\cdot)$, to model $Y(\cdot)$ as a transformation of a mean process, $\mu(\cdot)$ (that we consider in more detail in Section~\ref{subsection:DataLayer}):
+Following standard generalised-linear-model theory \citep{McCullagh_Nelder_1989_GLM}, 
+ \pkg{FRK}~v2 uses an invertible link function, $g(\cdot)$, to model $Y(\cdot)$ as a transformation of a mean process, $\mu(\cdot)$: % (that we consider in more detail in Section~\ref{subsection:DataLayer}):
 \begin{equation}\label{eqn:mu_linked_to_Y}
 g\left(\mu(\vec{s})\right) = Y(\vec{s}); \quad \vec{s} \in D.
 \end{equation}
@@ -1340,7 +1344,7 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 \fct{plot} & - & Visualise the data, predictions, and uncertainty quantification of the predictions given an \class{SRE} object and the object resulting from a call to \fct{predict}.\\
         \hline
     \end{tabular}
-     \caption{\Copy{TableCaptionNewArguments}{Important new or augmented function arguments in \pkg{FRK}~v2. The package now also provides methods for \fct{AIC}, \fct{BIC}, \fct{fitted}, \fct{residuals}, and \fct{simulate}.}} 
+     \caption{Important new or augmented function arguments in \pkg{FRK}~v2. The package now also provides methods for \fct{AIC}, \fct{BIC}, \fct{fitted}, \fct{residuals}, and \fct{simulate}.}
  \label{tab:new_arguments_in_functions} 
 \end{table}
 
@@ -2161,7 +2165,7 @@ Using a GLMM model and the software \pkg{TMB}, \pkg{FRK}~v2 can now cater for ma
 Matthew Sainsbury-Dale's research was supported by an Australian Government Research Training Program Scholarship.
 Andrew Zammit-Mangion's and Noel Cressie's research was supported by an Australian Research Council (ARC) Discovery Project, DP190100180. Andrew Zammit-Mangion's research was also supported by an ARC Discovery Early Career Research Award, DE180100203.  
 The authors would like to thank Rajib Paul for providing the Americium data analysed in Section~\ref{sec:block_prediction}, Michael Bertolacci for his discussion surrounding the MODIS comparison study, and Yi Cao for his technical assistance during the project. 
- We are also grateful to two anonymous reviewers whose suggestions enhanced our article. 
+ We are also grateful to two anonymous reviewers whose suggestions improved our article. 
 
 
 %% -- Bibliography -------------------------------------------------------------
