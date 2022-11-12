@@ -1,5 +1,5 @@
 suppressMessages({
-library("FRK") 
+library("FRK")
 library("dplyr")
 library("ggplot2")
 library("ggmap")

@@ -1,5 +1,7 @@
-%\documentclass[nojss]{jss}
-\documentclass[article]{jss}
+\documentclass[nojss]{jss}
+
+
+\usepackage{enumitem}
 
 %% -- LaTeX packages and custom commands ---------------------------------------
 
@@ -13,8 +15,7 @@
 \widowpenalty10000
 \clubpenalty10000
 % prevent orphans for section headings:
-%\usepackage[nobottomtitles]{titlesec} % doesn't work: breaks the code
-%\usepackage[all]{nowidow}
+\usepackage[all]{nowidow}
 % Couldn't find a solution... Just use \newpage at problematic headings, for now.
 
 
@@ -379,7 +380,10 @@ Several other approaches hinge on the use of a spatial version of the generalise
 
 
 
- Fixed-rank variants of trans-Gaussian kriging are relatively under-developed (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~3.2.1, for a discussion), however many modellers have used fixed-rank variants of the spatial GLMM.  
+ Fixed-rank variants of trans-Gaussian kriging are relatively under-developed 
+% (see \cite{Cressie_2021_review_spatial-basis-function_models}, sec.~3.2.1, for a discussion), 
+ \citep[see][sec.~3.2.1]{Cressie_2021_review_spatial-basis-function_models}, 
+ however many modellers have used fixed-rank variants of the spatial GLMM.  
   A popular fixed-rank model for $Y(\cdot)$ is the so-called spatial random effects (SRE) model, where $Y(\cdot)$ is modelled as a linear combination of a fixed number of spatial basis functions with spatially correlated random coefficients \citep{Cressie_Johannesson_2008_FRK}: For example, \cite{Sengupta_Cressie_2013_spatial_GLMM_FRK} and \citet{Bradley_2016_Bayesian_spatial_COS_lattice_data} use it in the spatial GLMM context. 
 %  They obtained parameter estimates using a Laplace approximation in an expectation maximisation (EM) algorithm, and the empirical predictive distribution was generated using an MCMC algorithm.  
 % A latent SRE model was also employed by \citet{Bradley_2016_Bayesian_spatial_COS_lattice_data} to facilitate spatial change-of-support for count-valued survey data. % (in particular, up-scaling to larger target supports).  
@@ -409,7 +413,8 @@ Several other approaches hinge on the use of a spatial version of the generalise
  Further, with the exception of \pkg{spatialfusion}, these software packages do not cater for spatial change-of-support.
  }
   Some general-purpose packages  \citep[e.g., \pkg{INLA};][]{Rue_2009_INLA, Lindgren_2015_R-INLA} can, in principle, handle the wide array of modelling challenges posed by non-Gaussian spatial and spatio-temporal data; however, they are not specifically designed for this purpose and can be difficult for an unfamiliar user to implement. 
- A project aimed at facilitating Gaussian and non-Gaussian spatial statistical modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}; at the time of writing,  spatio-temporal modelling was not implemented in \pkg{inlabru}.
+% A project aimed at facilitating Gaussian and non-Gaussian spatial statistical modelling using \pkg{INLA} is the \pkg{inlabru} package \citep{Bachl_2019_inlabru}; at the time of writing,  spatio-temporal modelling was not implemented in \pkg{inlabru}. 
+ The package \pkg{inlabru} \citep{Bachl_2019_inlabru} aims to facilitate Gaussian and non-Gaussian spatial modelling using \pkg{INLA} but, at the time of writing, it does not implement spatio-temporal modelling.
  
 
  \pkg{FRK} \citep{FRK_paper} is an \proglang{R} package for spatial/spatio-temporal statistical modelling and prediction. 
@@ -428,7 +433,7 @@ In Section~\ref{SEC:ApplicationStudy} we present a comparative study between \pk
 
 \section{Methodology}\label{SEC:Methodology}
 
-The statistical model used in \pkg{FRK}~v2 is a spatial or spatio-temporal hierarchical statistical model consisting of two conditional-probability layers.
+The model used in \pkg{FRK}~v2 is a spatial or spatio-temporal hierarchical statistical model consisting of two conditional-probability layers.
  In the \textit{process layer}, we model the conditional mean of the data as a transformation of a latent spatial process modelled as a low-rank SRE model; see Section  \ref{subsection:04-01:ProcessLayer}. 
  In the %first layer, which we refer to as the 
 \textit{data layer}, we use a conditionally independent exponential-family model for each element of the data vector; see Section~\ref{subsection:DataLayer}. 
@@ -480,14 +485,15 @@ See Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details on how these basis fu
 \begin{equation}\label{Ch4:eqn:vecY}
     \vec{Y} = \vec{T}\vec{\alpha} + \vec{S}\vec{\eta} + \vec{\xi},
 \end{equation}
- where $\vec{T}$ and $\vec{S}$ are known design matrices constructed from $\vec{t}(\cdot)$ and $\vec{\phi}(\cdot)$ respectively, $\vec{\alpha}$ is a fixed effect, and $\vec{\xi}$ is a vector associated with the fine-scale process which, like $\vec{\eta}$, is treated as a random effect. 
+ where $\vec{T}$ and $\vec{S}$ are known design matrices constructed from $\vec{t}(\cdot)$ and $\vec{\phi}(\cdot)$ respectively, $\vec{\alpha}$ is a fixed effect, and $\vec{\xi}$ is a vector associated with the fine-scale process which, like $\vec{\eta}$, is  random. 
 
 As in \pkg{FRK}~v1, \Copy{ParameterisationOfBasisFunctionWeights}{the elements of $\vec{\xi}$ are often modelled as independent and identically distributed (i.i.d.) Gaussian random variables with mean zero and variance $\sigma^2_\xi$, and $\vec{\eta}$ is modelled as a mean-zero multivariate-Gaussian random vector with covariance matrix $\cov{\vec{\eta}}{\vec{\eta}}$. 
  In \pkg{FRK}~v2, $\cov{\vec{\eta}}{\vec{\eta}}$ is modelled either as $\vec{K}$ or as $\vec{Q}^{-1}$, where $\vec{Q}$ is a precision matrix.} 
  Both formulations use block-diagonal matrices, so that basis-function coefficients between basis-function resolutions are independent; see Appendix~\ref{Appendix:CovarianceTapering} for how the intra-resolution dependencies with $\vec{K}$ and $\vec{Q}$ are modelled. 
-  Although both $\vec{K}$ and $\vec{Q}$ are generally sparse, use of $\vec{Q}$ instead of $\vec{K}$ is typically computationally advantageous. Irrespective of the parameterisation, we assume that $\cov{\vec{\eta}}{\vec{\eta}}$ depends on a parameter vector $\vec{\vartheta}$, which needs to be estimated.
+  Although both $\vec{K}$ and $\vec{Q}$ are generally sparse, use of $\vec{Q}$ instead of $\vec{K}$ is typically computationally advantageous. Irrespective of the parameterisation, we assume that $\cov{\vec{\eta}}{\vec{\eta}}$ depends on an unknown parameter vector $\vec{\vartheta}$.
 
- Following standard generalised-linear-model theory \citep{McCullagh_Nelder_1989_GLM}, \pkg{FRK}~v2 uses an invertible link function, $g(\cdot)$, to model $Y(\cdot)$ as a transformation of a mean process, $\mu(\cdot)$ (that we consider in more detail in Section~\ref{subsection:DataLayer}):
+Following standard generalised-linear-model theory \citep{McCullagh_Nelder_1989_GLM}, 
+ we use an invertible link function, $g(\cdot)$, to model $Y(\cdot)$ as a transformation of a mean process, $\mu(\cdot)$: % (that we consider in more detail in Section~\ref{subsection:DataLayer}):
 \begin{equation}\label{eqn:mu_linked_to_Y}
 g\left(\mu(\vec{s})\right) = Y(\vec{s}); \quad \vec{s} \in D.
 \end{equation}
@@ -657,9 +663,10 @@ Denoting the $j$th element of $\vec{\mu}_Z$ by $\mu_{Z_j}$, we assume that
 [Z_j \mid \vec{\mu}, \psi] = \text{EF}(\mu_{Z_j}, \psi); \quad j = 1, \dots, m,
 \end{equation}
 where EF corresponds to a probability distribution in the exponential family with dispersion parameter $\psi$ and, for generic random quantities $A$ and $B$, $[A \mid B]$ denotes the probability distribution of $A$ given $B$. 
- We assume that $\psi$ is spatially invariant; with the parameterisations assumed by \pkg{FRK}~v2, $\psi = 1$ for some distributions in the exponential family (e.g., the binomial, negative-binomial, and Poisson distributions).
+We assume that $\psi$ is spatially invariant (note that $\psi$ is equal to 1 for the binomial, negative-binomial, and Poisson distributions). %; with the parameterisations assumed by \pkg{FRK}~v2, $\psi = 1$ for some distributions in the exponential family (e.g., the binomial, negative-binomial, and Poisson distributions).
 
-Together, (\ref{eqn:mu_Z}) and (\ref{eqn:Z_j|mu(.)}) imply that a given observation depends only on the values of the mean process $\vec{\mu}$ at the corresponding observation support, rather than on means elsewhere in the domain. 
+
+Together, (\ref{eqn:mu_Z}) and (\ref{eqn:Z_j|mu(.)}) imply that a given observation depends only on the values of the mean process $\vec{\mu}$ at the corresponding observation support. %, rather than on means elsewhere in the domain. 
 Further, we assume that all observations are conditionally independent given the latent spatial process, and that they are all from the same exponential family member. Specifically, 
 \[
 [\vec{Z} \mid \vec{\mu}_Z, \psi] = \prod_{j=1}^m \text{EF}(\mu_{Zj}, \psi).
@@ -687,7 +694,7 @@ The model employed by \pkg{FRK}~v2 can be summarised as follows.
 \end{gather}
  where $\vec{V}$ is a known, positive-definite diagonal matrix which, in the absence of problem specific fine-scale information, can simply be set to $\vec{I}$, and $\sigma^2_\xi$ is either unknown and estimated, or provided by the user.  
  In a spatio-temporal setting, a more complex model for $\vec{\xi}$ is allowed; see Section~\ref{sec:spatio-temporal}. 
- Note that \pkg{FRK}~v2 is backwards compatible, since an identity link function and a Gaussian data model in (\ref{eqn:new_model_Z}) yields the model used in \pkg{FRK}~v1; then $\psi$ is simply the measurement-error variance $\sigma^2_\epsilon$ in $Z_j \mid \mu_{Z_j}, \sigma^2_\epsilon \sim \Gau(\mu_{Z_j}, \sigma^2_\epsilon)$. 
+ Note that \pkg{FRK}~v2 is backwards compatible, since an identity link function and a Gaussian data model in (\ref{eqn:new_model_Z}) yields the model used in \pkg{FRK}~v1. %; then $\psi$ is simply the measurement-error variance $\sigma^2_\epsilon$ in $Z_j \mid \mu_{Z_j}, \sigma^2_\epsilon \sim \Gau(\mu_{Z_j}, \sigma^2_\epsilon)$. 
  
 
 \subsection{Estimation}\label{subsection:02-03:Estimation}
@@ -872,7 +879,7 @@ Let $\hat{\vec{u}}\equiv\hat{\vec{u}}(\vec{\theta}, \vec{Z})$ be a mode of $\ell
 \pkg{FRK}~v2 supplies the \proglang{R} package \pkg{TMB} \citep{Kristensen_2016_TMB} with a \proglang{C++} template function that defines $\ell(\vec{\theta} ; \vec{Z}, \vec{u})$. \pkg{TMB} then computes the Laplace approximation of the observed-data log-likelihood, $\ell^*(\vec{\theta}; \vec{Z})$, and it automatically computes its derivatives; these quantities are then invoked via a user-defined optimising function (\fct{nlminb} is used by default). 
  \pkg{TMB} uses \pkg{CppAD} \citep{CppAD_Package} for automatic differentiation, and it uses the linear-algebra libraries \pkg{Eigen} \citep{Eigen} and \pkg{Matrix} \citep{Matrix_Package} for vector and matrix operations in \proglang{C++} and \proglang{R}, respectively. 
  Use of these packages yields high computational efficiency. 
-\pkg{TMB}'s implementation of automatic differentiation is a key reason why \pkg{FRK}~v2 can easily cater for a large variety of response distributions and link functions, as each response-distribution/link-function combination does not need to be considered on a case-by-case basis.
+%\pkg{TMB}'s implementation of automatic differentiation is a key reason why \pkg{FRK}~v2 can easily cater for a large variety of response distributions and link functions, as each response-distribution/link-function combination does not need to be considered on a case-by-case basis.
 
 Note that all unknown quantities are treated as random in \pkg{TMB}. % (with a flat prior assumed if a prior is not provided).
  To retain \pkg{FRK}~v1's mixed-model interpretation, we fix the model parameters and fixed effects to their posterior-mode estimates and then treat them as non-random quantities. 
@@ -1340,8 +1347,7 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 \fct{plot} & - & Visualise the data, predictions, and uncertainty quantification of the predictions given an \class{SRE} object and the object resulting from a call to \fct{predict}.\\
         \hline
     \end{tabular}
-%     \caption{\Copy{TableCaptionNewArguments}{Important new or augmented function arguments in \pkg{FRK}~v2. The package now also provides methods for \fct{AIC}, \fct{BIC}, \fct{fitted}, \fct{residuals}, and \fct{simulate}.}} 
- \caption{Important new or augmented function arguments in \pkg{FRK}~v2. The package now also provides methods for \fct{AIC}, \fct{BIC}, \fct{fitted}, \fct{residuals}, and \fct{simulate}.}
+     \caption{Important new or augmented function arguments in \pkg{FRK}~v2. The package now also provides methods for \fct{AIC}, \fct{BIC}, \fct{fitted}, \fct{residuals}, and \fct{simulate}.}
  \label{tab:new_arguments_in_functions} 
 \end{table}
 
@@ -1392,13 +1398,13 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
  The true mean process evaluated over the BAUs, $\vec{\mu}$, is also shown in Figure~\ref{fig:Poisson_true_and_Z}:  
  It was constructed by passing a sum of trigonometric functions through the exponential function. 
 % It was constructed by first simulating $\vec{Y}$ from a Gaussian process with an exponential covariance function (with variance parameter $\sigma^2 = 0.1$ and length-scale parameter $\tau = 0.2$), and then passing $\vec{Y}$ through the exponential function, $\exp(\cdot)$.
- In what follows, $\text{Poi}(\mu)$ refers to a probability distribution on the non-negative integers with probability mass function (PMF) $\{p_z: z = 0, 1, \dots\}$, namely $p_z = e^{-\mu} \mu^z/z!$, for $\mu > 0$. 
+ In what follows, $\text{Poi}(\mu)$ refers to a probability distribution on the non-negative integers with probability mass function (PMF) $\{e^{-\mu} \mu^z/z!: z = 0, 1, \dots\}$ for $\mu > 0$. 
 
 \begin{figure}[t!]
     \centering
     \includegraphics[width = 0.8\linewidth]{results/3_1_Poisson_sim_true_process_and_data.png}
     \vspace{-10pt}    
-    \caption{Simulated, point-referenced, Poisson data set used in the illustrative example of Section~\ref{sec:03-01:Poisson}. (Left) True mean process evaluated over the BAUs, $\vec{\mu}$. (Right) Simulated Poisson data set, $\vec{Z}$.}
+    \caption{Simulated, point-referenced, Poisson data set used in the illustrative example of Section~\ref{sec:03-01:Poisson}. (Left) True mean process evaluated over the BAUs. (Right) Simulated data.}
   \label{fig:Poisson_true_and_Z}
 \end{figure}
 
@@ -1407,7 +1413,7 @@ Next, an \class{SRE} object is constructed using \fct{SRE}, within which we spec
  In this example, we model counts using a Poisson data model, $Z_j \mid \vec{\mu} \sim \text{Poi}(\mu_{Z_j})$, for $j = 1, \dots, m$, and we use the log link function, $g(\cdot) = \log(\cdot)$. 
  These choices are made by setting \code{response = "poisson"} and \code{link = "log"}. 
  We then fit the model using \fct{SRE.fit}.
- These steps may also be performed in a single line of code with the convenient wrapper function \fct{FRK}. 
+ These steps may also be performed with the convenient wrapper function \fct{FRK}. 
  Note that when the data are non-Gaussian or when a non-identity link function is chosen, \fct{FRK} automatically enforces \code{method = "TMB"} and selects \code{K\_type = "precision"}, which means that \pkg{TMB} is used for model fitting and that the basis-function coefficients are modelled via a sparse precision matrix, $\vec{Q}$: 
 \begin{Code}
 R> S <- FRK(f = Z ~ 1, data = Poisson_data, response = "poisson", link = "log")
@@ -1471,7 +1477,7 @@ R> DHARMa_object <- createDHARMa(
 +    integerResponse = TRUE)
 \end{Code}
 %$
-The resulting \class{DHARMa} object can then be used to construct various residual plots and to perform a range of hypothesis tests, including tests for residual spatial dependence and zero-inflation, as well as arbitrary, user-defined tests. 
+The \class{DHARMa} object can then be used to construct residual plots and to perform a range of hypothesis tests, including tests for residual spatial dependence and zero-inflation, as well as arbitrary, user-defined tests. 
  Figure~\ref{fig:Poisson_residuals} shows the result of calling \fct{plot} on the above \class{DHARMa} object, which generates a QQ plot and a plot of the residuals against the predicted values. Although simulation-based residuals are a natural choice for the spatial GLMM employed by \pkg{FRK}~v2, one may also compute the response or Pearson residuals using \fct{residuals}. 
  %\pkg{FRK}~v2 also provides a function, \fct{diagnostics}, which, given a sample from \fct{posteriorpredictive} and the corresponding observed data, computes several default (e.g., coverage) and user-defined diagnostics.  
 
@@ -1557,55 +1563,22 @@ However, they are still often used in such settings and, hence, \pkg{FRK}~v2 als
 \subsection[Increased numbers of basis functions]{Increased numbers of basis functions}\label{sec:3:increased_resolution}
 
 
- The efficiency of \pkg{TMB} and our use of precision matrix $\vec{Q}$ instead of covariance matrix $\vec{K}$, means that \pkg{FRK}~v2 is now better equipped than \pkg{FRK}~v1 to use a large number of basis functions. 
+ The efficiency of \pkg{TMB} and our use of precision matrix $\vec{Q}$ instead of covariance matrix $\vec{K}$ means that \pkg{FRK}~v2 is well equipped to use a large number of basis functions. 
  This is important, as the predictive performance of fixed rank kriging is often determined by the number of basis functions, as show in the following experiment.
-
-%In our first experiment, we repeated the analysis in Section~\ref{sec:03-01:Poisson} using one, two, three, and four resolutions of basis functions; Table~\ref{tab:03-02:PoissonScoringRules} shows the results for each run. 
-% Clearly, predictive performance improves as the number of resolutions, and hence the number of basis functions, increases. However, the coverage remains accurate in all runs, implying that the model is able to accurately quantify uncertainty irrespective of the number of basis functions employed: This result is largely due to the presence of the fine-scale random variation term, $\xi(\cdot)$, in (\ref{eqn:04-01:Y(s)}). 
  
- 
-%\begin{table}[t!]
-%    \centering
-%    \begin{tabular}{cccccc}
-%    \hline
-%    Resolutions (basis functions) & RMSPE  & CRPS & Cvg90 & IS90 & Run time (min.) \\
-%    \hline
-%    % trig field:
-%    1 (9)    & 84.71    & 47.58 & 0.901  & 390.05 &  0.07  \\
-%    2 (90)   & 58.60    & 30.97 & 0.878  & 246.07 &  0.09   \\
-%    3 (819)  & 50.12    & 25.77 & 0.885  & 197.80 &  0.24 \\
-%%    4 (7380) & 50.10     & 25.28 & 0.886  & 197.33 &  3.31 \\
-%    \hline
-%    \end{tabular}
-%        \caption{
-%    Diagnostics comparing the predictive performance when using a range of basis-function resolutions with point-referenced count data. The diagnostics are the root-mean-squared prediction error (RMPSE), the continuous ranked probability score (CRPS), and the empirical coverage (Cvg90) and interval score (IS90) resulting from a prediction interval with a nominal coverage of 90\% (see Appendix~\ref{app:ScoringRules} for further details). 
-%    The diagnostics are with regard to prediction of $\vec{\mu}$ and they are averaged over all unobserved BAUs. 
-%    }
-%    \label{tab:03-02:PoissonScoringRules}
-%\end{table}
-
-
-%Figure~\ref{fig:Poisson_multires} shows several panels summarising the analysis of the point-referenced Poisson data set shown in Figure~\ref{fig:Poisson_true_and_Z}, using one, two, and three resolutions of basis functions.  
-%The models' ability to recreate the true process clearly improves as the number of basis function resolutions increases, with an increased number of basis functions consistently leading to lower prediction standard error.  
-%Table~\ref{tab:03-02:PoissonScoringRules} contains diagnostic scores comparing the predictive performance with a varying number of basis function resolutions. 
-%Critically, although all metrics reflect the fact that predictive performance improves with an increasing number of basis functions, the coverage remains accurate irrespective of the number of basis functions, implying that the model is able to accurately quantify uncertainty irrespective of the number of basis functions used. 
-
-
-
-
-
-
-% In our second experiment, 
-  We re-ran the analysis for the comparative study of spatial-prediction methods  published in \cite{Heaton_2019_comparative_study}, which included spatial predictions from \pkg{FRK}~v1.
+ We re-ran the analysis for the comparative study of spatial-prediction methods  published in \citet{Heaton_2019_comparative_study}, which included spatial predictions from \pkg{FRK}~v1.
 %The data in this study consists of daytime land surface temperatures as measured by the Terra instrument onboard the MODIS satellite \citep{MODIS_satelitte}, with observations on a $500 \times 300$ grid. 
 %The training set consists of 105,569 observations, while the test set consists of 42,740 observations.
  The data used in that study comprised a training data set and a test data set consisting of 105,569 observations and 42,740 observations, respectively. 
-  Table~\ref{tab:Heaton_comparison:full} replicates Table~3 of \cite{Heaton_2019_comparative_study},  
-with an additional entry corresponding to \pkg{FRK}~v2, wherein many more basis functions were used than was practical with \pkg{FRK}~v1. 
- Specifically, \pkg{FRK}~v1 used 485 basis functions, whilst \pkg{FRK}~v2 used 12,114.
- The results show that the increased number of basis functions from \pkg{FRK}~v2 significantly improved the diagnostic scores over \pkg{FRK}~v1. %, so that the results for \pkg{FRK}~v2 are now comparable to the spatial-prediction method MRA.  
-% To achieve these improvements, we only had to specify \code{nres = 4}, \code{K\_type = "precision"} and \code{method = "TMB"} in \fct{auto\_basis}, \fct{SRE}, and \fct{SRE.fit}, respectively; the rest of the \pkg{FRK}~v1 code that was used in the comparative study was left unchanged. 
- To achieve these improvements, we only had to specify \code{nres = 4} rather than \mbox{\code{nres = 3}}; the rest of the \pkg{FRK} code that was used in the comparative study was left unchanged. 
+%  Table~\ref{tab:Heaton_comparison:full} replicates Table~3 of \citet{Heaton_2019_comparative_study},  
+%with an additional entry corresponding to \pkg{FRK}~v2, wherein many more basis functions were used than was practical with \pkg{FRK}~v1. 
+% Specifically, \pkg{FRK}~v1 used 485 basis functions, whilst \pkg{FRK}~v2 used 12,114.
+% The results show that the increased number of basis functions from \pkg{FRK}~v2 significantly improved the diagnostic scores over \pkg{FRK}~v1. 
+ Table~\ref{tab:Heaton_comparison:full} replicates Table~3 of \citet{Heaton_2019_comparative_study},  
+with an additional entry corresponding to \pkg{FRK}~v2, wherein many more basis functions (12,144) were used than was practical with \pkg{FRK}~v1 (485). 
+%Specifically, \pkg{FRK}~v1 used 485 basis functions, whilst \pkg{FRK}~v2 used 12,114.
+The results show that the increased number of basis functions significantly improved the diagnostic scores. 
+ To achieve these improvements, we only had to specify \code{nres = 4} rather than \mbox{\code{nres = 3}}; the rest of the code that was used in the comparative study was left unchanged. 
  
 
 %\begin{table}[t!]
@@ -1651,11 +1624,11 @@ with an additional entry corresponding to \pkg{FRK}~v2, wherein many more basis 
     Pred. Proc. & 2.05 & 2.52 & 1.85 & 26.24 & 0.75 & 640.48 & 1\\[0pt]
     SPDE & 1.10 & 1.53 & 0.83 & 8.85 & 0.97 & 120.33 & 2\\[0pt]
     Tapering & 1.87 & 2.45 & 1.32 & 10.31 & 0.93 & 133.26 & 1\\[0pt]
-    Periodic Embedding & 1.29 & 1.79 & 0.91 & 7.44 & 0.93 & 9.81 & 1\\[0pt]
-    \hline
+    Periodic Embedding & 1.29 & 1.79 & 0.91 & 7.44 & 0.93 & 9.81 & 1\\\hline
     \end{tabular}
     \end{center}
-    \caption{Scores for each method in the comparative study presented in \cite{Heaton_2019_comparative_study}. The scores are the mean absolute error (MAE), the root-mean-squared prediction error (RMSPE), and the continuous ranked probability score (CRPS), and the empirical coverage (Cvg95) and the interval score (IS95) resulting from a prediction interval with a nominal coverage of 95\% (see Appendix~\ref{app:ScoringRules} for further details). Note that \pkg{FRK}~v2 was implemented in a different computing environment than the other models, and so its run time is not directly comparable. \pkg{FRK}~v2 was implemented using a machine with 16 GB of RAM and an Intel i7-9700 3.00GHz CPU with 8 cores. The other models were implemented using the powerful Becker computing environment (256 GB of RAM and 2 Intel Xeon E5-2680 v4 2.40GHz CPUs with 14 cores each and 2 threads per core) located at Brigham Young University \citep{Heaton_2019_comparative_study}.}
+\vspace{-1em}
+    \caption{Scores for each method in the comparative study presented in \cite{Heaton_2019_comparative_study}. The scores are the mean absolute error (MAE), the root-mean-squared prediction error (RMSPE), and the continuous ranked probability score (CRPS), and the empirical coverage (Cvg95) and the interval score (IS95) resulting from a prediction interval with a nominal coverage of 95\% (see Appendix~\ref{app:ScoringRules} for further details). Note that \pkg{FRK}~v2 was implemented in a different computing environment than the other models, and so its run time is not directly comparable. \pkg{FRK}~v2 was implemented using a machine with 16 GB of RAM and an Intel i7-9700 3.00GHz CPU with 8 cores. The other models were implemented using the powerful Becker computing environment with 256 GB of RAM and 2 Intel Xeon E5-2680 v4 2.40GHz CPUs with 14 cores each and 2 threads per core \citep{Heaton_2019_comparative_study}.}
     \label{tab:Heaton_comparison:full}
 \end{table}
 
@@ -1666,11 +1639,10 @@ with an additional entry corresponding to \pkg{FRK}~v2, wherein many more basis 
 
 We now provide several application and comparison studies using \pkg{FRK}~v2.
 In Section~\ref{sec:04-01:MODIS}, we present a comparison study between \pkg{FRK}~v2 and other packages that cater for non-Gaussian data models. 
-In Section~\ref{sec:block_prediction}, we demonstrate block prediction using contaminated soil data and compare our results to that from the package \pkg{georob}. 
-In Section~\ref{sec:spatialCOS}, we use data on poverty figures in Sydney, Australia, to demonstrate the spatial change-of-support functionality of \pkg{FRK}~v2 in a non-Gaussian setting.  
-In Section~\ref{sec:ST_example}, we provide a non-Gaussian spatio-temporal example through modelling crime counts in the city of Chicago during the first two decades of the 21st century. 
-For readers wishing to `try out' \pkg{FRK}~v2 on a real-world example, we suggest Section~\ref{sec:spatialCOS}.  
- \Copy{sphere}{For the use of \pkg{FRK} on the surface of a sphere, see \citet[][Sec.~4.2]{FRK_paper} and the examples given in the package vignette.}
+In Section~\ref{sec:block_prediction}, we demonstrate block prediction using contaminated soil data.  
+In Section~\ref{sec:spatialCOS}, we use data on poverty figures in Sydney, Australia, to demonstrate the spatial change-of-support functionality of \pkg{FRK}~v2 in a non-Gaussian setting; this is a useful example for readers wishing to `try out' \pkg{FRK}~v2 on real-world data.
+In Section~\ref{sec:ST_example}, we provide a non-Gaussian spatio-temporal example through modelling crime counts in Chicago during the first two decades of the 21st century.  
+ \Copy{sphere}{For the use of \pkg{FRK} on the sphere, see \citet[][Sec.~4.2]{FRK_paper} and the examples given in the package vignette.}
 
 \subsection{Comparative study: MODIS cloud data}\label{sec:04-01:MODIS}
 
@@ -1687,7 +1659,7 @@ We considered two types of sampling schemes for model comparison.
  The second sampling scheme, which we refer to as `missing-in-a-block' (MB), involved using all pixels outside a central block for training, and using pixels inside the block for testing. 
  The chosen testing block was a 30 $\times$ 30 square (900 pixels) in the middle of the spatial domain of interest, which meant that 32,850 pixels were used for training. 
 The training and test sets under the two sampling schemes are shown in Figure~\ref{fig:03-04-Modis1}. 
- In what follows, $\text{Bin}(k, \pi)$ refers to a probability distribution on the non-negative integers with PMF $\{p_z : z = 0, \dots, k\}$, namely \mbox{$p_z = {k \choose z}\pi^z(1-\pi)^{k-z}$}, for $\pi \in (0, 1)$ and $k \in \{0, 1, \dots\}$. 
+ In what follows, $\text{Bin}(k, \pi)$ refers to a probability distribution on the non-negative integers with PMF \mbox{$\{{k \choose z}\pi^z(1-\pi)^{k-z} : z = 0, \dots, k\}$} for $\pi \in (0, 1)$ and $k \in \{0, 1, \dots\}$. 
  For the special case of $k = 1$, $\text{Bin}(1, \pi)$ is the Bernoulli distribution.
 
 \begin{figure}[t!]
@@ -1713,8 +1685,7 @@ The training and test sets under the two sampling schemes are shown in Figure~\r
 \Copy{spBayesLimitation2}{For \pkg{spBayes}, we used 400 knots; increasing the number of knots further was computationally prohibitive (\pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of predictive-process knots).} 
  When using \pkg{spNNGP}, we found that the default option of considering 15 neighbours at a time was appropriate. 
  The packages \pkg{spNNGP} and \pkg{spBayes} use Markov chain Monte Carlo (MCMC). With these packages, we used 10,000 MCMC samples in total, with a burn-in of 6,000 samples and a thinning factor of 10. 
-The number of cores used for \pkg{spNNGP} can be controlled through the argument \code{n.omp.threads}. 
-Setting \code{n.omp.threads} to be greater than 1 returned an error (a known issue, at the time of writing, documented in the \pkg{spNNGP} package manual); hence, our reported run-times for \pkg{spNNGP} are for a single core.
+The number of cores used for \pkg{spNNGP} can be controlled through the argument \code{n.omp.threads}; choosing a value greater than 1 returned an error (a known issue documented in the \pkg{spNNGP} package manual) and, hence, our reported run-times for \pkg{spNNGP} are for a single core.
 
 \begin{figure}
     \centering
@@ -1775,12 +1746,13 @@ MB & FRK v2 & \textbf{0.19} & \textbf{0.77} & 31.74 \\
    & spNNGP & 0.20 & 0.75 & 65.30 \\     
    \hline    
   \end{tabular}
-      \caption{Diagnostic results for the MODIS comparison study. Best performers for a given diagnostic are boldfaced.}
+      \caption{Diagnostic results for the MODIS comparison study. %Best performers for a given diagnostic are boldfaced.
+      }
     \label{tab:summary_of_analyses}
 \end{table}
  
 
- To assess predictive accuracy, we compared the predictions from all models using the Brier score \citep[e.g., ][Sec.~3]{Gneiting_2007_scoring_rules}, and the area under the receiver operating characteristic (ROC) curve (AUC) \citep[see, e.g.,][pg. 317]{Hastie_2009_Elements_Statistical_Learning}.
+ To assess predictive accuracy, we compared the predictions from all models using the Brier score (see Appendix~\ref{app:ScoringRules}), and the area under the receiver operating characteristic (ROC) curve (AUC) \citep[see, e.g.,][pg. 317]{Hastie_2009_Elements_Statistical_Learning}.
  The Brier score assesses how close the predicted probability of `Cloud' is to the truth; 
 % it is a negatively oriented rule, where 
  lower scores indicate more accurate predictions of the probability of `Cloud'.
@@ -1949,9 +1921,10 @@ It can be clearly seen that the results are very similar despite the use of dime
  Our training data, shown in Figure~\ref{fig:SA2_level_data}, is reflective of such a scenario. It includes mostly SA2 regions, but some SA1 regions have also been included. 
 
 
- In this example, we use the SA2-region (and some SA1-region) data for training the model, and we use the SA1 regions as the BAUs; these are passed as \class{SpatialPolygonsDataFrame} objects to \fct{FRK}. 
-SA2 regions are aggregations of SA1 regions, so many of the observation supports, $B_j \in D^O$, encompass multiple BAUs. 
- Hence, the BAU-level size parameters $\vec{k}$, here the number of families in each SA1 region, are needed and must be provided with the BAU object (see Section~\ref{sec:Distributions with size parameters}).
+ We use SA2-region (and some SA1-region) data for model fitting, and we use the SA1 regions as the BAUs. 
+%SA2 regions are aggregations of SA1 regions, so many of the observation supports encompass multiple BAUs. 
+% Hence, the BAU-level size parameters $\vec{k}$, here the number of families in each SA1 region, are needed and must be provided with the BAU object (see Section~\ref{sec:Distributions with size parameters}).
+Since many of the observation supports encompass multiple BAUs (SA2 regions are aggregations of SA1 regions), the BAU-level size parameters $\vec{k}$, here the number of families in each SA1 region, are needed and must be provided with the BAU object (see Section~\ref{sec:Distributions with size parameters}).
  
  
  \begin{Code}
@@ -2162,7 +2135,7 @@ Using a GLMM model and the software \pkg{TMB}, \pkg{FRK}~v2 can now cater for ma
 Matthew Sainsbury-Dale's research was supported by an Australian Government Research Training Program Scholarship.
 Andrew Zammit-Mangion's and Noel Cressie's research was supported by an Australian Research Council (ARC) Discovery Project, DP190100180. Andrew Zammit-Mangion's research was also supported by an ARC Discovery Early Career Research Award, DE180100203.  
 The authors would like to thank Rajib Paul for providing the Americium data analysed in Section~\ref{sec:block_prediction}, Michael Bertolacci for his discussion surrounding the MODIS comparison study, and Yi Cao for his technical assistance during the project. 
- We are also grateful to two anonymous reviewers whose suggestions enhanced our article. 
+ We are also grateful to two anonymous reviewers whose suggestions improved our article. 
 
 
 %% -- Bibliography -------------------------------------------------------------
@@ -2292,7 +2265,7 @@ where $d(\vec{s},\vec{s}^*)$ is the distance between two basis-function centroid
 Clearly (\ref{eqn:02-01:K_covariance_function}) is always non-zero for $\sigma^2_k > 0$, however 
  it is often reasonable to assume that coefficients associated with fine-resolution basis functions separated by medium-to-large distances are uncorrelated. 
 To increase sparsity, \pkg{FRK}~v2 now allows covariance tapering \citep{Furrer_2006_CovarianceTapering} of the intra-resolution covariance function. 
- Noting that (\ref{eqn:02-01:K_covariance_function}) is a special case of the Matérn covariance function with Matérn smoothness parameter $\nu = 0.5$, we follow the recommendation of \cite{Furrer_2006_CovarianceTapering} and use the spherical taper: 
+ Noting that (\ref{eqn:02-01:K_covariance_function}) is a special case of the Mat\'ern covariance function with smoothness parameter $\nu = 0.5$, we follow the recommendation of \cite{Furrer_2006_CovarianceTapering} and use the spherical taper: 
 \begin{equation}\label{eqn:02-01:taper_function}
 %K_{\beta_k}(\vec{s}, \vec{s}^*) 
 T_{\beta_k}(\vec{s}, \vec{s}^*) 
