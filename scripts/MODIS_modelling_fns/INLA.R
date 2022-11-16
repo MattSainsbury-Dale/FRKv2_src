@@ -1,8 +1,6 @@
 MODIS_INLA <- function(pred_locs, df_train, max.edge.interior = 5, 
                      sigma0 = 5, range0 = 1) {
   
-  browser()
-  
   ## Establish a boundary for the domain, D
   ##  Use a small sample of the training locations to create the boundary
   ## (necessary for the block sampling scheme)
