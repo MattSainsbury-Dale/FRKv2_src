@@ -111,6 +111,7 @@ S <- S_list[[3]]
 
 # ---- Model validation and selection ----
 
+RNGversion("3.6.0"); set.seed(2020)
 n_test <- 500
 unobs_idx <- (1:length(BAUs))[-obs_idx]
 unobs_idx <- sample(unobs_idx, n_test)
