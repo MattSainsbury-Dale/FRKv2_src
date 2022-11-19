@@ -2,14 +2,6 @@ MODIS_INLA <- function(pred_locs, df_train, max.edge.interior = 5,
                      sigma0 = 5, range0 = 1) {
   
   ## Establish a boundary for the domain, D
-  ##  Use a small sample of the training locations to create the boundary
-  ## (necessary for the block sampling scheme)
-  ## If I don't do this, I get this warning from inla.nonconvex.hull():
-  ## In contourLines(x, y, z, levels = levels) : all z values are equal
-  ## and then an uninformative error message:
-  ## Error in fmesher.read(prefix, "s") : 
-  #    File '/tmp/RtmpJVT6GV/fmesher30f95674846036.s' does not exist.
-  ## from inla.mesh.2d()
   boundary <- df_train[, c("x", "y")] %>% 
     slice_sample(n = min(2000, nrow(.))) %>%
     as.matrix() %>%

@@ -42,10 +42,10 @@ You are now ready to run the replication script described in the Results section
 The second method uses a conda environment to replicate the exact conditions at the time of submission (e.g., the version of R, package versions, etc.). This is a robust method to reproduce the results of the paper, but it is only available for Linux systems. First, download the packages and reproducible source code from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz, then enter the following commands:
 ```bash
 tar -xzvf FRKv2_renv.tar.gz
-cd FRKv2
+cd FRKv2_src
 conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal udunits2 proj
 conda activate ./.condaenv
-Rscript -e "renv::status()"   
+Rscript renv::rebuild('jpeg') 
 ```
 The result of the last command should be "The project is already synchronized with the lockfile". You are now ready to run the replication script described in the Results section. We suggest simply running `run_all.sh` (see below for details).
 
@@ -79,7 +79,7 @@ When running the replication script (see below for details), the user will be as
 
 ## Results
 
-The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. Note that some of the results will look very different when using these low-dimensional representations (particularly the results for Section 4.1).
+The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. **NB**: the reproducible scripts ask the user if package dependencies should be installed - only do this if using the current github code + local install option above. The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. Note that some of the results will look very different when using these low-dimensional representations (particularly the results for Section 4.1).
 
 Please note that the replication material for Section 3.3, Table 4, reproduces the results for row FRK v2 only; the results for other rows are taken from Table 3 in Heaton et al. (2019).
 

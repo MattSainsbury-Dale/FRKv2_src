@@ -1,5 +1,8 @@
 \documentclass[nojss]{jss}
 
+%TODO Random symbols at the beginning of scripts/MODIS_modelling_fns/INLA.R
+%TODO  .tar.gz file that weren't updated but I'm happy for you to submit and these could be changed later (please make note) maybe even after acceptance... namely the figures need to be made the same as in the paper (currently they're different) and files could be cleaned up (e.g., #OUTPUT#).
+%TODO We also need to remove those funny symbols in the beginning of INLA.R in the conda version; that should be done relatively soon.
 
 \usepackage{enumitem}
 
@@ -320,13 +323,7 @@
 
 
 \Abstract{
- Non-Gaussian spatial and spatio-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of disciplines. %, such as those involving small-area demographics or global satellite remote sensing. 
-  \pkg{FRK} is an \proglang{R} package for spatial/spatio-temporal modelling and prediction with very large data sets that, to date, has only supported linear process models and Gaussian data models. 
- In this paper, we describe a major upgrade to \pkg{FRK} that allows for non-Gaussian data to be analysed in a generalised linear mixed model framework. 
-  These vastly more general spatial and spatio-temporal models are fitted using the Laplace approximation via the software \pkg{TMB}. 
- The existing functionality of \pkg{FRK} is retained with this advance into non-Gaussian models; in particular, it allows for automatic basis-function construction, it can handle both point-referenced and areal data simultaneously, and it can predict process values at any spatial support from these data. 
- This new version of \pkg{FRK} also allows for the use of a large number of basis functions when modelling the spatial process, and is thus often able to achieve more accurate predictions than previous versions of the package in a Gaussian setting.   
- We demonstrate innovative features in this new version of \pkg{FRK}, highlight its ease of use, and compare it to alternative packages using both simulated and real data sets. 
+ Non-Gaussian spatial and spatio-temporal data are becoming increasingly prevalent, and their analysis is needed in a variety of disciplines. \pkg{FRK} is an \proglang{R} package for spatial/spatio-temporal modelling and prediction with very large data sets that, to date, has only supported linear process models and Gaussian data models. In this paper, we describe a major upgrade to \pkg{FRK} that allows for non-Gaussian data to be analysed in a generalised linear mixed model framework. These vastly more general spatial and spatio-temporal models are fitted using the Laplace approximation via the software \pkg{TMB}. The existing functionality of \pkg{FRK} is retained with this advance into non-Gaussian models; in particular, it allows for automatic basis-function construction, it can handle both point-referenced and areal data simultaneously, and it can predict process values at any spatial support from these data. This new version of \pkg{FRK} also allows for the use of a large number of basis functions when modelling the spatial process, and is thus often able to achieve more accurate predictions than previous versions of the package in a Gaussian setting. We demonstrate innovative features in this new version of \pkg{FRK}, highlight its ease of use, and compare it to alternative packages using both simulated and real data sets. 
 }
 
 %% - \Keywords{} with LaTeX markup, at least one required
@@ -418,17 +415,18 @@ Several other approaches hinge on the use of a spatial version of the generalise
  
 
  \pkg{FRK} \citep{FRK_paper} is an \proglang{R} package for spatial/spatio-temporal statistical modelling and prediction. 
- The main purpose of our article is to present a major upgrade to \pkg{FRK} that allows one to cater for many distributions within the exponential family using the spatial GLMM framework; we henceforth refer to it as \pkg{FRK}~v2 and the original version as \pkg{FRK}~v1. 
+ In this article, we present a major upgrade to \pkg{FRK} that allows one to cater for many distributions within the exponential family using the spatial GLMM framework; we henceforth refer to it as \pkg{FRK}~v2 and the original version as \pkg{FRK}~v1. 
  \pkg{FRK}~v2 provides a unifying framework that handles large, spatial and spatio-temporal non-Gaussian (and Gaussian) data, and it can seamlessly ingest point-referenced and area-referenced data to solve spatial change-of-support problems. %facilitates change-of-support over target supports that may be smaller or larger than the source supports (i.e., it caters for statistical down-scaling and up-scaling). 
   User-friendliness is a central focus of the package: Challenging statistical analyses may be tackled with only a few lines of intuitive, readable code. Optimal spatial prediction proceeds through the use of an empirical hierarchical statistical model (where likelihood-based estimates are substituted in place of unknown parameters) and a Monte Carlo (MC) algorithm, where a minimal number of user-level decisions is required.
  \pkg{FRK}~v2 also accommodates the modelling of non-Gaussian spatial and spatio-temporal data on the surface of a sphere, a feature not offered by many other packages. 
- Finally, although the primary motivation for this major upgrade is the modelling of non-Gaussian data, \pkg{FRK}~v2 also allows for the use of substantially more basis functions than \pkg{FRK}~v1 when modelling the spatial process. Therefore, in a Gaussian setting, it is often able to achieve more accurate predictions than \pkg{FRK}~v1. 
+ Finally, although the primary motivation for this major upgrade is the modelling of non-Gaussian data, \pkg{FRK}~v2 also allows for the use of substantially more basis functions than \pkg{FRK}~v1, which often results in more accurate predictions when in a Gaussian setting. % when modelling the spatial process. 
+% Therefore, in a Gaussian setting, it is often able to achieve more accurate predictions than \pkg{FRK}~v1. 
 
 
 The remainder of the paper is organised as follows. 
-In Section~\ref{SEC:Methodology} we establish the statistical framework for \pkg{FRK}~v2, and we describe model fitting and prediction using the \proglang{R} package \pkg{TMB} \citep{Kristensen_2016_TMB}. 
-In Section~\ref{SEC:IllustrativeExample} we discuss the new functionalities in \pkg{FRK}~v2, provide a variety of illustrative examples using simulated data, and demonstrate how using an increased number of basis functions can substantially improve predictive performance.  
-In Section~\ref{SEC:ApplicationStudy} we present a comparative study between \pkg{FRK}~v2 and several related packages, as well as real-world applications of \pkg{FRK}~v2. 
+In Section~\ref{SEC:Methodology}, we establish the statistical framework for \pkg{FRK}~v2, and we describe model fitting and prediction. 
+In Section~\ref{SEC:IllustrativeExample}, we discuss and illustrate the new functionalities in \pkg{FRK}~v2. 
+In Section~\ref{SEC:ApplicationStudy}, we present a comparative study between \pkg{FRK}~v2 and several related packages, as well as real-world applications of \pkg{FRK}~v2. 
  Section~\ref{SEC:Conclusion} gives a discussion and conclusions. 
 
 \section{Methodology}\label{SEC:Methodology}
@@ -699,7 +697,7 @@ The model employed by \pkg{FRK}~v2 can be summarised as follows.
 
 \subsection{Estimation}\label{subsection:02-03:Estimation}
 
-We now derive the likelihood functions required for model fitting, outline the intractable integrals that arise when non-Gaussian data models are fitted, and describe how \pkg{TMB} \citep{Kristensen_2016_TMB} is used to obtain estimates of the parameters/fixed effects and predictions of the random effects.
+%We now derive the likelihood functions required for model fitting, outline the intractable integrals that arise when non-Gaussian data models are fitted, and describe how \pkg{TMB} \citep{Kristensen_2016_TMB} is used to obtain estimates of the parameters/fixed effects and predictions of the random effects.
 
 Noting that $\vec{\mu}_Z$ is, through (\ref{eqn:new_model_muZ})--(\ref{eqn:new_model_Y}), completely determined by $\vec{\alpha}$, $\vec{\eta}$, and $\vec{\xi}$,  
  the complete-data likelihood function for our model is
@@ -917,7 +915,7 @@ Note that all unknown quantities are treated as random in \pkg{TMB}. % (with a f
 \subsection{Prediction and uncertainty quantification}\label{subsection:Prediction}
 
 
-We now discuss spatial prediction and uncertainty quantification of the predictions. 
+%We now discuss spatial prediction and uncertainty quantification of the predictions. 
 There are three principal quantities that could be of interest to the user, namely the latent process 
 %$Y(\cdot)$ and mean process $\mu(\cdot)$ in (\ref{eqn:mu_linked_to_Y}), and data at unobserved locations. 
 $\vec{Y}$ and mean process $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), and data at unobserved locations. 
@@ -1548,7 +1546,7 @@ However, they are still often used in such settings and, hence, \pkg{FRK}~v2 als
     1 (9)    & 84.71    & 47.58  & 0.901   & 8894.9  \\  % &  0.07 \\
     2 (90)   & 58.60    & 30.97  & 0.878   & 8340.3  \\  % &  0.09 \\
     3 (819)  & 50.12    & 25.77  & 0.885   & 8117.3  \\  % &  0.24 \\
-    4 (7380) & 50.10    & 25.28  & 0.886   & 8121.4  \\  % &  3.31 \\
+    4 (7380) & 50.10    & 25.78  & 0.886   & 8121.4  \\  % &  3.31 \\
     \hline
     \end{tabular}
         \caption{
@@ -1609,10 +1607,10 @@ The results show that the increased number of basis functions significantly impr
     \setlength{\tabcolsep}{5pt}
     \begin{tabular}{lcccccrr}
     \hline
-    Method & MAE  & RMSPE & CRPS & IS95 & Cvg95 & Run time (min.) & Cores \\[0pt]
+    Method       & MAE   & RMSPE & CRPS  & IS95  & Cvg95 & Run time (min.) & Cores \\[0pt]
     \hline
-    \pkg{FRK}~v1 & 1.96   & 2.44 & 1.44  & 14.08 & 0.79 & 2.32 & 1\\[0pt]
-    \pkg{FRK}~v2 & 1.37  & 1.81 & 0.98  & 8.97 & 0.89 & 22.41 & 8    \\[0pt]
+    \pkg{FRK}~v1 & 1.96  & 2.44  & 1.44  & 14.08 & 0.79  & 2.32            & 1\\[0pt]
+    \pkg{FRK}~v2 & 1.34  & 1.74  & 0.95  & 8.47  & 0.92  & 22.41           & 8    \\[0pt]
     Gapfill & 1.33   & 1.86 & 1.17  & 34.78 & 0.36 & 1.39 & 40\\[0pt]
     Lattice Krig & 1.22   & 1.68 & 0.87  & 7.55 & 0.96 & 27.92 & 1\\[0pt]
     LAGP & 1.65   & 2.08 & 1.17  & 10.81 & 0.83 & 2.27 & 40\\[0pt]
@@ -1665,7 +1663,7 @@ The training and test sets under the two sampling schemes are shown in Figure~\r
 \begin{figure}[t!]
     \centering
     \includegraphics[width = \linewidth]{results/4_1_MODIS_data.png}
-    \vspace{-25pt}
+    \vspace{-30pt}
      \caption{
      MODIS data used in the comparative study of Section~\ref{sec:04-01:MODIS}; a white background is used to denote removed data. (Left) The missing-at-random (MR) sample used for training.  (Centre left) The MR test data. (Centre right) The `missing-in-a-block' (MB) sample used for training. (Right) The MB test data. 
      }\label{fig:03-04-Modis1}
@@ -1682,15 +1680,15 @@ The training and test sets under the two sampling schemes are shown in Figure~\r
  For \pkg{FRK}~v2, we used four resolutions of basis functions, giving a total of 11,130 basis functions. 
  For \pkg{INLA}, we discretised the domain into 13,494 elements.
  For \pkg{mgcv}, we used the \fct{bam} function, which is similar to the generalised-additive-model function \fct{gam} but optimised for large data sets, with 2,250 knots. 
-\Copy{spBayesLimitation2}{For \pkg{spBayes}, we used 400 knots; increasing the number of knots further was computationally prohibitive (\pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of predictive-process knots).} 
+\Copy{spBayesLimitation2}{For \pkg{spBayes}, we used 400 knots; increasing the number of knots further was computationally prohibitive (\pkg{spBayes} uses basis functions that depend on covariance-function parameters, so that computationally it can only handle a small number of knots).} 
  When using \pkg{spNNGP}, we found that the default option of considering 15 neighbours at a time was appropriate. 
- The packages \pkg{spNNGP} and \pkg{spBayes} use Markov chain Monte Carlo (MCMC). With these packages, we used 10,000 MCMC samples in total, with a burn-in of 6,000 samples and a thinning factor of 10. 
+ For \pkg{spNNGP} and \pkg{spBayes}, we used 10,000 MCMC samples in total, with a burn-in of 6,000 samples and a thinning factor of 10. 
 The number of cores used for \pkg{spNNGP} can be controlled through the argument \code{n.omp.threads}; choosing a value greater than 1 returned an error (a known issue documented in the \pkg{spNNGP} package manual) and, hence, our reported run-times for \pkg{spNNGP} are for a single core.
 
 \begin{figure}
     \centering
     \includegraphics[width = \linewidth]{results/4_1_MODIS_MAR_predictions.png}
-    \vspace{-25pt}
+    \vspace{-30pt}
      \caption{Predictions of the probability of `Cloud' on the test set of the missing-at-random (MR) experiment shown in Figure~\ref{fig:03-04-Modis1}.  The corresponding test data is shown in the top-left panel. Note that the training locations are indicated by white pixels.}   
   \label{fig:MODIS:pred_MR}
 \end{figure}
@@ -1698,7 +1696,7 @@ The number of cores used for \pkg{spNNGP} can be controlled through the argument
 \begin{figure}[t!]
     \centering
     \includegraphics[width = \linewidth]{results/4_1_MODIS_block_predictions.png}
-    \vspace{-25pt}
+    \vspace{-30pt}
      \caption{Predictions of the probability of `Cloud' on the test set of the `missing-in-a-block' (MB) experiment shown in Figure~\ref{fig:03-04-Modis1}. Here, we only show the test locations, which correspond to the 30 $\times$ 30 block near the centre of the spatial domain; the test data in this block is shown in the left-most panel of this figure.}   
   \label{fig:MODIS:pred_block}
 \end{figure}
@@ -1722,7 +1720,14 @@ The predictions from \pkg{FRK}~v2, \pkg{INLA}, and \pkg{spNNGP} are similar,
     \centering
     \includegraphics[width = \linewidth]{results/4_1_MODIS_ROC.png}
         \vspace{-25pt}
-    \caption{ROC curves for the training/test sets displayed in Figure~\ref{fig:03-04-Modis1}. (Left) ROC curves generated in the `missing-at-random' experiment. Note that there is a large degree of overlap between \pkg{FRK}~v2, \pkg{INLA}, \pkg{mgcv}, and \pkg{spNNGP}. (Right) ROC curves generated in the `missing-in-a-block' experiment. } 
+    \caption{
+%    	ROC curves for the training/test sets displayed in Figure~\ref{fig:03-04-Modis1}. 
+%    	(Left) ROC curves generated in the `missing-at-random' experiment. 
+%    	Note that there is a large degree of overlap between \pkg{FRK}~v2, \pkg{INLA}, \pkg{mgcv}, and \pkg{spNNGP}. 
+%    	(Right) ROC curves generated in the `missing-in-a-block' experiment. 
+    	ROC curves for the training/test sets displayed in Figure~\ref{fig:03-04-Modis1}. 
+ROC curves generated in the `missing-at-random' experiment (left) and the `missing-in-a-block' experiment (right).  
+    } 
   \label{fig:MODIS:ROC}
 \end{figure}
 
