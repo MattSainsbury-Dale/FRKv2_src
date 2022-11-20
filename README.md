@@ -47,7 +47,8 @@ conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal ud
 conda activate ./.condaenv
 Rscript renv::rebuild('jpeg') 
 ```
-The result of the last command should be "The project is already synchronized with the lockfile". You are now ready to run the replication script described in the Results section. We suggest simply running `run_all.sh` (see below for details).
+If the last command doesn't run, start `R` and run the command `renv::rebuild('jpeg')`. 
+You are now ready to run the replication script described in the Results section. We suggest simply running `run_all.sh` (see below for details).
 
 
 ### Current github code + local install
