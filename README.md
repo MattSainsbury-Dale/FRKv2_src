@@ -1,24 +1,19 @@
-# Source code for FRK v2 
+# Source code for FRK v2
 
 This repository contains the source code for reproducing the results in "Modelling Big, Heterogeneous, Non-Gaussian
-Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale et al., 2022).
-<!---To reproduce the results of the short (6-page) format of this paper, please invoke `run_all_6page.{sh/bat}` rather than `run_all.{sh/bat}` (see below).--->
-
-
-
-
+Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale, Zammit-Mangion, and Cressie, 2022).
 
 ## Creating a reproducible environment
 
-There are three ways to create an environment that can reproduce the results of the paper, and these are listed below in the order of preference: 
+There are three ways to create an environment that can reproduce the results of the paper, and these are listed below in the order of preference:
 
 1. using a docker contained (cross platform),
-1. using a conda environment (linux only), 
+1. using a conda environment (linux only),
 1. using the current github code + local install (this is the least reliable option as packages and their dependencies change with time).
 
 ### Using a docker container
 
-First, download and install `docker` or `Docker Desktop`. Then, 
+First, download and install `docker` or `Docker Desktop`. Then,
 
 1. Download the archive containing all R packages, reproducible source code, and the Dockerfile from: https://hpc.niasra.uow.edu.au/FRKv2_renv_docker.tar.gz
 2. Uncompress the downloaded archive. This will yield a folder with the structure:  
@@ -32,7 +27,7 @@ First, download and install `docker` or `Docker Desktop`. Then,
 5. Build a local docker image from the downloaded image: `sudo DOCKER_BUILDKIT=1 docker build -t 31b8d383613a:latest .`
 6. Start a docker container with an interactive bash terminal (change `absolute_path` in the following command accordingly): `sudo docker run --rm -it -v "absolute_path/FRK_docker/FRKv2:/project" 31b8d383613a:latest bash`
 
-Note that the above commands are for linux/mac, and small changes might be needed for Windows. For instance, it may be necessary to remove `sudo`, and replace `DOCKER_BUILDKIT=1` with `set DOCKER_BUILDKIT=1` in a separate line before building the docker file. 
+Note that the above commands are for linux/mac, and small changes might be needed for Windows. For instance, it may be necessary to remove `sudo`, and replace `DOCKER_BUILDKIT=1` with `set DOCKER_BUILDKIT=1` in a separate line before building the docker file.
 
 You are now ready to run the replication script described in the Results section. We suggest simply running `run_all.sh` (see below for details).
 
@@ -45,9 +40,9 @@ tar -xzvf FRKv2_renv.tar.gz
 cd FRKv2_src
 conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal udunits2 proj
 conda activate ./.condaenv
-Rscript renv::rebuild('jpeg') 
+Rscript renv::rebuild('jpeg')
 ```
-If the last command doesn't run, start `R` and run the command `renv::rebuild('jpeg')`. 
+If the last command doesn't run, start `R` and run the command `renv::rebuild('jpeg')`.
 You are now ready to run the replication script described in the Results section. We suggest simply running `run_all.sh` (see below for details).
 
 
@@ -73,7 +68,7 @@ Some data sets are too large (a few hundred Mb in total) to be stored on GitHub:
 
 Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if these files are not present.
 
-When running the replication script (see below for details), the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages). 
+When running the replication script (see below for details), the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages).
 
 
 
@@ -117,6 +112,4 @@ Note that the replication script is clearly presented and commented; hence, one 
 
 ## Real-world example
 
-For users wishing to "try out" the package on a real-world example, we suggest the Sydney spatial change-of-support example presented in Section 4.3. 
-
-
+For users wishing to "try out" the package on a real-world example, we suggest the Sydney spatial change-of-support example presented in Section 4.3.
