@@ -1,7 +1,11 @@
-\documentclass[article]{jss}
+\documentclass[nojss]{jss} %TODO change nojss back to article
 
-%TODO Random symbols at the beginning of scripts/MODIS_modelling_fns/INLA.R in the conda version; that should be done relatively soon.
+%TODO Do this on campus, it will be much faster.
+
 %TODO  .tar.gz file that weren't updated but I'm happy for you to submit and these could be changed later, maybe even after acceptance... namely the figures need to be made the same as in the paper (currently they're different) and files could be cleaned up (e.g., #OUTPUT#). 
+%TODO  could the `._*` files be purged from the file `FRKv2_renv_docker.tar.gz`?.
+%TODO Suggestion in the R code: readShapePoly is deprecated; use sf::st_read. Make sure it is identical. May be ok to leave deprecated. 
+%TODO All scripts should be in the subdirectory Code/, and all figures produced by the scripts, if they are written to file, should be written to Figures/.
 
 \usepackage{enumitem}
 
@@ -297,7 +301,7 @@
 
 
 %\newcommand{\FRKgeneric}{\pkg{FRK}~v1/v2 }
-\newcommand{\FRKgeneric}{\pkg{FRK} }
+\newcommand{\FRKgeneric}{\pkg{FRK}}
 
 
 %% -- Article metainformation (author, title, ...) -----------------------------
@@ -342,7 +346,7 @@
   School of Mathematics and Applied Statistics\\
   University of Wollongong\\
   Wollongong, Australia\\
-  E-mail: \email{msainsburydale@gmail.com}\\
+  E-mail: \email{msdale@uow.edu.au}\\
   URL: \url{https://github.com/msainsburydale}
 }
 
@@ -459,7 +463,8 @@ Second, the spatially correlated random effect $v(\cdot)$ captures medium-to-sma
 %Accounting for the scales of spatial variation with only $\vec{t}(\cdot)^\tp \vec{\alpha}$ and $v(\cdot)$ can result in an overly smooth spatial model and hence overly optimistic predictions; this problem is alleviated by also including a fine-scale-variation random process, $\xi(\cdot)$. 
  \Copy{MotivationForFineScaleProcess}{If the spatial process being modelled has fine-scale variation, including only $\vec{t}(\cdot)^\tp \vec{\alpha}$ and $v(\cdot)$ can result in an overly smooth spatial model and hence overly optimistic predictions. This problem is alleviated by also including a fine-scale-variation random process, $\xi(\cdot)$, in the model.}
  
-In \FRKgeneric, the medium-to-small-scale term $v(\cdot)$ is constructed as a linear combination of $r$ spatial basis functions with random coefficients, where $r$ is fixed and usually smaller than $m$, the number of observations. Specifically,
+In \FRKgeneric, the medium-to-small-scale term $v(\cdot)$ is constructed as a linear combination of $r$ spatial basis functions with random coefficients, where $r$ is fixed. % and usually smaller than $m$, the number of observations. 
+ Specifically,
 \[
 v(\vec{s}) 
 = \sum_{l=1}^r \phi_l(\vec{s})\eta_l
@@ -473,12 +478,10 @@ See Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details on how these basis fu
  The fine-scale term, $\xi(\cdot) \equiv \{\xi(\vec{s}): \vec{s} \in D\}$, is modelled as white noise after discretisation, which we discuss next.
 
 
- To cater for different observation supports and facilitate solutions to spatial change-of-support problems, \FRKgeneric assumes a discretised domain of interest, \mbox{$D^G \equiv \{A_i: i = 1, \dots, N\}$}, that is made up of $N$ non-overlapping basic areal units (BAUs) such that $D = \cup_{i = 1}^N A_i$. 
+ To cater for different observation supports and facilitate solutions to spatial change-of-support problems, \FRKgeneric~assumes a discretised domain of interest, \mbox{$D^G \equiv \{A_i: i = 1, \dots, N\}$}, that is made up of $N$ non-overlapping basic areal units (BAUs) such that $D = \cup_{i = 1}^N A_i$. 
 % These BAUs may correspond to physical real-world boundaries, such as regional borders, or simply a fine mesh covering that spatial domain. 
- \Copy{BAUEffectOnPrediction}{The finest resolution at which one can make predictions is at the level of the BAU. Point predictions are not possible; however, when the BAUs are so fine that the chosen basis functions are approximately constant within each BAU, the BAU-level predictions are practically equivalent to point predictions (see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~2, for more details). %, and see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~4, and   \citeauthor{Cressie_2021_review_spatial-basis-function_models}, \citeyear{Cressie_2021_review_spatial-basis-function_models}, Sec.~5).
- }
- Now, let $Y(A_i)$ denote a representative value of $\{Y(\vec{s}) : \vec{s} \in A_i\}$, where commonly that value is the spatial integral or the spatial average over $A_i$.  
- Define the discretised latent spatial process $Y(\cdot)$ evaluated over the $N$ BAUs as $\vec{Y} \equiv (Y_1, \dots, Y_N)^\tp$, where $Y_i \equiv Y(A_i)$, $i = 1, \dots, N$. Then, a vectorised version of (\ref{eqn:04-01:Y(s)}) is
+ Let $Y(A_i)$ denote a representative value of $\{Y(\vec{s}) : \vec{s} \in A_i\}$, where commonly that value is the spatial integral or the spatial average over $A_i$.  
+ Define the discretised latent spatial process $Y(\cdot)$ evaluated over the $N$ BAUs as $\vec{Y} \equiv (Y_1, \dots, Y_N)^\tp$, where $Y_i \equiv Y(A_i)$, $i = 1, \dots, N$. Then, the vectorised version of (\ref{eqn:04-01:Y(s)}) is
 \begin{equation}\label{Ch4:eqn:vecY}
     \vec{Y} = \vec{T}\vec{\alpha} + \vec{S}\vec{\eta} + \vec{\xi},
 \end{equation}
@@ -926,6 +929,8 @@ since $\vec{Y}$ is a linear function of $\vec{u}$, approximate inference on $\ve
   However, the posterior distribution of a non-linear function of $\vec{Y}$, for example the mean $\vec{\mu}$ in (\ref{eqn:new_model_g(mu)}), is typically not available in closed form, and some approximation is required.
 %  In \pkg{FRK}~v2, we use a Monte Carlo (MC) approach to inference on $\vec{u} \equiv (\vec{\eta}^\tp, \vec{\xi}^\tp)^\tp$.
  In \pkg{FRK}~v2 we therefore use a Monte Carlo (MC) approach to inference on non-linear functions of $\vec{Y}$, by first drawing a sample from the approximate conditional distribution of $\vec{u}$ and then transforming the sample accordingly. 
+  \Copy{BAUEffectOnPrediction}{Note that the finest resolution at which one can make predictions is at the level of the BAU. Point predictions are not possible; however, when the BAUs are sufficiently fine that the basis functions are approximately constant within each BAU, BAU-level predictions are practically equivalent to point predictions (see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~2, for more details). %, and see \citeauthor{FRK_paper}, \citeyear{FRK_paper}, Sec.~4, and   \citeauthor{Cressie_2021_review_spatial-basis-function_models}, \citeyear{Cressie_2021_review_spatial-basis-function_models}, Sec.~5).
+ }
   
 
 
@@ -1299,10 +1304,11 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
  In Section~\ref{sec:3:increased_resolution}, we show the potential improvement in predictive performance of \pkg{FRK}~v2 over \pkg{FRK}~v1 when the data are Gaussian, owing to an increase in the maximum number of basis functions allowed in \pkg{FRK}~v2.  
  All results presented in the remainder of this paper can be generated using the reproducible code at \mbox{\url{https://github.com/msainsburydale/FRKv2_src}}. 
 
+
 \begin{table}
     \centering
     \setlength{\tabcolsep}{4pt}
-    \begin{tabular}{ccp{9cm}}
+    \begin{tabular}{ccp{8cm}}
     \hline
     Function & Argument & Use\\
     \hline
@@ -1405,7 +1411,7 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
   \label{fig:Poisson_true_and_Z}
 \end{figure}
 
-The first step when using \FRKgeneric is to create basis functions and BAUs, which can be done automatically using the helper functions, \fct{auto\_BAUs} and \fct{auto\_basis}; see Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details. 
+The first step when using \FRKgeneric~is to create basis functions and BAUs, which can be done automatically using the helper functions, \fct{auto\_BAUs} and \fct{auto\_basis}; see Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details. 
 Next, an \class{SRE} object is constructed using \fct{SRE}, within which we specify the data model, the link function, and the parameterisation of $\cov{\vec{\eta}}{\vec{\eta}}$.  
  In this example, we model counts using a Poisson data model, $Z_j \mid \vec{\mu} \sim \text{Poi}(\mu_{Z_j})$, for $j = 1, \dots, m$, and we use the log link function, $g(\cdot) = \log(\cdot)$. 
  These choices are made by setting \code{response = "poisson"} and \code{link = "log"}. 
@@ -2735,7 +2741,7 @@ As prediction-performance measures for the examples in this paper, we considered
     The IS rewards narrow prediction intervals and penalises instances in which an observation misses the interval, with the size of the penalty depending on $\alpha$. 
     \item (Empirical) coverage: The empirical coverage of the prediction intervals is defined as 
     \begin{equation*}
-    \text{Cvg} \equiv \frac{1}{|D^*|}\sum_{\vec{s} \in D^*} \mathbbm{1}\{L(\vec{s}) \leq \mu(\vec{s})  \leq U(\vec{s})\}
+    \text{Cvg} \equiv \frac{1}{|D^*|}\sum_{\vec{s} \in D^*} \mathbbm{1}\{L(\vec{s}) \leq \mu(\vec{s})  \leq U(\vec{s})\}.
     \end{equation*}
     If the intervals are indeed $(1-\alpha)\times 100$\% prediction intervals throughout $D^*$, the empirical coverage should be approximately equal to $1-\alpha$.
     \item Brier score \citep[Sec. 3]{Gneiting_2007_scoring_rules}: The Brier score %, applicable in a binary setting, 

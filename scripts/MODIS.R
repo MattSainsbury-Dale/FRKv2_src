@@ -354,7 +354,6 @@ times <- read.csv(file = "intermediates/times.csv")
 ## ---- Training and testing data visualisation ----
 
 ## Plot the unthresholded version of the data
-# TODO add this plot to the supplementary material
 g_original_data <- common_layers +
   geom_raster(data = MODIS_cloud_df, aes(x, y, fill = z_unthresholded)) +
   scale_fill_gradient(low = no_cloud_colour, high = cloud_colour) +
