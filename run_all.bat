@@ -20,37 +20,37 @@ echo "Not run with very-low-dimensional representations of the models, quick =%q
 goto :callRscript
 
 :callRscript
-Rscript scripts\setup.R
+Rscript Code\setup.R
 
 echo "######## STARTING POISSON EXAMPLE OF SECTION 3.1 ############"
-Rscript scripts\Poisson_sim.R %quick%
+Rscript Code\Poisson_sim.R %quick%
 
 echo 
 
 echo "######## STARTING HEATON COMPARISON OF SECTION 3.3 #############"
-Rscript scripts\Heaton.R %quick%
+Rscript Code\Heaton.R %quick%
 
 echo 
 
 echo "######## STARTING MODIS COMPARISON OF SECTION 4.1 #############"
-Rscript scripts\MODIS.R %quick%
+Rscript Code\MODIS.R %quick%
 
 echo 
 
 echo "######## STARTING AMERICIUM COMPARISON OF SECTION 4.2 #############"
-Rscript scripts\Am.R %quick%
+Rscript Code\Am.R %quick%
 
 echo 
 
 echo "######## STARTING SYDNEY EXAMPLE OF SECTION 4.3 #############"
-Rscript scripts\Sydney.R %quick%
+Rscript Code\Sydney.R %quick%
 
 echo 
 
 echo "######## STARTING CHICAGO EXAMPLE OF SECTION 4.4 #############"
-Rscript scripts\Chicago.R %quick%
+Rscript Code\Chicago.R %quick%
 echo 
 
-echo "All R scripts have been finished!"
+echo "All R Code have been finished!"
 pause
 exit

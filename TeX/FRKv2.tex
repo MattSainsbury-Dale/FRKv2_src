@@ -1,11 +1,7 @@
 \documentclass[nojss]{jss} %TODO change nojss back to article
 
-%TODO Do this on campus, it will be much faster.
-
-%TODO  .tar.gz file that weren't updated but I'm happy for you to submit and these could be changed later, maybe even after acceptance... namely the figures need to be made the same as in the paper (currently they're different) and files could be cleaned up (e.g., #OUTPUT#). 
-%TODO  could the `._*` files be purged from the file `FRKv2_renv_docker.tar.gz`?.
+%TODO  could the `._*` files be purged from the file `FRKv2_renv_docker.tar.gz`? and #OUTPUT#.
 %TODO Suggestion in the R code: readShapePoly is deprecated; use sf::st_read. Make sure it is identical. May be ok to leave deprecated. 
-%TODO All scripts should be in the subdirectory Code/, and all figures produced by the scripts, if they are written to file, should be written to Figures/.
 
 \usepackage{enumitem}
 
@@ -1405,7 +1401,7 @@ $\text{vec}(\cdot)$ `stacks' its arguments into a single vector, $\text{diag}(\c
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = 0.8\linewidth]{results/3_1_Poisson_sim_true_process_and_data.png}
+    \includegraphics[width = 0.8\linewidth]{Figures/3_1_Poisson_sim_true_process_and_data.png}
     \vspace{-10pt}    
     \caption{Simulated, point-referenced, Poisson data set used in the illustrative example of Section~\ref{sec:03-01:Poisson}. (Left) True mean process evaluated over the BAUs. (Right) Simulated data.}
   \label{fig:Poisson_true_and_Z}
@@ -1434,7 +1430,7 @@ The second element is a \class{list} of matrices containing MC samples for each 
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/3_1_Poisson_sim.png}
+    \includegraphics[width = \linewidth]{Figures/3_1_Poisson_sim.png}
     \vspace{-20pt}  
     \caption{Predictions and prediction-interval widths returned by \pkg{FRK}~v2 when applied to the simulated Poisson data shown in the right panel of Figure~\ref{fig:Poisson_true_and_Z}. (Left) Prediction of $\vec{Y}$, the latent process over the BAUs. (Centre left) Width of the 90\% prediction interval for each element of $\vec{Y}$. (Centre right) Prediction of $\vec{\mu} = g^{-1}(\vec{Y})$, the mean process over the BAUs. (Right) Width of the 90\% prediction interval for each element of $\vec{\mu}$.}
   \label{fig:Poisson_nres3}
@@ -1486,7 +1482,7 @@ The \class{DHARMa} object can then be used to construct residual plots and to pe
 
   \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/3_2_Poisson_sim_residuals.pdf}
+    \includegraphics[width = \linewidth]{Figures/3_2_Poisson_sim_residuals.pdf}
     \vspace{-20pt}  
     \caption{QQ plot (left) and the residuals against the predicted values (right) for the Poisson example of Section~\ref{sec:03-01:Poisson}.} 
   \label{fig:Poisson_residuals}
@@ -1522,7 +1518,7 @@ However, they are still often used in such settings and, hence, \pkg{FRK}~v2 als
 %
 %  \begin{figure}[t!]
 %    \centering
-%    \includegraphics[width = \linewidth]{results/3_2_Poisson_sim_residuals.pdf}
+%    \includegraphics[width = \linewidth]{Figures/3_2_Poisson_sim_residuals.pdf}
 %    \vspace{-20pt}  
 %    \caption{QQ plot (left) and the residuals against the predicted values (right) for the Poisson example of Section~\ref{sec:03-01:Poisson}.} 
 %  \label{fig:Poisson_residuals}
@@ -1667,7 +1663,7 @@ The training and test sets under the two sampling schemes are shown in Figure~\r
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/4_1_MODIS_data.png}
+    \includegraphics[width = \linewidth]{Figures/4_1_MODIS_data.png}
     \vspace{-30pt}
      \caption{
      MODIS data used in the comparative study of Section~\ref{sec:04-01:MODIS}; a white background is used to denote removed data. (Left) The missing-at-random (MR) sample used for training.  (Centre left) The MR test data. (Centre right) The `missing-in-a-block' (MB) sample used for training. (Right) The MB test data. 
@@ -1700,7 +1696,7 @@ The number of cores used for \pkg{spNNGP} can be controlled through the argument
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/4_1_MODIS_block_predictions.png}
+    \includegraphics[width = \linewidth]{Figures/4_1_MODIS_block_predictions.png}
     \vspace{-30pt}
      \caption{Predictions of the probability of `Cloud' on the test set of the `missing-in-a-block' (MB) experiment shown in Figure~\ref{fig:03-04-Modis1}. Here, we only show the test locations, which correspond to the 30 $\times$ 30 block near the centre of the spatial domain; the test data in this block is shown in the left-most panel of this figure.}   
   \label{fig:MODIS:pred_block}
@@ -1723,7 +1719,7 @@ The predictions from \pkg{FRK}~v2, \pkg{INLA}, and \pkg{spNNGP} are similar,
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/4_1_MODIS_ROC.png}
+    \includegraphics[width = \linewidth]{Figures/4_1_MODIS_ROC.png}
         \vspace{-25pt}
     \caption{
 %    	ROC curves for the training/test sets displayed in Figure~\ref{fig:03-04-Modis1}. 
@@ -1805,7 +1801,7 @@ Hence, %soil remediation for
 
 \begin{figure}
     \centering
-    \includegraphics[width = \linewidth]{results/4_2_Am_data_and_blocks.png}
+    \includegraphics[width = \linewidth]{Figures/4_2_Am_data_and_blocks.png}
         \vspace{-20pt}
     \caption{Americium (Am) soil data. The `$\times$' denotes Ground Zero (GZ), where the devices were detonated. (Left) Am concentrations on the original scale. (Centre) Am concentrations on the log scale. (Right) Blocking schemes: Scheme 1 (solid lines), centred away from GZ, and Scheme 2 (dashed lines), centred on GZ.}   
   \label{fig:Am_data}
@@ -1845,7 +1841,7 @@ R> S <- FRK(f = Am ~ -1 + x1 + x2 + x3 + x4,
 
 \begin{figure}
     \centering
-    \includegraphics[width = \linewidth]{results/4_2_Am_comparison.png}
+    \includegraphics[width = \linewidth]{Figures/4_2_Am_comparison.png}
         \vspace{-20pt} 
     \caption{Plots of block-predictions (left) and RMSPE (right) of Am concentrations against block size, $|B|^{1/2}$. Both quantities are in units of $10^3$ counts per minute. In both panels, the solid line corresponds to Scheme 1, and the dashed line corresponds to Scheme 2; the red line corresponds to \pkg{FRK}~v2, and the blue line corresponds to \pkg{georob}.}   
   \label{fig:Americium_block_preds_by_size}
@@ -1917,7 +1913,7 @@ It can be clearly seen that the results are very similar despite the use of dime
 
 \begin{figure}[t!]
     \centering
-\includegraphics[width = \linewidth]{results/4_3_Sydney_training_data_mixed.png}
+\includegraphics[width = \linewidth]{Figures/4_3_Sydney_training_data_mixed.png}
     \vspace{-20pt}    
     \caption{
     Training data on SA1/SA2 regions used for modelling the proportion of families `in poverty' (see Appendix~\ref{Appendix:Sydney_data_description} for how we define `in poverty'). 
@@ -1964,7 +1960,7 @@ R> SA1_predictions <- predict(S)
  
  \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/4_3_Sydney_SA1_predictions_mixed.png}
+    \includegraphics[width = \linewidth]{Figures/4_3_Sydney_SA1_predictions_mixed.png}
         \vspace{-15pt}
     \caption{
     SA1-level predictions. 
@@ -1989,7 +1985,7 @@ R> SA3_predictions <- predict(S, newdata = SA3s)
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/4_3_Sydney_SA3_predictions_probability_mixed.png}
+    \includegraphics[width = \linewidth]{Figures/4_3_Sydney_SA3_predictions_probability_mixed.png}
         \vspace{-15pt}
     \caption{
         SA3-level predictions. 
@@ -2074,7 +2070,7 @@ R> S <- FRK(f = number_of_crimes ~ log(population),
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/4_4_Chicago_data_pred_uncertainty.png}
+    \includegraphics[width = \linewidth]{Figures/4_4_Chicago_data_pred_uncertainty.png}
         \vspace{-15pt}
     \caption{Observed (withheld) number of crimes, predictions, and prediction-interval width over Chicago in the prediction (2010) and forecast (2019) years. The first row corresponds to the year 2010, and the second row corresponds to the year 2019. The first column shows the observed (withheld) number of crimes; the second column shows the predicted number of crimes; and the third column shows the width of a prediction interval with a nominal coverage of 90\%. For details on the underlying Stamen base map, refer to the caption of Figure~\ref{fig:SA2_level_data} (the large black region in this figure correspond to Lake Michigan).
 }   
@@ -2089,7 +2085,7 @@ Finally, we generate predictive data over the spatio-temporal BAUs using \fct{pr
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{results/4_4_Chicago_focused_CAs_time_series.png}
+    \includegraphics[width = \linewidth]{Figures/4_4_Chicago_focused_CAs_time_series.png}
         \vspace{-15pt}
     \caption{Time-series plots of predicted and observed number of crimes for three randomly-selected CAs. The prediction (2010) and forecast (2019) years are highlighted in light-grey. The observed number of crimes in each year is indicated by a red dot, whilst the predicted number of crimes is indicated by a blue dot. The error bars represent a 90\% prediction interval. We note that the prediction intervals are slightly wider in validation years (2010 and 2019) than in observed years, and that the observed number of crimes is contained within the prediction interval in all years for these CAs. 
 }   
@@ -2098,7 +2094,7 @@ Finally, we generate predictive data over the spatio-temporal BAUs using \fct{pr
 
 %\begin{figure}[t!]
 %    \centering
-%    \includegraphics[width = \linewidth]{results/4_4_Chicago_focused_CAs_predictive_distributions.png}
+%    \includegraphics[width = \linewidth]{Figures/4_4_Chicago_focused_CAs_predictive_distributions.png}
 %    \vspace{-15pt}    
 %    \caption{Predictive distributions in the prediction (2010) and forecast (2019) years for three randomly-selected CAs (Archer Heights, Ashburn, and Roseland). 
 % In each panel, the red line corresponds to the observed (withheld) number of crimes and the blue line corresponds to the predicted number of crimes. 
@@ -2182,7 +2178,7 @@ The authors would like to thank Rajib Paul for providing the Americium data anal
 
 % \begin{figure}[t!]
 %     \centering
-%     \includegraphics[width = 0.75\linewidth]{results/02-TwoProbMass.png}
+%     \includegraphics[width = 0.75\linewidth]{Figures/02-TwoProbMass.png}
 %     \caption[Two regions of probability mass, demonstrating the different estimates of $\vec{\theta}$ which result from maximising the observed-data and joint log-likelihood function]{Two regions of probability mass. The first, centred around $\theta = 0.5$, has a larger density than the second when $u$ is not marginalised out. However, the second, centred at $\theta = 1.5$, contributes more to the observed-data likelihood $L(\theta; \vec{Z})$. Hence, an estimate of $\theta$ based on the observed-data likelihood would yield $\hat{\theta} = 1.5$ and not $\hat{\theta} = 0.5$.}
 %   \label{fig:02-04:TwoProbMass}
 % \end{figure}
@@ -2193,19 +2189,19 @@ The authors would like to thank Rajib Paul for providing the Americium data anal
 %     \centering
 %     \begin{subfigure}[b]{\linewidth}
 %         \centering
-%         \includegraphics[width=\linewidth]{results/03-02-Poisson_plots2a.png}
+%         \includegraphics[width=\linewidth]{Figures/03-02-Poisson_plots2a.png}
 %         \caption{(Left) True conditional mean of the data, $\mu(\cdot)$. (Right) Observed data.}\label{fig:03-02-PoissonResA}
 %         \vspace{2\baselineskip}
 %     \end{subfigure}
 %     \begin{subfigure}[b]{\linewidth}
 %         \centering
-%         \includegraphics[width=\linewidth]{results/03-02-Poisson_plots2b.png}
+%         \includegraphics[width=\linewidth]{Figures/03-02-Poisson_plots2b.png}
 %         \caption{Prediction maps using basis functions of one resolution (left), two resolutions (centre), and three resolutions (right).}\label{fig:03-02-PoissonResB}
 %         \vspace{2\baselineskip}
 %     \end{subfigure}
 %         \begin{subfigure}[b]{\linewidth}
 %         \centering
-%         \includegraphics[width=\linewidth]{results/03-02-Poisson_plots2c.png}
+%         \includegraphics[width=\linewidth]{Figures/03-02-Poisson_plots2c.png}
 %         \caption{Prediction uncertainty maps using basis functions of one resolution (left), two resolutions (centre), and three resolutions (right).}\label{fig:03-02-PoissonResC}
 %         \vspace{2\baselineskip}
 %     \end{subfigure}
@@ -2217,7 +2213,7 @@ The authors would like to thank Rajib Paul for providing the Americium data anal
 
 %\begin{figure}[t!]
 %    \centering
-%    \includegraphics[width = \linewidth]{results/Poisson_multires.png}
+%    \includegraphics[width = \linewidth]{Figures/Poisson_multires.png}
 %    \caption{Prediction and prediction uncertainty when analysing the Poisson data shown in Figure~\ref{fig:Poisson_true_and_Z}. The first row corresponds to predictions of the mean process, $\mu(\cdot)$, while the second row corresponds to prediction uncertainty. The figure is divided into three columns, with the first, second, and third columns corresponding to predictions using one, two, and three resolutions of basis functions, respectively. 
 %}   
 %  \label{fig:Poisson_multires}
@@ -2226,7 +2222,7 @@ The authors would like to thank Rajib Paul for providing the Americium data anal
 
 %\begin{figure}
 %    \centering
-%    \includegraphics[width = 0.7\linewidth]{results/temporal_trend.png}
+%    \includegraphics[width = 0.7\linewidth]{Figures/temporal_trend.png}
 %    \caption{The total number of crimes committed across Chicago in each year, as well as two sets of fitted lines: the \red{red} line corresponds to a linear model that considers all data simultaneously, whilst the \textcolor{blue}{blue} line corresponds to a piece-wise linear model split by the year 2014. The improved fit using a piece-wise linear model suggests a piece-wise temporal trend is appropriate for the Chicago analysis presented in Section~\ref{sec:ST_example}.}   
 %  \label{fig:chicago_temporal_trend}
 %\end{figure}

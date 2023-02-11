@@ -1,4 +1,4 @@
-source("scripts/Utility_fns.R")
+source("Code/Utility_fns.R")
 
 
 ## Use very-low-dimensional representations of the models to establish that the code works? 
@@ -62,7 +62,7 @@ if (quick) {
 
 ## Load the model fitting and prediction functions
 ## (assign to dummy variable to prevent output)
-dummy <- mapply(source, paste0("scripts/MODIS_modelling_fns/", PACKAGES, ".R"))
+dummy <- mapply(source, paste0("Code/MODIS_modelling_fns/", PACKAGES, ".R"))
 
 
 

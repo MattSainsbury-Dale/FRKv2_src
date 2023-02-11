@@ -4,7 +4,7 @@ library("stringr")
 library("R.utils")
 })
 
-## Helper functions for running the scripts and providing informative output
+## Helper functions for running the Code and providing informative output
 print_start_msg <- function(section_name, section_number) {
   cat(paste("\n\n######## STARTING", section_name, "OF SECTION", section_number, "#############\n\n"))
 }
@@ -15,7 +15,7 @@ print_run_time <- function(section_name, section_number, total_time) {
 
 source_wrapper <- function(script, section_name, section_number) {
   print_start_msg(section_name, section_number)
-  total_time <- system.time(source(paste0("scripts/", script)))
+  total_time <- system.time(source(paste0("Code/", script)))
   print_run_time(section_name, section_number, total_time)
   rm(list = setdiff(ls(), c("quick", "print_start_msg", "print_run_time")))
   invisible(gc())

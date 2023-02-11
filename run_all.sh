@@ -22,35 +22,35 @@ else
     quick=0
 fi
 
-Rscript scripts/setup.R
+Rscript Code/setup.R
 
 echo ""
 echo "######## STARTING POISSON EXAMPLE OF SECTION 3.1 ############"
 echo ""
-Rscript scripts/Poisson_sim.R $quick
+Rscript Code/Poisson_sim.R $quick
 echo ""
 
 echo "######## STARTING HEATON COMPARISON OF SECTION 3.3 #############"
 echo ""
-Rscript scripts/Heaton.R $quick
+Rscript Code/Heaton.R $quick
 echo ""
 
 echo "######## STARTING MODIS COMPARISON OF SECTION 4.1 #############"
 echo ""
-Rscript scripts/MODIS.R $quick
+Rscript Code/MODIS.R $quick
 echo ""
 
 echo "######## STARTING AMERICIUM COMPARISON OF SECTION 4.2 #############"
 echo ""
-Rscript scripts/Am.R $quick
+Rscript Code/Am.R $quick
 echo ""
 
 echo "######## STARTING SYDNEY EXAMPLE OF SECTION 4.3 #############"
 echo ""
-Rscript scripts/Sydney.R $quick
+Rscript Code/Sydney.R $quick
 echo ""
 
 echo "######## STARTING CHICAGO EXAMPLE OF SECTION 4.4 #############"
 echo ""
-Rscript scripts/Chicago.R $quick
+Rscript Code/Chicago.R $quick
 echo ""

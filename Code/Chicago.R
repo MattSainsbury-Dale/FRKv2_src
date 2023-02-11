@@ -11,7 +11,7 @@ library("stringr")
 library("htmltab")
 library("ggpubr")
 options(dplyr.summarise.inform = FALSE) # Suppress summarise info
-source("scripts/Utility_fns.R")
+source("Code/Utility_fns.R")
 })
 
 ## Use very-low-dimensional representations of the models to establish that the code works? 

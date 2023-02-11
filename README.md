@@ -1,7 +1,7 @@
 # Source code for FRK v2
 
 This repository contains the source code for reproducing the results in "Modelling Big, Heterogeneous, Non-Gaussian
-Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale, Zammit-Mangion, and Cressie, 2022).
+Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale, Zammit-Mangion, and Cressie, 2023).
 
 ## Creating a reproducible environment
 

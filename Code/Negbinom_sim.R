@@ -8,7 +8,7 @@ library("raster")
 # library("RandomFields")
 })
 
-source("scripts/Utility_fns.R")
+source("Code/Utility_fns.R")
 
 ## Use very-low-dimensional representations of the models to establish that the code works? 
 quick <- check_quick()

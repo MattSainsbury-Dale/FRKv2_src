@@ -87,7 +87,7 @@ install_dependencies <- function(install_exact_versions) {
   ## Now install the new packages: Here, we always install the correct 
   ## package version (no reason not to)
   if(length(new_packages)) {
-    cat("Package dependencies are being installed automatically using scripts/Dependencies_install.R\n")
+    cat("Package dependencies are being installed automatically using Code/Dependencies_install.R\n")
     for (pkg in new_packages) {
       devtools::install_version(pkg, version = pkg_versions[pkg], repos = CRANMIRROR, upgrade = "never")
     }
