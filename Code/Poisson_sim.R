@@ -129,7 +129,7 @@ suppressMessages({
     integerResponse = T
   )
   
-  pdf("results/3_2_Poisson_sim_residuals.pdf", width = 8, height = 4)
+  pdf("Figures/3_2_Poisson_sim_residuals.pdf", width = 8, height = 4)
   plot(DHARMa, title = "")
   dev.off()
 })
@@ -216,7 +216,7 @@ figure <- ggarrange(plot_list$mu_true, plot_list$Z,
                     nrow = 1, common.legend = TRUE, legend = "right", align = "hv")
 
 ggsave("3_1_Poisson_sim_true_process_and_data.png", plot = figure, 
-       path = "results", device = "png", width = 10, height = 4, units = "in") 
+       path = "Figures", device = "png", width = 10, height = 4, units = "in") 
 
 
 ## Remove y-axis labels/ticks for all but the left-most panel
@@ -238,7 +238,7 @@ figure <- ggarrange(plot_list$p_Y %>% exterior_plot,
 
 
 ggsave("3_1_Poisson_sim.png", plot = figure, 
-       path = "results", device = "png", width = 14, height = 5.2, units = "in")
+       path = "Figures", device = "png", width = 14, height = 5.2, units = "in")
 
 
 ## Diagnostic functions
@@ -278,10 +278,10 @@ diagnostics <- cbind(
 
 rownames(diagnostics) <- paste0("nres", rownames(diagnostics))
 
-write.csv(diagnostics, file = "results/3_3_Poisson_nres_comparison.csv")
+write.csv(diagnostics, file = "Figures/3_3_Poisson_nres_comparison.csv")
 
 save_html_table(
   diagnostics,
-  file = "results/3_3_Poisson_nres_comparison.html", 
+  file = "Figures/3_3_Poisson_nres_comparison.html", 
   caption = "Poisson comparison using multiple resolutions of basis functions"
 )

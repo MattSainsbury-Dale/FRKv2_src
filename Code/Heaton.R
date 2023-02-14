@@ -98,16 +98,16 @@ diagnostics <- pred_df[validx, ] %>%
 
 
 write.csv(diagnostics, 
-          "results/3_3_Heaton_FRKv2.csv", 
+          "Figures/3_3_Heaton_FRKv2.csv", 
           row.names = FALSE)
 
-diagnostics <- read.csv("results/3_3_Heaton_FRKv2.csv")
+diagnostics <- read.csv("Figures/3_3_Heaton_FRKv2.csv")
 
 rownames(diagnostics) <- "FRK v2"
 
 save_html_table(
   diagnostics,
-  file = "results/3_3_Heaton_FRKv2.html", 
+  file = "Figures/3_3_Heaton_FRKv2.html", 
   caption = "Heaton comparison study"
 )
 
@@ -184,8 +184,8 @@ if (short_format) {
   
   
   ## Save the data frame in case it is needed in the future:
-  write.csv(plot_df, "results/Heaton_FRKv1_FRKv2.csv")
-  plot_df <- read.csv("results/Heaton_FRKv1_FRKv2.csv")
+  write.csv(plot_df, "Figures/Heaton_FRKv1_FRKv2.csv")
+  plot_df <- read.csv("Figures/Heaton_FRKv1_FRKv2.csv")
   
   
   # Plot all:
@@ -226,7 +226,7 @@ if (short_format) {
   ggsave( 
     figure,
     filename = "Heaton_FRKv1_FRKv2.png", 
-    device = "png", path = "results/", 
+    device = "png", path = "Figures/", 
     width = 8, height = 1.7
   )
   

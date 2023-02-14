@@ -15,14 +15,14 @@ There are three ways to create an environment that can reproduce the results of 
 
 First, download and install `docker` or `Docker Desktop`. Then,
 
-1. Download the archive containing all R packages, reproducible source code, and the Dockerfile from: https://hpc.niasra.uow.edu.au/FRKv2_renv_docker.tar.gz
+1. Download the archive containing all R packages, reproducible source code, and the Dockerfile from: https://hpc.niasra.uow.edu.au/FRKv2_docker.tar.gz
 2. Uncompress the downloaded archive. This will yield a folder with the structure:  
 ```bash
-├── FRK_docker
+├── FRKv2_docker
 │   ├── Dockerfile
 │   ├── FRKv2
 ```
-3. Start a terminal and change directory to `FRK_docker`
+3. Start a terminal and change directory to `FRKv2_docker`
 4. Download the pre-prepared docker image from dockerhub: `sudo docker pull ycaodocker/frkv2`
 5. Build a local docker image from the downloaded image: `sudo DOCKER_BUILDKIT=1 docker build -t 31b8d383613a:latest .`
 6. Start a docker container with an interactive bash terminal (change `absolute_path` in the following command accordingly): `sudo docker run --rm -it -v "absolute_path/FRK_docker/FRKv2:/project" 31b8d383613a:latest bash`
@@ -36,8 +36,8 @@ You are now ready to run the replication script described in the Results section
 
 The second method uses a conda environment to replicate the exact conditions at the time of submission (e.g., the version of R, package versions, etc.). This is a robust method to reproduce the results of the paper, but it is only available for Linux systems. First, download the packages and reproducible source code from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz, then enter the following commands:
 ```bash
-tar -xzvf FRKv2_renv.tar.gz
-cd FRKv2_src
+tar -xzvf FRKv2_conda.tar.gz
+cd FRKv2_conda
 conda create -p .condaenv -c conda-forge gcc r-base=3.6.3 nlopt jpeg gmp gdal udunits2 proj
 conda activate ./.condaenv
 Rscript renv::rebuild('jpeg')

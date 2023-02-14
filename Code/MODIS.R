@@ -7,7 +7,7 @@ quick <- check_quick()
 ## Packages used (use whichever subset you please)
 PACKAGES <- c(
   "FRK",
-  "INLA", 
+  "INLA",
   "mgcv",
   "spNNGP",
   "spBayes"
@@ -383,7 +383,7 @@ figure <- (common_layers +
   discrete_cloud_scale + discrete_cloud_theme + training_data_background
 
 ggsave(figure,
-       path = "results/", filename = "4_1_MODIS_data.png", device = "png", 
+       path = "Figures/", filename = "4_1_MODIS_data.png", device = "png", 
        width = 10, height = 2.2)
 
 # ---- Compute diagnostics (Brier score and AUC) ----
@@ -412,11 +412,11 @@ diagnostics <- diagnostics %>%
   as.data.frame()
 
 write.csv(diagnostics, row.names = FALSE, 
-          file = "results/4_1_MODIS_diagnostics.csv")
+          file = "Figures/4_1_MODIS_diagnostics.csv")
 
 save_html_table(
   diagnostics,
-  file = "results/4_1_MODIS_diagnostics.html", 
+  file = "Figures/4_1_MODIS_diagnostics.html", 
   caption = "MODIS comparison study"
   )
 
@@ -464,11 +464,11 @@ plot_predictions <- function(df, scheme) {
 }
 
 ggsave(plot_predictions(all_df_test, "MAR"),
-       path = "results/", filename = "4_1_MODIS_MAR_predictions.png", device = "png", 
+       path = "Figures/", filename = "4_1_MODIS_MAR_predictions.png", device = "png", 
        width = 10, height = 5.1)
 
 ggsave(plot_predictions(all_df_test, "block"),
-       path = "results/", filename = "4_1_MODIS_block_predictions.png", device = "png",
+       path = "Figures/", filename = "4_1_MODIS_block_predictions.png", device = "png",
        width = 12, height = 2.5)   
 
 
@@ -516,6 +516,6 @@ MAR_ROC   <- plot_ROC(MAR_ROC_list)
 figure <- ggpubr::ggarrange(MAR_ROC, block_ROC, 
                     align = "h", common.legend = TRUE, legend = "right")
 
-ggsave(figure, path = "results/", filename = "4_1_MODIS_ROC.png", device = "png", 
-       width = 6, height = 2.6)
+ggsave(figure, path = "Figures/", filename = "4_1_MODIS_ROC.png", device = "png", 
+       width = 8.3, height = 3.4)
 

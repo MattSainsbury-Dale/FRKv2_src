@@ -1,8 +1,5 @@
 \documentclass[nojss]{jss} %TODO change nojss back to article
 
-%TODO  could the `._*` files be purged from the file `FRKv2_renv_docker.tar.gz`? and #OUTPUT#.
-%TODO Suggestion in the R code: readShapePoly is deprecated; use sf::st_read. Make sure it is identical. May be ok to leave deprecated. 
-
 \usepackage{enumitem}
 
 %% -- LaTeX packages and custom commands ---------------------------------------
@@ -415,6 +412,7 @@ Several other approaches hinge on the use of a spatial version of the generalise
 
  \pkg{FRK} \citep{FRK_paper} is an \proglang{R} package for spatial/spatio-temporal statistical modelling and prediction. 
  In this article, we present a major upgrade to \pkg{FRK} that allows one to cater for many distributions within the exponential family using the spatial GLMM framework; we henceforth refer to it as \pkg{FRK}~v2 and the original version as \pkg{FRK}~v1. 
+ We use \pkg{FRK} when referring to features common to both versions of the package.  
  \pkg{FRK}~v2 provides a unifying framework that handles large, spatial and spatio-temporal non-Gaussian (and Gaussian) data, and it can seamlessly ingest point-referenced and area-referenced data to solve spatial change-of-support problems. %facilitates change-of-support over target supports that may be smaller or larger than the source supports (i.e., it caters for statistical down-scaling and up-scaling). 
   User-friendliness is a central focus of the package: Challenging statistical analyses may be tackled with only a few lines of intuitive, readable code. Optimal spatial prediction proceeds through the use of an empirical hierarchical statistical model (where likelihood-based estimates are substituted in place of unknown parameters) and a Monte Carlo (MC) algorithm, where a minimal number of user-level decisions is required.
  \pkg{FRK}~v2 also accommodates the modelling of non-Gaussian spatial and spatio-temporal data on the surface of a sphere, a feature not offered by many other packages. 
@@ -477,7 +475,7 @@ See Appendix~\ref{Appendix:Basis_fns_and_BAUs} for details on how these basis fu
  To cater for different observation supports and facilitate solutions to spatial change-of-support problems, \FRKgeneric~assumes a discretised domain of interest, \mbox{$D^G \equiv \{A_i: i = 1, \dots, N\}$}, that is made up of $N$ non-overlapping basic areal units (BAUs) such that $D = \cup_{i = 1}^N A_i$. 
 % These BAUs may correspond to physical real-world boundaries, such as regional borders, or simply a fine mesh covering that spatial domain. 
  Let $Y(A_i)$ denote a representative value of $\{Y(\vec{s}) : \vec{s} \in A_i\}$, where commonly that value is the spatial integral or the spatial average over $A_i$.  
- Define the discretised latent spatial process $Y(\cdot)$ evaluated over the $N$ BAUs as $\vec{Y} \equiv (Y_1, \dots, Y_N)^\tp$, where $Y_i \equiv Y(A_i)$, $i = 1, \dots, N$. Then, the vectorised version of (\ref{eqn:04-01:Y(s)}) is
+ Define the discretised latent spatial process $Y(\cdot)$ evaluated over the $N$ BAUs as $\vec{Y} \equiv (Y_1, \dots, Y_N)^\tp$, where $Y_i \equiv Y(A_i)$, $i = 1, \dots, N$. Then, the vectorised version of (\ref{eqn:04-01:Y(s)}) conditionally on the BAUs is
 \begin{equation}\label{Ch4:eqn:vecY}
     \vec{Y} = \vec{T}\vec{\alpha} + \vec{S}\vec{\eta} + \vec{\xi},
 \end{equation}
@@ -1688,7 +1686,7 @@ The number of cores used for \pkg{spNNGP} can be controlled through the argument
 
 \begin{figure}
     \centering
-    \includegraphics[width = \linewidth]{results/4_1_MODIS_MAR_predictions.png}
+    \includegraphics[width = \linewidth]{Figures/4_1_MODIS_MAR_predictions.png}
     \vspace{-30pt}
      \caption{Predictions of the probability of `Cloud' on the test set of the missing-at-random (MR) experiment shown in Figure~\ref{fig:03-04-Modis1}.  The corresponding test data is shown in the top-left panel. Note that the training locations are indicated by white pixels.}   
   \label{fig:MODIS:pred_MR}
@@ -1719,13 +1717,9 @@ The predictions from \pkg{FRK}~v2, \pkg{INLA}, and \pkg{spNNGP} are similar,
 
 \begin{figure}[t!]
     \centering
-    \includegraphics[width = \linewidth]{Figures/4_1_MODIS_ROC.png}
-        \vspace{-25pt}
+    \includegraphics[width = 0.9\linewidth]{Figures/4_1_MODIS_ROC.png}
+        \vspace{-10pt}
     \caption{
-%    	ROC curves for the training/test sets displayed in Figure~\ref{fig:03-04-Modis1}. 
-%    	(Left) ROC curves generated in the `missing-at-random' experiment. 
-%    	Note that there is a large degree of overlap between \pkg{FRK}~v2, \pkg{INLA}, \pkg{mgcv}, and \pkg{spNNGP}. 
-%    	(Right) ROC curves generated in the `missing-in-a-block' experiment. 
     	ROC curves for the training/test sets displayed in Figure~\ref{fig:03-04-Modis1}. 
 ROC curves generated in the `missing-at-random' experiment (left) and the `missing-in-a-block' experiment (right).  
     } 

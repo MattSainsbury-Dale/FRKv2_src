@@ -2,7 +2,7 @@ all: INSTALL_DEPENDS DATA Poisson_sim Negbinom_sim Heaton Sydney Am Chicago MODI
 
 clean:
 	rm -f intermediates/*
-	rm -f results/*
+	rm -f Figures/*
 
 # A few targets that are not intended for public use 
 # (i.e., they are intended to be run by the original author at submission time)

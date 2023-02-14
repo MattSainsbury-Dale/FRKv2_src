@@ -467,11 +467,11 @@ diagnostics <- cbind(
   CRPS = mean(scoringRules::crps_sample(y = mu_true, dat = pred$MC$mu_samples))
 )
 
-write.csv(diagnostics, file = "results/Negbinom_sim.csv", row.names = FALSE)
+write.csv(diagnostics, file = "Figures/Negbinom_sim.csv", row.names = FALSE)
 
 save_html_table(
   diagnostics,
-  file ="results/3_2_Negbinom_sim.html", 
+  file ="Figures/3_2_Negbinom_sim.html", 
   caption = "Negative-binomial simulation study"
 )
 

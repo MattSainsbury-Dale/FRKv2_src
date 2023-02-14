@@ -277,7 +277,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   ggsave( 
     ggarrange(plotlist = training_data_plots, align = "hv", nrow = 1, legend = "top"),
     filename = paste0("4_3_Sydney_training_data_", fitting, ".png"), 
-    device = "png", path = "results/", width = 9, height = 4.1
+    device = "png", path = "Figures/", width = 9, height = 4.1
   )
   
   # ---- FRK ----
@@ -339,7 +339,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   coverage   <- mean((lower <= true_value) & (true_value <= upper))
   
   diagnostics <- data.frame(coverage = coverage)
-  save_path   <- paste0("results/4_3_Sydney_SA1_coverage_", fitting)
+  save_path   <- paste0("Figures/4_3_Sydney_SA1_coverage_", fitting)
   
   write.csv(diagnostics, 
             paste0(save_path, ".csv"), 
@@ -380,7 +380,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   ggsave( 
     figure,
     filename = paste0("4_3_Sydney_SA1_predictions_", fitting, ".png"), 
-    device = "png", width = 9.5, height = 4.4, path = "results/"
+    device = "png", width = 9.5, height = 4.4, path = "Figures/"
   )
   
   # ---- SA3 predictions ----
@@ -426,7 +426,7 @@ Sydney_analysis <- function(fitting = "mixed") {
   ggsave( 
     figure,
     filename = paste0("4_3_Sydney_SA3_predictions_probability_", fitting, ".png"), 
-    device = "png", width = 9.5, height = 4.4, path = "results/"
+    device = "png", width = 9.5, height = 4.4, path = "Figures/"
   )
 }
 

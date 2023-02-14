@@ -238,7 +238,7 @@ M <- FRK(f = number_of_crimes ~ link_fn(population),
 
 save_html_table(
   as.data.frame(coef(M)),
-  file = "results/4_4_Chicago_estimated_coefficients.html", 
+  file = "Figures/4_4_Chicago_estimated_coefficients.html", 
   caption = "Chicago estimated coefficients"
 )
 
@@ -372,7 +372,7 @@ figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z,
                     align = "hv", nrow = 1, legend = "top")
 
 ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty.png", 
-       device = "png", width = 10, height = 8.5, path = "results/")
+       device = "png", width = 10, height = 8.5, path = "Figures/")
 
 # ## Also save a version with only the forecast years (for presentations)
 # subset_time <- 19
@@ -380,7 +380,7 @@ ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty.png",
 # figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
 #                     align = "hv", nrow = 1, legend = "top")
 # ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty_2019_only.png", 
-#        device = "png", width = 10, height = 5.5, path = "results/")
+#        device = "png", width = 10, height = 5.5, path = "Figures/")
 
 
 # ---- Time series plot ----
@@ -429,7 +429,7 @@ time_series_plot <- ggplot() +
   scale_y_continuous(n.breaks = 4)
 
 ggsave(time_series_plot,
-  path = "results/", filename = "4_4_Chicago_focused_CAs_time_series.png", 
+  path = "Figures/", filename = "4_4_Chicago_focused_CAs_time_series.png", 
   device = "png", width = 9, height = 6)
 
 ## Select the MC samples corresponding to our chosen BAUs
@@ -462,7 +462,7 @@ predictive_distribution_plots <- ggplot() +
         legend.position = "top") 
 
 ggsave(predictive_distribution_plots,
-  path = "results/", filename = "4_4_Chicago_focused_CAs_predictive_distributions.png", 
+  path = "Figures/", filename = "4_4_Chicago_focused_CAs_predictive_distributions.png", 
   device = "png", width = 9, height = 6)
 
 # ---- Coverage ----
@@ -505,12 +505,12 @@ Chicago_coverage_and_MAPE$average_coverage_difference <-
   rowMeans
 
 write.csv(Chicago_coverage_and_MAPE, 
-          "results/4_4_Chicago_coverage_and_MAPE.csv", 
+          "Figures/4_4_Chicago_coverage_and_MAPE.csv", 
           row.names = FALSE)
 
 save_html_table(
   Chicago_coverage_and_MAPE,
-  file = "results/4_4_Chicago_coverage_and_MAPE.html", 
+  file = "Figures/4_4_Chicago_coverage_and_MAPE.html", 
   caption = "Chicago coverage and MAPE"
 )
 

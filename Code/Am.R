@@ -11,7 +11,7 @@ library("reshape2")
 
 GZ_df   <- data.frame("Easting" = 219868.09, "Northing" = 285320.84)
 Am_data <- read.csv("data/Am_data.csv")
-write.csv(sd(Am_data$Americium), file = "results/Am_total_data_standard-deviation.csv", row.names = FALSE)
+write.csv(sd(Am_data$Americium), file = "Figures/Am_total_data_standard-deviation.csv", row.names = FALSE)
 
 
 ## Convert Easting and Northing from feet to metres, and rename Americium.
@@ -138,7 +138,7 @@ ggsave(
                     p_Scheme_1_2 + theme(text = element_text(size=17)), 
                     nrow = 1, align = "hv", legend = "top"),
   filename = "4_2_Am_data_and_blocks.png", device = "png", width = 13.6, height = 4.5,
-  path = "results/"
+  path = "Figures/"
 )
 
 
@@ -320,7 +320,7 @@ figure <- figure +
 ggsave( 
   figure,
   filename = "4_2_Am_FRK.png", device = "png", width = 13.6, height = 4.5,
-  path = "results/"
+  path = "Figures/"
 )
 
 
@@ -357,5 +357,5 @@ figure <- ggplot(data = combined_df,
 ggsave( 
   figure,
   filename = "4_2_Am_comparison.png", device = "png", width = 13.6, height = 4.5,
-  path = "results/"
+  path = "Figures/"
 )
