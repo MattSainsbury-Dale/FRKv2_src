@@ -8,7 +8,7 @@ library("maptools") # readShapePoly()
 library("reshape2")
 library("sp")
 library("stringr")
-library("htmltab")
+library("htmltab") # NB archived from CRAN: install from GitHub using devtools::install_github("crubba/htmltab")
 library("ggpubr")
 options(dplyr.summarise.inform = FALSE) # Suppress summarise info
 source("Code/Utility_fns.R")
@@ -154,15 +154,15 @@ ST_df <- df %>%
 ## Visualization: Number of crimes in each year:
 ## Supports the use of a piecewise temporal trend however, for simplicity, we do 
 ## not do this in the manuscript.
-# g_temporal_trend <- ggplot(data = ST_df %>%
-#                              group_by(year) %>%
-#                              summarise(total_crimes = sum(number_of_crimes)), 
-#                            aes(x = year, y = total_crimes)) +
-#   geom_point() +
-#   geom_smooth(colour = "red", method = 'lm', se = F) + 
-#   geom_smooth(aes(group = year < 2014), method = 'lm', se = F) + 
-#   labs(y = "total crimes") + 
-#   theme_bw()
+g_temporal_trend <- ggplot(data = ST_df %>%
+                             group_by(year) %>%
+                             summarise(total_crimes = sum(number_of_crimes)),
+                           aes(x = year, y = total_crimes)) +
+  geom_point() +
+  geom_smooth(colour = "red", method = 'lm', se = F) +
+  geom_smooth(aes(group = year < 2014), method = 'lm', se = F) +
+  labs(y = "total crimes") +
+  theme_bw()
 
 
 ## Create a Date field

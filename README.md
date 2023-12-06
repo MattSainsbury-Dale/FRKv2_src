@@ -25,7 +25,7 @@ First, download and install `docker` or `Docker Desktop`. Then,
 3. Start a terminal and change directory to `FRKv2_docker`
 4. Download the pre-prepared docker image from dockerhub: `sudo docker pull ycaodocker/frkv2`
 5. Build a local docker image from the downloaded image: `sudo DOCKER_BUILDKIT=1 docker build -t 31b8d383613a:latest .`
-6. Start a docker container with an interactive bash terminal (change `absolute_path` in the following command accordingly): `sudo docker run --rm -it -v "absolute_path/FRK_docker/FRKv2:/project" 31b8d383613a:latest bash`
+6. Start a docker container with an interactive bash terminal (change `absolute_path` in the following command accordingly): `sudo docker run --rm -it -v "absolute_path/FRKv2_docker/FRKv2:/project" 31b8d383613a:latest bash`
 
 Note that the above commands are for linux/mac, and small changes might be needed for Windows. For instance, it may be necessary to remove `sudo`, and replace `DOCKER_BUILDKIT=1` with `set DOCKER_BUILDKIT=1` in a separate line before building the docker file.
 
@@ -34,7 +34,7 @@ You are now ready to run the replication script described in the Results section
 
 ### Using a conda environment
 
-The second method uses a conda environment to replicate the exact conditions at the time of submission (e.g., the version of R, package versions, etc.). This is a robust method to reproduce the results of the paper, but it is only available for Linux systems. First, download the packages and reproducible source code from https://hpc.niasra.uow.edu.au/FRKv2_renv.tar.gz, then enter the following commands:
+The second method uses a conda environment to replicate the exact conditions at the time of submission (e.g., the version of R, package versions, etc.). This is a robust method to reproduce the results of the paper, but it is only available for Linux systems. First, download the packages and reproducible source code from https://hpc.niasra.uow.edu.au/FRKv2_conda.tar.gz, then enter the following commands:
 ```bash
 tar -xzvf FRKv2_conda.tar.gz
 cd FRKv2_conda
