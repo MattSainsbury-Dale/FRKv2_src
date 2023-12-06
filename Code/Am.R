@@ -81,7 +81,7 @@ construct_block_scheme <- function(n_schemes = 2, n_block = 5) {
   return(pred_polygons)
 }
 
-blocks <- construct_block_scheme()
+blocks <- construct_block_scheme(n_schemes = 1)
 
 
 
@@ -124,11 +124,11 @@ p_data_log_scale <- p_basic +
 p_Scheme_1_2 <- p_basic +
   # include the points with complete-transparancy so that the domain remains 
   # the same as the other two plots
-  geom_point(size = 0.3, alpha = 0) + 
+  geom_point(size = 0.3, alpha = 1) + 
   geom_point(data = GZ_df, shape = 4, size = 5) +
   geom_polygon(data = FRK::SpatialPolygonsDataFrame_to_df(blocks), 
                aes(group = id, lty = Scheme), colour = "black", alpha = 0) +
-  labs(colour = "Blocking Scheme")
+  labs(lty = "Blocks")
 
 ggsave( 
   ggpubr::ggarrange(p_data +
@@ -158,101 +158,6 @@ BAUs$x3 <- as.numeric(d_BAU >= d_cutoff)
 BAUs$x4 <- d_BAU * (BAUs$x3)
 
 
-# ---- georob analysis ---- 
-
-
-
-if ("georob" %in% .packages(all.available = TRUE)) {
-  
-  cat("Starting georob analysis...\n")
-  
-  # NB: This code is based on vignette("georob_vignette") 
-  
-  library("georob")
-  
-  # Fit a spatial linear model by Gaussian (RE)ML
-  r.georob.m0.spher.reml <- georob(
-    log(Am) ~ -1 + x1 + x2 + x3 + x4,
-    data = Am_df,
-    locations = ~ Easting + Northing,
-    variogram.model = "RMexp",
-    param = c(variance = 0.1, nugget = 0.05, scale = 100), tuning.psi = 1000
-  )
-  
-  # The diagnostics at the beginning of the summary output suggest that
-  # maximization of the restricted log-likelihood by nlminb() was successful.
-  
-  ## In the vignette, they refit the model with maximum likelihood in order to
-  ## perform step-wise covariate selection. Although we do not wish to perform
-  ## step-wise covariate selection, we will still refit the model for consistency.
-  r.georob.m0.spher.ml <- update(r.georob.m0.spher.reml,
-                                 control=control.georob(ml.method="ML"))
-  
-  
-  ## Lognormal block Kriging
-  
-  ## If newdata is a SpatialPolygonsDataFrame then predict.georob() computes block
-  ## Kriging predictions.
-  ## However, first we need the covariates. georob requires one covariate value
-  ## for each polygon. To deal with this, we will average the BAU-level covariates
-  ## within each polygon:
-  poly <- lapply(blocks@polygons, function(x) SpatialPolygons(list(x)))
-  ind <- lapply(poly, function(x) over(as(BAUs, "SpatialPoints"), x))
-  blocks$x1 <- sapply(ind, function(y) tapply(BAUs$x1, y, mean))
-  blocks$x2 <- sapply(ind, function(y) tapply(BAUs$x2, y, mean))
-  blocks$x3 <- sapply(ind, function(y) tapply(BAUs$x3, y, mean))
-  blocks$x4 <- sapply(ind, function(y) tapply(BAUs$x4, y, mean))
-  
-  ## Permanence of log-normality, that is, the assumption that both point values
-  ## and block means follow log-normal laws, strictly cannot hold. This does not
-  ## much impair the efficiency of the back-transformation as long as the blocks
-  ## are small (Cressie, 2006; Hofer et al., 2013). However, for larger blocks,
-  ## such as those used in this example, one should use the optimal predictor
-  ## obtained by averaging back-transformed point predictions. This is the approach
-  ## that we take.
-  ## First, we need the full covariance matrix of the point prediction errors: To
-  ## Hence, we compute the point predictions of log(Am) with the additional
-  ## control argument full.covmat=TRUE:
-  point_predictions <- predict(
-    r.georob.m0.spher.reml, newdata = as.data.frame(BAUs),
-    control = control.predict.georob(extended.output = TRUE, full.covmat = TRUE)
-  )
-  
-  ## Now we back-transform the predictions and average them separately for each block:
-  ## index defining to which block the point predictions belong
-  poly <- lapply(blocks@polygons, function(x) SpatialPolygons(list(x)))
-  ind <- lapply(poly, function(x) over(geometry(BAUs), x))
-  ## select point predictions in block and predict block average
-  block_predictions <- lapply(ind, function(i, x) {
-    idx <- which(!is.na(i))
-    x$pred <- x$pred[idx, ]
-    x$mse.pred <- x$mse.pred[idx, idx]
-    x$var.pred <- x$var.pred[idx, idx]
-    x$cov.pred.target <- x$cov.pred.target[idx, idx]
-    x$var.target <- x$var.target[idx, idx]
-    res <- lgnpp(x, is.block = TRUE)
-    return(res)
-  }, x = point_predictions)
-  block_predictions <- do.call(rbind, block_predictions)
-  colnames(block_predictions) <- c("opt.pred", "opt.se")
-  
-  ## Make a dataframe for use in the comparison plot
-  georob_results <- block_predictions %>%
-    as.data.frame() %>%
-    rename(p_mu = opt.pred, RMSPE_mu = opt.se) %>%
-    mutate(area_sqrt = sqrt(sapply(blocks@polygons, slot, "area")),
-           Framework = "georob",
-           Scheme = as.numeric(blocks@data$Scheme)) %>%
-    melt(id.vars = c("area_sqrt", "Framework", "Scheme"))
-  write.csv(as.data.frame(georob_results), file = "data/Am_georob_results.csv", row.names = FALSE)
-  cat("georob analysis complete.\n")
-  
-} else {
-  # read in the pre-saved results. This may be necessary since georob has been removed from CRAN.
-  georob_results <- read.csv("data/Am_georob_results.csv")
-}
-
-
 # ---- FRK analysis ---- 
 
 cat("Starting FRK analysis...\n")
@@ -271,6 +176,35 @@ suppressWarnings( # Suppress warning about log-link being inappropriate for Gaus
            response = "gaussian", link = "log", BAUs = BAUs, est_error = FALSE, nres = 2,
            # manually set these arguments to reduce console output:
            K_type = "precision", method = "TMB")
+)
+
+
+## Continuous predictions
+pred      <- predict(M, type = c("link", "mean"))
+plot_list <- plot(M, pred$newdata)
+
+formatter <- function(x){ 
+  x/10^5 
+}
+x_scale <- scale_x_continuous(breaks = 10^5 *c(2.197, 2.199, 2.201), labels = formatter)  
+y_scale <- scale_y_continuous(breaks = 10^5 * c(2.852, 2.854, 2.856), labels = formatter)
+plot_list <- lapply(
+  plot_list, 
+  function(gg) gg + lab1 + lab2 + x_scale + y_scale)
+
+figure <- ggpubr::ggarrange(
+  plot_list$p_Y + labs(fill = expression(bold(Y)~"pred.")) +   
+    scale_fill_gradientn(colours = nasa_palette, labels = scales::scientific),
+  plot_list$RMSPE_Y + labs(fill = expression(RMSPE(bold(Y)))),
+  plot_list$p_mu + labs(fill = expression(bold(mu)~"pred.")) +    
+    scale_fill_gradientn(colours = nasa_palette, labels = scales::scientific),
+  plot_list$RMSPE_mu + labs(fill = expression(RMSPE(bold(mu)))), 
+  align = "hv", nrow = 2, ncol =2) 
+
+ggsave( 
+  figure,
+  filename = "4_2_Am_FRK_cts.png", device = "png", width = 9.6, height = 5.7,
+  path = "Figures/"
 )
 
 
@@ -303,10 +237,10 @@ df <- FRK_results %>%
   )
 
 
-figure <- ggplot(data = df, aes(x = area_sqrt, lty = Scheme)) +
+figure <- ggplot(data = df, aes(x = area_sqrt)) +
   geom_line(aes(y = value), size = 1) +
   facet_wrap(~variable, scales = "free", labeller = label_parsed) + 
-  labs(x = "Block size (m)", y = "", lty = "Blocking Scheme") +
+  labs(x = "block size (m)", y = "") +
   theme_bw() + 
   scale_y_continuous(labels = scales::scientific) + 
   theme(text = element_text(size = 20), 
@@ -323,39 +257,3 @@ ggsave(
   path = "Figures/"
 )
 
-
-
-# ---- Comparison plot: FRK and georob ----
-
-
-combined_df <- FRK_results %>% 
-  dplyr::select(c("variable", "value", "area_sqrt", "Framework", "Scheme")) %>% 
-  rbind(georob_results) %>% 
-  mutate(fwk_sch = paste(Framework, Scheme, sep = ": ")) %>%
-  # alter the labels to change the facet_wrap titles:
-  mutate(variable = factor(
-    variable, 
-    labels = c("'Block prediction'", "'RMSPE from block prediction'")
-  )) %>% 
-  mutate(
-    Framework = as.character(Framework), 
-    Scheme = as.character(Scheme)
-  )
-
-
-figure <- ggplot(data = combined_df,
-                 aes(x = area_sqrt, colour = Framework, 
-                     lty = Scheme, group = fwk_sch)) +
-  geom_line(aes(y = value), size = 1) +
-  facet_wrap(~variable, scales = "free", labeller = label_parsed) + 
-  labs(x = "Block size (m)", y = "", lty = "Blocking Scheme") +
-  theme_bw() + 
-  scale_y_continuous(labels = scales::scientific) + 
-  theme(text = element_text(size = 20), 
-        strip.text = element_text(size = 20))
-
-ggsave( 
-  figure,
-  filename = "4_2_Am_comparison.png", device = "png", width = 13.6, height = 4.5,
-  path = "Figures/"
-)
