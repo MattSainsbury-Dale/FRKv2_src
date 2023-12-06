@@ -30,7 +30,6 @@ library("tibble")
 ## Packages required by INLA
 library("foreach")
 library("splancs")
-library("rgdal") 
 
 ## Packages used in the comparison study
 library("FRK") 
