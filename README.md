@@ -1,15 +1,14 @@
 # Source code for FRK v2
 
-This repository contains the source code for reproducing the results in "Modelling Big, Heterogeneous, Non-Gaussian
-Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale, Zammit-Mangion, and Cressie, 2023).
+This repository contains the source code for reproducing the results in "Modelling Big, Heterogeneous, Non-Gaussian Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale, Zammit-Mangion, and Cressie, 2023).
 
 ## Creating a reproducible environment
 
 There are three ways to create an environment that can reproduce the results of the paper, and these are listed below in the order of preference:
 
-1. using a docker contained (cross platform),
+1. using a docker container (cross platform),
 1. using a conda environment (linux only),
-1. using the current github code + local install (this is the least reliable option as packages and their dependencies change with time).
+1. using the current GitHub code + local install of current package versions 
 
 ### Using a docker container
 
@@ -46,16 +45,16 @@ If the last command doesn't run, start `R` and run the command `renv::rebuild('j
 You are now ready to run the replication script described in the Results section. We suggest simply running `run_all.sh` (see below for details).
 
 
-### Current github code + local install
+### Current GitHub code + local install of current package versions
 
 First, download this repo and navigate to its top-level directory within the command line.
 
-Some data sets are too large (a few hundred Mb in total) to be stored on GitHub: These data sets are associated with Section 4.3 (Sydney spatial change-of-support) and Section 4.4 (Chicago crime). To download them and place them into the correct folders, run `make DATA`. If you do not wish to use `make`, or if the data is not downloading as expected, please:
+Some data sets are too large (a few hundred Mb in total) to be stored on GitHub: These data sets are associated with Section 4.3 (Sydney spatial change-of-support) and Section 4.4 (Chicago crime). To download them and place them into the correct folders, run `bash DATA.sh`. If the data are not downloading as expected, please:
 
-- Download the  [Chicago crime data set](https://hpc.niasra.uow.edu.au/ckan/dataset/chicago_crime_dataset), name it `chicago_crime_df.Rda`, and move it to the `data` folder; and
-- download the [folders containing the Sydney SA1/SA2/SA3 region shapefiles](https://hpc.niasra.uow.edu.au/ckan/dataset/sydney_sa_regions), unzip them, and move them into `data/Sydney_shapefiles`.
+- Download the  [Chicago crime data set](https://zenodo.org/records/10278749) into the `data` folder; and
+- download the [folders containing the Sydney SA1/SA2/SA3 region shapefiles](https://zenodo.org/records/10278720), unzip them, and move them into `data/Sydney_shapefiles`.
 
-(To download the files, click "Explore" > "Go to resource".) The `data` folder should contain the following files (as well as other files automatically downloaded from Github):
+The folder `data` should contain the following files (as well as other files automatically downloaded from GitHub):
 
 ```bash
 ├── data
@@ -67,10 +66,6 @@ Some data sets are too large (a few hundred Mb in total) to be stored on GitHub:
 ```
 
 Note that we have included checks at the beginning of the replication script to ensure that the user is immediately notified if these files are not present.
-
-When running the replication script (see below for details), the user will be asked if they wish to install package dependencies. If they choose to do so, they will then be asked if pre-existing packages should be re-installed with the version numbers as given in `dependencies.txt` (this option is only recommended for use if there is a problem with the latest version of the packages).
-
-
 
 
 ## Results
