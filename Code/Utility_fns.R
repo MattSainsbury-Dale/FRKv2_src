@@ -70,7 +70,6 @@ check_quick <- function() {
   return(quick)
 }
 
-
 # ---- Plotting helpers ----
 
 change_legend_breaks <- function(gg, breaks, aesthetic = "fill") {

@@ -4,9 +4,9 @@ library("dplyr")
 library("ggplot2")
 library("ggmap")
 library("spacetime")
-library("maptools") # readShapePoly()
 library("reshape2")
 library("sp")
+library("sf")       # st_read() and st_is_empty()
 library("stringr")
 library("htmltab") # NB archived from CRAN: install from GitHub using devtools::install_github("crubba/htmltab")
 library("ggpubr")
@@ -28,7 +28,7 @@ if(quick) {
   nres <- if (exists("Chicago_nres")) Chicago_nres else 3
 }
 
-fs_by_spatial_BAU <- TRUE
+fs_by_spatial_BAU <- TRUE 
 
 # When we have very few basis functions, it is typically more stable to use sqrt
 if (nres  < 3) {
@@ -42,17 +42,20 @@ cat(paste("Chicago example: Using", nres, "resolution(s) of spatial basis functi
 
 # ---- Data pre-processing ----
 
-# ---- Chicago ggmap ----
+# ---- Chicago Stamen map ----
 
-# get_stamenmap() does NOT require a google API. 
-chicago_bbox = c(left = -87.9, bottom = 41.6, right = -87.5, top = 42.06)
-suppressMessages(
-  chicago <- get_stamenmap(bbox = chicago_bbox, maptype = "toner-background", color = "bw") 
-)
-save(chicago, file = "data/chicago_map.RData")
-save(chicago_bbox, file = "data/chicago_bbox.RData")
+## Note that get_stamenmap() does not currently require a google API, but I 
+## chose to save the map object in case this changes in the future
+# chicago_bbox = c(left = -87.9, bottom = 41.6, right = -87.5, top = 42.06)
+# suppressMessages(
+#   chicago <- get_stamenmap(bbox = chicago_bbox, maptype = "toner-background", color = "bw") 
+# )
+# save(chicago, file = "data/chicago_map.RData")
+# save(chicago_bbox, file = "data/chicago_bbox.RData")
 
 ## Create map layer to place under all plots
+load("data/chicago_map.RData") 
+load("data/chicago_bbox.RData") 
 chicago_map <- ggmap(chicago)
 
 
@@ -86,8 +89,23 @@ df <- droplevels(df) # Drop unused levels
 
 # ---- Chicago community areas ----
 
+## Helper function for reading spatial polygons saved as a .shp file
+read_shape_poly <- function(path) {
+  
+  # polys <- maptools::readShapePoly(path)
+  
+  polys <- sf::st_read(path, quiet = TRUE) %>%
+    filter(!sf::st_is_empty(.)) %>%
+    as("Spatial")
+  
+  crs(polys) <- NA
+  
+  return(polys)
+}
+
 ## Load Shapefile of community areas, and name the coordinates
-suppressWarnings(community_areas <- readShapePoly("data/Chicago_shapefiles/chicago_community_areas.shp"))
+# suppressWarnings(community_areas <- maptools::readShapePoly("data/Chicago_shapefiles/chicago_community_areas.shp"))
+community_areas <- read_shape_poly("data/Chicago_shapefiles/chicago_community_areas.shp")
 coordnames(community_areas) <- c("longitude", "latitude")
 
 ## The polygon IDs are labelled from 0 to 76, and are not even associated 
@@ -133,12 +151,11 @@ idx <- community_areas@data$area_num_1 %>% as.character %>% as.numeric
 ## the internal integer codes.)
 community_areas$population <- tmp[idx]
 
-suppressMessages({
-  g_population <- plot_spatial_or_ST(community_areas, "population", map_layer =  chicago_map,  
-                                     colour = "black", size = 0.3)[[1]] + 
-    geom_text(data = cbind(data.frame(community_areas), coordinates(community_areas)), 
-              aes(label = area_num_1), size = 2)
-})
+## Visualization: Population in each community area
+# plot_spatial_or_ST(community_areas, "population", map_layer =  chicago_map,  
+#                    colour = "black", size = 0.3)[[1]] + 
+#   geom_text(data = cbind(data.frame(community_areas), coordinates(community_areas)), 
+#             aes(label = area_num_1), size = 2)
 
 # ---- Spatio-temporal dataframe (one-year time periods) ----
 
@@ -150,28 +167,24 @@ ST_df <- df %>%
   dplyr::summarise(number_of_crimes = n()) %>%
   as.data.frame()
 
-
-## Visualization: Number of crimes in each year:
+## Visualization: Number of crimes in each year
 ## Supports the use of a piecewise temporal trend however, for simplicity, we do 
 ## not do this in the manuscript.
-g_temporal_trend <- ggplot(data = ST_df %>%
-                             group_by(year) %>%
-                             summarise(total_crimes = sum(number_of_crimes)),
-                           aes(x = year, y = total_crimes)) +
-  geom_point() +
-  geom_smooth(colour = "red", method = 'lm', se = F) +
-  geom_smooth(aes(group = year < 2014), method = 'lm', se = F) +
-  labs(y = "total crimes") +
-  theme_bw()
+# ggplot(data = ST_df %>% group_by(year) %>%summarise(total_crimes = sum(number_of_crimes)),
+#                            aes(x = year, y = total_crimes)) +
+#   geom_point() +
+#   geom_smooth(colour = "red", method = 'lm', se = F) +
+#   geom_smooth(aes(group = year < 2014), method = 'lm', se = F) +
+#   labs(y = "total crimes") +
+#   theme_bw()
 
 
 ## Create a Date field
 ST_df$time <- as.Date(paste(ST_df$year, 06,01,sep="-"))
 
 ## Construct an STIDF object
-ST_df %>% nrow
 ## Remove NAs (there are only 19 incomplete cases)
-sum(!complete.cases(ST_df))
+# sum(!complete.cases(ST_df))
 ST_df <- ST_df[complete.cases(ST_df), ]
 chicago_crimes <- stConstruct(x = ST_df,                               
                               space = c("longitude", "latitude"), 
@@ -183,9 +196,7 @@ chicago_crimes_fit <- subset(chicago_crimes,
                              !(chicago_crimes@data$year %in% c(2010, 2019, 2020)))
 
 
-
 # ---- BAUs ----
-
 
 ## Set up the space-time BAUs. 
 ## For the spatial BAUs, we use the Chicago community areas.
@@ -198,7 +209,6 @@ ST_BAUs$fs <- 1 # scalar fine-scale variance matrix
 ## Create population covariate
 ST_BAUs$population <- community_areas$population
 
-
 ## Add covariates that can be used to make a piecewise-linear temporal trend.
 ## As the inclusion of the trend did not significantly affect the results, it 
 ## was omitted from the paper to simplify the exposition.
@@ -208,7 +218,6 @@ ST_BAUs$population <- community_areas$population
 # ST_BAUs$x2 <- year * ST_BAUs$x1
 # ST_BAUs$x3 <- as.numeric(year >= 2014)
 # ST_BAUs$x4 <- year * ST_BAUs$x3
-
 
 # ---- Model fitting ----
 
@@ -227,30 +236,11 @@ M <- FRK(f = number_of_crimes ~ link_fn(population),
          data = chicago_crimes_fit, BAUs = ST_BAUs, basis = basis, 
          response = "poisson", link = link, 
          sum_variables = "number_of_crimes", 
-         fs_by_spatial_BAU = fs_by_spatial_BAU, 
+         fs_by_spatial_BAU = fs_by_spatial_BAU,
          # manually set these arguments to reduce console output:
          K_type = "precision", method = "TMB", est_error = FALSE)
 )
 
-# print(object.size(M), units = "Mb")
-# Chicago_SRE_object <- M
-# saveRDS(Chicago_SRE_object, file = "intermediates/Chicago_SRE_object.rds")
-
-save_html_table(
-  as.data.frame(coef(M)),
-  file = "Figures/4_4_Chicago_estimated_coefficients.html", 
-  caption = "Chicago estimated coefficients"
-)
-
-
-# ---- Simplified, high-level version that I show in presentations ---- 
-
-# M <- FRK(f = number_of_crimes ~ 1,
-#          response = "poisson",
-#          link     = "log",
-#          data     = chicago_crimes,
-#          spatial_BAUs  = community_areas, 
-#          sum_variables = "number_of_crimes")
 
 # ---- Prediction ----
 
@@ -373,14 +363,6 @@ figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z,
 
 ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty.png", 
        device = "png", width = 10, height = 8.5, path = "Figures/")
-
-# ## Also save a version with only the forecast years (for presentations)
-# subset_time <- 19
-# plots <- plot_predictions(subset_time = subset_time) 
-# figure <- ggarrange(plots$number_of_crimes, plots$p_Z, plots$interval90_Z, 
-#                     align = "hv", nrow = 1, legend = "top")
-# ggsave(figure, filename = "4_4_Chicago_data_pred_uncertainty_2019_only.png", 
-#        device = "png", width = 10, height = 5.5, path = "Figures/")
 
 
 # ---- Time series plot ----

@@ -4,7 +4,7 @@ library("plyr")     # round_any()
 library("dplyr")    
 library("ggplot2")
 library("sp")
-library("maptools") # readShapePoly()
+library("sf")       # st_read() and st_is_empty()
 library("raster")   # bind()
 library("ggpubr")
 library("ggmap")    # Stamenmap
@@ -12,34 +12,9 @@ library("ggmap")    # Stamenmap
 source("Code/Utility_fns.R")
 })
 
-
 ## Use very-low-dimensional representations of the models to establish that the code works? 
 quick <- check_quick()
 nres <- if (quick) 2 else 3
-
-# ---- Helper functions for plotting ----
-
-## Simplify the legend of the predictions if the fitting method was SA2s only 
-## (I do this for very short 15 minute presentations where I do not have time 
-## to explain everything properly and I don't want to overload the viewer) 
-simplify_legend_label <- function(plots) {
-  plots$p_prob <- plots$p_prob + 
-    labs(fill = "Predicted proportion\nof families in poverty")
-  plots$interval90_prob <- plots$interval90_prob + 
-    labs(fill = "90% prediction-interval \nwidth for proportion of\nfamilies in poverty")
-  
-  return(plots)
-}
-
-
-change_font_size_and_axis <- function(gg) {
-  gg + theme(axis.text = element_text(size = 11),
-             axis.title = element_text(size = 14), 
-             legend.text = element_text(size = 11),
-             legend.title = element_text(size = 14)) + 
-    scale_x_continuous(breaks = c(150.8, 151.0, 151.2), expand = c(0, 0)) + 
-    scale_y_continuous(breaks = c(-33.7, -33.9, -34.1), expand = c(0, 0))
-}
 
 # ---- Data preprocessing ----
 
@@ -53,8 +28,7 @@ poverty_lines <- c("Couple_family_with_no_children" = round_any(594.6, 200),
                    "One_parent_family" = round_any(691.04, 200))
 
 ## Select the income brackets common to all family groups as defined above
-low_income <- c("Negative_Nil_income_", "X1_199_", "X200_299_", 
-                "X300_399_", "X400_599_")
+low_income <- c("Negative_Nil_income_", "X1_199_", "X200_299_", "X300_399_", "X400_599_")
 
 ## Select the family names we are interested in.
 family_names <- names(poverty_lines)
@@ -108,10 +82,22 @@ census_SA2_df <- censusDataPreprocess(census_SA2_df, "SA2")
 ## have a big chunk of SA1s missing.  This will ensure that the SA1s and SA2s 
 ## used for model fitting aggregate to whole SA3s. 
 
+## Helper function for reading spatial polygons saved as a .shp file
+read_shape_poly <- function(path) {
+  
+  # polys <- maptools::readShapePoly(path, delete_null_obj = TRUE)
+  
+  polys <- sf::st_read(path, quiet = TRUE) %>%
+    filter(!sf::st_is_empty(.)) %>%
+    as("Spatial")
+  
+  crs(polys) <- NA
+  
+  return(polys)
+}
+
 ## Deal with the SA3s first so that we can subset the SA1s based on the SA3s. 
-suppressWarnings(
-  SA3 <- readShapePoly("data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp", delete_null_obj = TRUE)
-)
+SA3 <- read_shape_poly("data/Sydney_shapefiles/SA3/SA3_2011_AUST.shp")
 coordnames(SA3) <- c("lon", "lat")
 
 ## Now focus on a subset of SA3s in NSW (around Sydney)
@@ -122,7 +108,7 @@ SA3_NSW_sub <- SA3[idx,]
 cat("Number of SA3s:", length(SA3_NSW_sub), "\n")
 
 ## Deal with the SA2s first so that we can subset the SA1s based on the SA2s 
-SA2 <- readShapePoly("data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp", delete_null_obj = TRUE)
+SA2 <- read_shape_poly("data/Sydney_shapefiles/SA2/SA2_2011_AUST.shp")
 coordnames(SA2) <- c("lon", "lat")
 
 ## Add the SA2 census data 
@@ -142,7 +128,7 @@ cat("Removed SA2s with no families of interest.\n")
 cat("Number of SA2s:", length(SA2_NSW_sub), "\n")
 
 ## Now deal with the SA1s
-SA1 <- readShapePoly("data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp", delete_null_obj=TRUE)
+SA1 <- read_shape_poly("data/Sydney_shapefiles/SA1/SA1_2011_AUST.shp")
 coordnames(SA1) <- c("lon", "lat")
 
 ## Retain only those SA1s which are in the remaining SA2s.
@@ -158,7 +144,6 @@ SA1_NSW_sub@data <- merge(SA1_NSW_sub@data, census_SA1_df,
 SA1s <- SA1_NSW_sub
 SA2s <- SA2_NSW_sub
 
-
 construct_training_data <- function(fitting = "mixed", SA1s, SA2s) {
   if (fitting == "SA2s") {
     return(SA2s)
@@ -167,7 +152,6 @@ construct_training_data <- function(fitting = "mixed", SA1s, SA2s) {
   } else if (fitting == "mixed") {
     
     ## We include some SA1s in the training set 
-    SA1s <- SA1s
     zdf  <- SA2s 
     
     ## Select some data supports to be replaced
@@ -179,6 +163,7 @@ construct_training_data <- function(fitting = "mixed", SA1s, SA2s) {
     ## also selected because they share lines, which is classified as overlapping 
     ## by over()
     SA1s_as_points <- SpatialPoints(as(SA1s, "SpatialPolygons"))
+    crs(SA1s_as_points) <- crs(zdf)
     ## Select SA1s corresponding to the selected data supports
     observed_BAU_idx <- which(!is.na(over(SA1s_as_points, zdf[rmidx, 1])))
     
@@ -197,25 +182,22 @@ construct_training_data <- function(fitting = "mixed", SA1s, SA2s) {
 
 # ---- Sydney Stamen map ----
 
-# TODO Better to just save this in the data 
-
-## map background to show Sydney
-## NB: get_stamenmap() does NOT require a google API
-Sydney_bbox <- c(left = 150.72, bottom = -34.2, right = 151.32, top = -33.65)
-suppressMessages({
-  Sydney_map  <- get_stamenmap(bbox = Sydney_bbox, 
-                               maptype = "toner-background", 
-                               color = "bw")
-})
-save(Sydney_map, file = "data/Sydney_map.RData") 
+## Note that get_stamenmap() does not currently require a google API, but I 
+## chose to save the map object in case this changes in the future
+# Sydney_bbox <- c(left = 150.72, bottom = -34.2, right = 151.32, top = -33.65)
+# Sydney_map  <- get_stamenmap(bbox = Sydney_bbox, 
+#                              maptype = "toner-background", 
+#                              color = "bw")
+# save(Sydney_map, file = "data/Sydney_map.RData") 
 
 ## Create map layer to place under all plots
+load("data/Sydney_map.RData") 
 Sydney_map <- ggmap(Sydney_map)
 
 
 # ---- Conduct the analysis ---- 
 
-## The argument fitting controls whether the training data comprises SA2 regions 
+## The argument `fitting` controls whether the training data comprise SA2 regions 
 ## only (fitting = "SA2s"), SA1 regions only (fitting = "SA1s"; this is useful 
 ## to obtain a good estimate of the fine-scale variance parameter), or a mixture 
 ## of SA2s and SA1s (fitting = "mixed"; this is the approach used in the paper).  
@@ -266,7 +248,6 @@ Sydney_analysis <- function(fitting = "mixed") {
       gg <- training_data_plots[[i]] 
       gg <- gg %>% change_legend_breaks(breaks[[i]]) 
       gg <- gg + labs(fill = fill_label[[i]]) + lab1 + lab2
-      gg <- gg %>% change_font_size_and_axis
       return(gg)
     }
   )
@@ -283,7 +264,6 @@ Sydney_analysis <- function(fitting = "mixed") {
   # ---- FRK ----
   
   BAUs <- SA1s
-
   
   ## For binomial or negative-binomial data, the known constant parameter k must
   ## be provided for each observation. In this case, it is simply the total number
@@ -351,8 +331,6 @@ Sydney_analysis <- function(fitting = "mixed") {
     caption = "Sydney spatial change-of-support"
   )
   
-  
-  
   # ---- Plotting SA1 predictions ----
   
   suppressMessages({
@@ -364,10 +342,6 @@ Sydney_analysis <- function(fitting = "mixed") {
   
   ## Change axis labels and font size
   plots <- lapply(plots, function(gg) gg + lab1 + lab2) 
-  plots <- lapply(plots, change_font_size_and_axis)
-  
-  ## Simple legends (useful for presentations)
-  if (fitting == "SA2s") plots <- simplify_legend_label(plots)
   
   ## Shift the legend title so it doesn't run into the legend box
   plots$interval90_prob <- plots$interval90_prob + theme(legend.title.align = 1.5)
@@ -404,21 +378,16 @@ Sydney_analysis <- function(fitting = "mixed") {
       gg <- plots[[i]] 
       gg <- gg %>% change_legend_breaks(breaks[[i]]) 
       gg <- gg + lab1 + lab2
-      gg <- gg %>% change_font_size_and_axis
       return(gg)
     }
   )
   })
   names(plots) <- plotnames
   
-  ## Simple legends (useful for presentations)
-  if (fitting == "SA2s") plots <- simplify_legend_label(plots)
-  
   ## Shift the legend title so it doesn't run into the legend box
   plots$interval90_prob <- plots$interval90_prob + theme(legend.title.align = 1.8)
   plots$interval90_mu <- plots$interval90_mu + theme(legend.title.align = 1.5)
 
-  
   suppressWarnings(
     figure <- ggarrange(plots$p_prob, plots$interval90_prob, nrow = 1, legend = "top")
   )
@@ -434,10 +403,10 @@ cat("\nStarting FRK analysis: Using a mixture of SA1 and SA2 regions as training
 Sydney_analysis(fitting = "mixed")
 
 ## This is only used for presentations, and not at all in the paper:
-cat("\nStarting FRK analysis: Using only SA2 regions as training data.\n")
-Sydney_analysis(fitting = "SA2s")
+# cat("\nStarting FRK analysis: Using only SA2 regions as training data.\n")
+# Sydney_analysis(fitting = "SA2s")
 
 ## This serves a test for the case of binomial data with areal observation
-## supports, where the osbervation supports and BAUs coincide:
-cat("\nStarting FRK analysis: Using only SA1 regions as training data.\n")
-Sydney_analysis(fitting = "SA1s")
+## supports, where the observation supports and BAUs coincide:
+# cat("\nStarting FRK analysis: Using only SA1 regions as training data.\n")
+# Sydney_analysis(fitting = "SA1s")
