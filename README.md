@@ -1,14 +1,16 @@
 # Source code for FRK v2
 
-This repository contains the source code for reproducing the results in "Modelling Big, Heterogeneous, Non-Gaussian Spatial and Spatio-Temporal Data using FRK" (Sainsbury-Dale, Zammit-Mangion, and Cressie, 2023).
+This repository contains the source code for reproducing the results in "Modelling Big, Heterogeneous, Non-Gaussian Spatial and Spatio-Temporal Data using FRK", which is in press with the *Journal of Statistical Software*. See [here](https://arxiv.org/abs/2110.02507) for a pre-print of the paper. 
 
 ## Creating a reproducible environment
 
-There are three ways to create an environment that can reproduce the results of the paper, and these are listed below in the order of preference:
+There are three ways to create an environment that can reproduce the results of the paper, and these are listed below in the order of reliability:
 
 1. using a docker container (cross platform),
 1. using a conda environment (linux only),
-1. using the current GitHub code + local install of current package versions 
+1. using the current GitHub code + local install of current package versions. 
+
+The first two options use package versions frozen at the time of submission, and are intended to ensure reproducibility for the foreseeable future. The third option is intended to provide users with a clear example of how our illustrative examples may be replicated using the latest versions of the associated packages. 
 
 ### Using a docker container
 
@@ -70,7 +72,9 @@ Note that we have included checks at the beginning of the replication script to 
 
 ## Results
 
-The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. **NB**: the reproducible scripts ask the user if package dependencies should be installed - only do this if using the current github code + local install option above. The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. Note that some of the results will look very different when using these low-dimensional representations (particularly the results for Section 4.1).
+The replication script is `run_all.sh`, invoked using `bash run_all.sh`. Alternatively, Windows users may use `run_all.bat`. **NB**: the reproducible scripts ask the user if package dependencies should be installed - only do this if using the current GitHub code + local install option above. 
+
+The replication script populates the `results` folder with the figures and tables given in the manuscript: These can then be viewed by opening `results_all.html` in any web browser. To quickly establish that the code is working, very-low-dimensional representations of the models can be used: The user is prompted for their choice when running the replication script. Note that some of the results will look very different when using these low-dimensional representations (particularly the results for Section 4.1).
 
 Please note that the replication material for Section 3.3, Table 4, reproduces the results for row FRK v2 only; the results for other rows are taken from Table 3 in Heaton et al. (2019).
 
