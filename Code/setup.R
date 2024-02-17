@@ -24,9 +24,11 @@ user_decision <- function(prompt, allowed_answers = c("y", "n")) {
 
 install_depends <- user_decision("Do you want to automatically install package dependencies? (y/n)")
 if (install_depends == "y") {
-  install.packages("dggrids", repos="https://andrewzm.github.io/dggrids-repo", type = "source")
-  install.packages("INLA", repos="https://inla.r-inla-download.org/R/stable")
-  install.packages(c("maps", "devtools", "dplyr", "DHARMa", "foreach", "FRK", "fmesher", "ggmap", "ggplot2", "ggpubr", "gstat", "htmltab", "htmlTable", "mgcv" , "plyr", "pROC" , "R.utils" , "raster", "renv" , "reshape2", "scales", "scoringRules", "sp", "sf", "spacetime", "spBayes", "splancs" , "spNNGP", "stringr", "tibble", "tidyr"), 
+  install.packages("dggrids", repos = "https://andrewzm.github.io/dggrids-repo", type = "source")
+  install.packages("INLA", repos = "https://inla.r-inla-download.org/R/stable")
+  remove.packages("FRK")
+  install.packages("FRK", repos = "https://github.com/andrewzm/FRK.git") 
+  install.packages(c("maps", "devtools", "dplyr", "DHARMa", "foreach", "fmesher", "ggmap", "ggplot2", "ggpubr", "gstat", "htmltab", "htmlTable", "mgcv" , "plyr", "pROC" , "R.utils" , "raster", "renv" , "reshape2", "scales", "scoringRules", "sp", "sf", "spacetime", "spBayes", "splancs" , "spNNGP", "stringr", "tibble", "tidyr"), 
                    repos = "https://cloud.r-project.org")
 }
 

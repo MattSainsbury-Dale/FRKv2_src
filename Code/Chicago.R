@@ -332,7 +332,7 @@ plot_predictions <- function(subset_time) {
           axis.ticks.y = element_blank())
   
   plots$interval90_Z <- plots$interval90_Z + 
-    scale_fill_distiller(palette = "BrBG", n.breaks = 3) + 
+    scale_fill_distiller(palette = "BrBG") + 
     labs(title = "90% prediction-\ninterval width", fill = "") + 
     theme(axis.title.y = element_blank(), 
           axis.text.y = element_blank(), 
