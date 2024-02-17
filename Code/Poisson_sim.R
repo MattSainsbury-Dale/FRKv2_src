@@ -15,13 +15,13 @@
 #        previously computed true process value.
 
 suppressMessages({
-library("FRK")
-library("ggplot2")
-library("sp")
-library("dplyr")
-library("ggpubr")
-library("DHARMa")
-source("Code/Utility_fns.R")
+  library("FRK")
+  library("ggplot2")
+  library("sp")
+  library("dplyr")
+  library("ggpubr")
+  library("DHARMa")
+  source("Code/Utility_fns.R")
 })
 
 ## Use very-low-dimensional representations of the models to establish that the code works? 
@@ -275,6 +275,8 @@ diagnostics <- cbind(
   diagnostics, 
   run_time_minutes = sapply(timings, function(x) x["elapsed"] / 60)
   )
+
+diagnostics$AIC <- sapply(S_list, AIC)
 
 rownames(diagnostics) <- paste0("nres", rownames(diagnostics))
 
